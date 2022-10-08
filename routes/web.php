@@ -16,3 +16,9 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return 'JYB';
 });
+
+
+
+Route::get('/login', function () {
+    return view('admin.login.login');
+});

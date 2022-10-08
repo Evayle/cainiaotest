@@ -17,3 +17,15 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+
+
+Route::group(['namespace'=>'App\Http\Controllers\Admin'], function ($api){
+
+    $api->get('mhn/info', 'User@UserList');
+    $api->get('admin/login', 'UserLogin@login');
+
+    $api->post('admin/user/pass/set', 'UserLogin@password');
+});
+
+
