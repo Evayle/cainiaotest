@@ -29,3 +29,13 @@ Route::group(['namespace'=>'App\Http\Controllers\Admin'], function ($api){
 });
 
 
+
+Route::group(['namespace'=>'App\Http\Controllers\Api'], function ($api){
+
+
+    $api->post('file/update/oss', 'AliOss@createNewFile');
+});
+
+
+
+
