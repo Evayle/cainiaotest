@@ -34,6 +34,9 @@ Route::group(['namespace'=>'App\Http\Controllers\Api'], function ($api){
 
 
     $api->post('file/update/oss', 'AliOss@createNewFile');
+
+    $api->post('file/del/info', 'AliOss@delFile');
+
 });
 
 
