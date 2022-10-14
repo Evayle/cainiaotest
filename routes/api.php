@@ -37,8 +37,24 @@ Route::group(['namespace'=>'App\Http\Controllers\Api'], function ($api){
 
     $api->post('file/del/info', 'AliOss@delFile');
 
+    //绑定用户uid
+    $api->post('banding/uid', 'Index@index');
+    $api->post('sendmsg/uid', 'Index@SendMessage');
+
 });
 
 
+/**
+ * 测试的API的部分
+ */
+
+
+Route::group(['namespace'=>'App\Http\Controllers\Api\Cainiao'], function ($api){
+
+
+    $api->post('order/consign/infos', 'Consign@index');
+
+
+});
 
 
