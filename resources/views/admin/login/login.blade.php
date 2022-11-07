@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>登录</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
@@ -89,27 +90,33 @@
                                                 </div>
                                             </div>
                                             <div class="card-body">
-                                                <div class="edit-profile__body">
+                                                <form action=""  method="POST">
+                                                    @method('PUT')
+                                                    @csrf
+
+                                                    <div class="edit-profile__body">
                                                     <div class="form-group mb-20">
                                                         <label for="username">请输入登录的电话号码</label>
-                                                        <input type="text" class="form-control" id="username" placeholder="请输入登录的电话号码">
+                                                        <input type="text" class="form-control" id="username" placeholder="请输入登录的电话号码" name="user_phone">
                                                     </div>
                                                     <div class="form-group mb-15">
                                                         <label for="password-field">请输入密码</label>
                                                         <div class="position-relative">
-                                                            <input id="password-field" type="password" class="form-control" name="password" value="">
+                                                            <input id="password-field" type="password" class="form-control" name="user_password" value="">
                                                             <div class="fa fa-fw fa-eye-slash text-light fs-16 field-icon toggle-password2"></div>
                                                         </div>
                                                     </div>
 
                                                     <div class="button-group d-flex pt-1 justify-content-md-start justify-content-center">
-                                                        <button class="btn btn-primary btn-default btn-squared mr-15 text-capitalize lh-normal px-50 py-15 signIn-createBtn ">
+                                                        <button class="btn btn-primary btn-default btn-squared mr-15 text-capitalize lh-normal px-50 py-15 signIn-createBtn " type="submit">
                                                            登 录
                                                         </button>
                                                     </div>
                                                     <p class="social-connector text-center mb-sm-25 mb-15  mt-sm-30 mt-20"><span>分割线</span></p>
 
                                                 </div>
+
+                                                </form>
                                             </div><!-- End: .card-body -->
                                         </div><!-- End: .card -->
                                     </div><!-- End: .edit-profile -->

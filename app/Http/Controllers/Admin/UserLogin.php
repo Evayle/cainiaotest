@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-
 use Illuminate\Http\Request;
 use App\Models\AdminUser;
 use Illuminate\Support\Facades\Hash;
@@ -24,106 +23,35 @@ class UserLogin extends Controller
         }
     }
 
-
     /**
      * 用戶登錄操作
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function login(Request $request) {
-        return view('admin.login.login');
 
-        if (!$request->filled(['user_phone', 'user_password'])) {
-
-           return response()->json([
-               'code' => '400413', 'msg' => '重要參數為空'
-           ],403);
-
-        }
+        if (!$request->filled(['user_phone', 'user_password'])) return $this->ReturnJson(400403, '重要的参数为空');
         $phone    = $request->input('user_phone');
         $password = $request->input('user_password');
-
 
         if(strlen($phone) == 11 || strlen($phone) == 8){
 
 
-
             $userInfo = self::$AdminUser->where('user_status', '1')->where('user_phone', $phone)->first();
 
-            if (!$userInfo) {
+            if (!$userInfo) return $this->ReturnJson(400413, '用户获取失败');
 
-                return response()->json([
-                    'code' => '400413', 'msg' => '獲取用戶信息失敗!'
-                ]);
-            }
-
-            if(!Hash::check($password,$userInfo->user_password)){
-                return response()->json([
-                    'code' => '400413', 'msg' => '密碼錯誤!'
-                ]);
-
-            }
-
-            //密碼正確,存入到session
-
-            //生成token
+            if(!Hash::check($password,$userInfo->user_password)) return $this->ReturnJson(400413, '密码错误');
 
             $token = md5($userInfo->user_password.$userInfo->user_password);
 
             $userInfo->update(['user_token' => $token]);
 
-
-//            session::put($phone, $token);
-//            $data = session::put($phone, $token);
-//            dump($data);
-//
-//            $data = session::get($phone);
-//            dump($data);
-//            $data =  session::flush($phone);
-//            dump($data);
-//
-
-            return view('admin.login.login');
-        }
-        return response()->json([
-            'code' => '400413', 'msg' => '電話號碼格式錯誤'
-        ]);
-
-    }
-
-
-
-    public function banUsers(Request $request)
-    {
-
-        if (!$request->filled(['user_phone'])) {
-
-            return response()->json([
-                'code' => '400413', 'msg' => '重要參數為空'
-            ],403);
+            return $this->ReturnJson(200201,'获取成功',['user_phone' => $userInfo->user_phone, 'user_name' =>$userInfo->user_name, 'token' => $token, 'user_rights' => $userInfo->user_rights, 'user_rights_pda' => $userInfo->user_rights_pda]);
 
         }
+        return $this->ReturnJson(400403, '电话号码格式错误');
 
-        $phone = $request->input('user_phone');
-
-        if(strlen($phone) == 11 || strlen($phone) == 8){
-
-            $userInfo = self::$AdminUser->where('user_status', 1)->where('user_phone', $phone)->first();
-
-            if (!$userInfo) {
-
-                return response()->json([
-                    'code' => '400413', 'msg' => '獲取用戶信息失敗!'
-                ]);
-            }
-
-            $userInfo->update(['user_status' => '0']);
-            session::flush($phone);
-            return '刪除成功';
-        }
-        return response()->json([
-            'code' => '400413', 'msg' => '電話號碼格式錯誤'
-        ]);
     }
 
 

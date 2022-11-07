@@ -22,10 +22,18 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::group(['namespace'=>'App\Http\Controllers\Admin'], function ($api){
 
-    $api->get('mhn/info', 'User@UserList');
-    $api->get('admin/login', 'UserLogin@login');
+    /**
+     * 后台用户的增,删,改,查
+     */
+    $api->post('admin/user/add', 'User@add');
+    $api->post('admin/user/del', 'User@del');
+    $api->post('admin/user/edit', 'User@edit');
+    $api->get('admin/user/query', 'User@query');
+    $api->get('admin/user/rights', 'User@queryRole');
+    $api->post('admin/login', 'UserLogin@login');
+    $api->post('admin/login', 'UserLogin@login');
 
-    $api->post('admin/user/pass/set', 'UserLogin@password');
+
 });
 
 
@@ -47,7 +55,6 @@ Route::group(['namespace'=>'App\Http\Controllers\Api'], function ($api){
 /**
  * 测试的API的部分
  */
-
 
 Route::group(['namespace'=>'App\Http\Controllers\Api\Cainiao'], function ($api){
 
