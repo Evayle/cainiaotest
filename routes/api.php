@@ -30,9 +30,16 @@ Route::group(['namespace'=>'App\Http\Controllers\Admin'], function ($api){
     $api->post('admin/user/edit', 'User@edit');
     $api->get('admin/user/query', 'User@query');
     $api->get('admin/user/rights', 'User@queryRole');
-    $api->post('admin/login', 'UserLogin@login');
+    $api->post('admin/user/set/role', 'User@setRole');
     $api->post('admin/login', 'UserLogin@login');
 
+    /**
+     * 后台用户组部分
+     */
+    $api->post('admin/group/add', 'UserGroup@add');
+    $api->post('admin/group/del', 'UserGroup@del');
+    $api->post('admin/group/edit', 'UserGroup@edit');
+    $api->get('admin/group/query', 'UserGroup@query');
 
 });
 

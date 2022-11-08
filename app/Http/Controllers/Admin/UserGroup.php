@@ -4,13 +4,13 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\AdminUserGruop;
+use App\Models\AdminUserGroup;
 use Illuminate\Support\Facades\DB;
 
 class UserGroup extends Controller
 {
     /**
-     * @var AdminUserGruop
+     * @var AdminUserGroup
      */
     private static $AdminUserGroup;
 
@@ -21,7 +21,7 @@ class UserGroup extends Controller
 
         if(!self::$AdminUserGroup) {
 
-            self::$AdminUserGroup = new AdminUserGruop();
+            self::$AdminUserGroup = new AdminUserGroup();
         }
     }
 
@@ -59,8 +59,13 @@ class UserGroup extends Controller
     public function query(Request $request){
 
         $query = self::$AdminUserGroup;
-        $offset = $request->input(['offset',1]);
-        $limit  = $request->input(['limit',10]);
+        $offset = $request->input('offset',0);
+        $limit  = $request->input('limit',10);
+
+        if($request->id) {
+
+            $query = $query ->where('id', $request->id);
+        }
 
         if($request->name) {
 
@@ -69,9 +74,9 @@ class UserGroup extends Controller
 
         $count = $query->count();
 
-        $data = $query->offset($offset)->limit($limit)->get()->toArray();
+        $data = $query->offset($offset)->limit($limit)->get();
 
-        return $this->ReturnJson(200201,'获取成功',['data' => $data,'count' => $count]);
+        return $this->ReturnJson(200201,'获取成功',['data' => $data,'count' => $count, 'page' => ($offset + 1)]);
 
     }
 
@@ -95,7 +100,7 @@ class UserGroup extends Controller
 
         DB::beginTransaction();
         try {
-            self::$AdminUserGroup->where('id', $request->id)->udpate($UpdateData);
+            self::$AdminUserGroup->where('id', $request->id)->update($UpdateData);
             DB::commit();
             return $this->ReturnJson(200201, '修改成功');
 

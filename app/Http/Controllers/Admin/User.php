@@ -51,7 +51,7 @@ class User extends Controller
 
         $count = $query->count();
 
-        $data = $query->offset(0)->limit($limit)->select('id', 'user_name',  'user_phone', 'user_status', 'socket_id' ,'created_at', 'user_group')->get();
+        $data = $query->offset($offset)->limit($limit)->select('id', 'user_name',  'user_phone', 'user_status', 'socket_id' ,'created_at', 'user_group')->get();
 
         return $this->ReturnJson(200201, '获取成功',['data' => $data, 'count' => $count, 'page' => ($offset + 1)]);
 
