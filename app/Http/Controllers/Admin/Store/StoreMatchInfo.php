@@ -32,7 +32,7 @@ class StoreMatchInfo extends Controller
     public function add(Request $request){
 
         if(!$request->filled(['cainiao_match', 'cainiao_match_chi', 'cainiao_transfer', 'cainiao_transfer_chi', 'receiving_address']))
-            $this->ReturnJson(400403, '重要参数为空');
+            return $this->ReturnJson(400403, '重要参数为空');
 
         //新增
 
@@ -104,7 +104,7 @@ class StoreMatchInfo extends Controller
      */
     public function edit(Request $request){
 
-        if(!$request->id) $this->ReturnJson(400403, '重要参数为空');
+        if(!$request->id) return $this->ReturnJson(400403, '重要参数为空');
 
         $Updata = [];
         if($request->cainiao_match){
@@ -145,7 +145,7 @@ class StoreMatchInfo extends Controller
      */
     public function del(Request $request){
 
-        if(!$request->id) $this->ReturnJson(400403, '重要参数为空');
+        if(!$request->id) return $this->ReturnJson(400403, '重要参数为空');
 
         DB::beginTransaction();
         try {
@@ -206,7 +206,7 @@ class StoreMatchInfo extends Controller
      */
     public function  RemoveCompletely(Request $request){
 
-        if(!$request->id) $this->ReturnJson(400403, '重要参数为空');
+        if(!$request->id) return $this->ReturnJson(400403, '重要参数为空');
 
         DB::beginTransaction();
         try {
@@ -226,16 +226,16 @@ class StoreMatchInfo extends Controller
      */
     public function recoverData(Request $request){
 
-        if(!$request->id) $this->ReturnJson(400403, '重要参数为空');
+        if(!$request->id) return $this->ReturnJson(400403, '重要参数为空');
 
         DB::beginTransaction();
         try {
             self::$StoreMatch->where('id', $request->id)->restore();
             DB::commit();
-            return $this->ReturnJson(200201, '彻底删除成功');
+            return $this->ReturnJson(200201, '恢复成功');
         }catch (\Exception $e){
             DB::rollBack();
-            return $this->ReturnJson(400403, '彻底删除失败');
+            return $this->ReturnJson(400403, '恢复失败');
         }
     }
 

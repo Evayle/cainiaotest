@@ -67,7 +67,7 @@ class UserLogin extends Controller
      */
     public function  loginOut(Request $request){
 
-        if (!$request->filled(['user_phone', 'id'])) return $this->ReturnJson(400403, '重要的参数为空');
+        if (!$request->filled('id')) return $this->ReturnJson(400403, '重要的参数为空');
 
         if($request->id){
 
