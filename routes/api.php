@@ -20,7 +20,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 
 
-Route::group(['namespace'=>'App\Http\Controllers\Admin'], function ($api){
+Route::group(['namespace'=>'App\Http\Controllers\Admin\User'], function ($api){
 
     /**
      * 后台用户的增,删,改,查
@@ -32,6 +32,7 @@ Route::group(['namespace'=>'App\Http\Controllers\Admin'], function ($api){
     $api->get('admin/user/rights', 'User@queryRole');
     $api->post('admin/user/set/role', 'User@setRole');
     $api->post('admin/login', 'UserLogin@login');
+    $api->post('admin/loginout', 'UserLogin@loginOut');
 
     /**
      * 后台用户组部分

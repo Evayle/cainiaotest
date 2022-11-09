@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Admin\User;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -175,6 +175,7 @@ class User extends Controller
         }
 
         if($request->user_password){
+
             $Updata['user_password'] = Hash::make($request->user_password);
         }
 
