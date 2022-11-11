@@ -69,9 +69,31 @@ class User extends Controller
     public  function queryRole(Request $request)
     {
 
-        if(!$request->id) return $this->ReturnJson(400403, '重要参数为空');
+        if(!$request->id) return $this->ReturnJson();
 
         $query = self::$AdminUser->where('id', $request->id)->select('id','user_rights', 'user_rights_pda')->first();
+
+        if(!$query) $this->ReturnJson(400403, '获取用户失败');
+
+
+        $query = $query->toArray();
+
+
+        if(isset($query['user_rights'])){
+
+            $query['user_rights'] = json_decode($query['user_rights'], true);
+        }else{
+            $query['user_rights'] = json_encode([]);
+
+        }
+
+        if(isset($query['user_rights_pda'])){
+
+            $query['user_rights_pda'] = json_decode($query['user_rights_pda'], true);
+        }else{
+            $query['user_rights_pda'] = json_encode([]);
+
+        }
 
         return $this->ReturnJson(200201, '获取成功',[$query]);
     }
