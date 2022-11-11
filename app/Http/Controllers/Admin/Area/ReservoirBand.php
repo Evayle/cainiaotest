@@ -35,11 +35,6 @@ class ReservoirBand extends Controller
         $Storenfo = self::$Area->select('id')->find($request->store_id);
 
 
-
-
-
-
-
     }
 
 

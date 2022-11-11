@@ -48,6 +48,10 @@ class User extends Controller
 
             $query = $query->where('id', $request->id);
         }
+        if($request->user_phone){
+
+            $query = $query->where('id', $request->user_phone);
+        }
 
         $count = $query->count();
 
