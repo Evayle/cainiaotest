@@ -12,7 +12,7 @@ class Controller extends BaseController
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
 
-    public function ReturnJson($code, $msg, $data = [], $resCode = 200)
+    public function ReturnJson($code = 400403, $msg = '重要参数为空', $data = [], $resCode = 200)
     {
 
         return response()->json(['code' => $code, 'msg' => $msg, 'data' => $data], $resCode);

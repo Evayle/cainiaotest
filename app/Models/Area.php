@@ -4,24 +4,22 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Store extends Model
+class Area extends Model
 {
     use HasFactory;
-    use SoftDeletes;
 
-    protected $table = 'cainiao_receivinglist';
+    protected $table = 'cainiao_area';
 
     /**
      * 处理时间格式
      */
 
-    protected $primaryKey = 'receiving_id';
+    protected $primaryKey = 'id';
 
     public    $timestamps = true;
 
-    protected $fillable = ['receiving_id', 'cainiao_match', 'receiving_name', 'receiving_name_simple', 'receiving_address', 'type', 'latitude', 'area_id', 'longitude', 'created_at', 'updated_at', 'deleted_at'];
+    protected $fillable = ['id', 'area_name', 'admin_name', 'created_at', 'updated_at'];
 
     /**
      * 设置时间格式几个人法兰克福国际'螺丝刀快件管理我快递费加绿茶
@@ -32,4 +30,13 @@ class Store extends Model
 
         return $date->format($this->dateFormat ?: 'Y-m-d H:i:s');
     }
+
+    /**
+     * 一对多关联门店
+     */
+    public function store(){
+
+        return $this->hasMany(Store::Class, 'area_id', 'id');
+    }
+
 }

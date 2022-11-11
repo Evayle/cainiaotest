@@ -219,7 +219,7 @@ class StoreInfo extends Controller
 
         if(!$data) return $this->ReturnJson(200201, '数据获取成功');
 
-        return $this->ReturnJson(200201, '数据获取成功', ['data'=> $data, 'count' => $count, 'page' => $limit +1]);
+        return $this->ReturnJson(200201, '数据获取成功', ['data'=> $data, 'count' => $count, 'page' => $offset +1]);
 
     }
 
