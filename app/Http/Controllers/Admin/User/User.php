@@ -112,7 +112,7 @@ class User extends Controller
             $Update['user_rights'] = json_encode($request->user_rights);
         }
         if($request->user_rights_pda){
-            $Update['user_rights'] = json_encode($request->user_rights_pda);
+            $Update['user_rights_pda'] = json_encode($request->user_rights_pda);
         }
 
         DB::beginTransaction();
