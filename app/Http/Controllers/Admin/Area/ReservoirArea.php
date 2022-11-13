@@ -77,7 +77,11 @@ class ReservoirArea extends Controller
 
         $count = $query->count();
 
-        $data = $query->offset($offset)->limit($limit)->get()->toArray();
+        $data = $query->offset($offset)->limit($limit)->with(['store' => function($query){
+
+            $query->select('area_id', 'cainiao_match', 'receiving_name', 'receiving_name_simple');
+
+        }])->get()->toArray();
 
         if(!$data) return $this->ReturnJson(200201, '数据获取成功');
 

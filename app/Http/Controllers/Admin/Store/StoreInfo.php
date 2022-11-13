@@ -16,10 +16,8 @@ class StoreInfo extends Controller
      */
     public function  __construct(){
 
-        if(!self::$Store) {
+        if(!self::$Store) self::$Store = new Store();
 
-            self::$Store = new Store();
-        }
     }
 
     /**

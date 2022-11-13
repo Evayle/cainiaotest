@@ -38,4 +38,31 @@ class Consign extends Controller
         return $this->ReturnCainiao('下发成功');
     }
 
+
+    public function  sign(Request $request){
+
+
+//        dd($request->all());
+
+        if(!$request->filled(['msg_type', 'msg_id', 'from_code', 'partner_code', 'data_digest', 'logistics_interface'])) return $this->ReturnCainiaoError('重要参数为空');
+        //验证
+
+        //处理签名
+//        if($request->msg_type !=' ' || $request->msg_id != '' || $request->from_code != '' || $request->partner_code != '' || $request->data_digest != '' || $request->logistics_interface != '')
+//            return $this->ReturnCainiaoError();
+
+        //接收数据--主表信息--SKU等信息---商品支付等信息
+
+
+
+
+
+
+
+
+
+
+
+    }
+
 }

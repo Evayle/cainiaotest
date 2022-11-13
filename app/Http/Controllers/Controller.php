@@ -18,7 +18,13 @@ class Controller extends BaseController
         return response()->json(['code' => $code, 'msg' => $msg, 'data' => $data], $resCode);
     }
 
-    public function ReturnCainiao($msg = '请求的重要参数为空', $success = true, $resCode = 200)
+    public function ReturnCainiao($msg = '数据接收成功', $success = true, $resCode = 200)
+    {
+
+        return response()->json(['success' => $success, 'msg' => $msg], $resCode);
+    }
+
+    public function ReturnCainiaoError($msg = '请求的重要参数为空', $success = false, $resCode = 404)
     {
 
         return response()->json(['success' => $success, 'msg' => $msg], $resCode);

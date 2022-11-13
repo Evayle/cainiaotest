@@ -22,22 +22,7 @@ class CainiaoConsign extends Controller
 
         $logisticsEvent = $request->logisticsEvent;
 
-
-
-
-
-
-
-
-
-
-
-
     }
-
-
-
-
 
 
 

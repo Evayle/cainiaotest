@@ -11,7 +11,7 @@
  Target Server Version : 50736
  File Encoding         : 65001
 
- Date: 10/11/2022 18:19:30
+ Date: 13/11/2022 17:53:55
 */
 
 SET NAMES utf8mb4;
@@ -44,5 +44,9 @@ CREATE TABLE `cainiao_forecast`  (
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Compact;
+
+-- ----------------------------
+-- Records of cainiao_forecast
+-- ----------------------------
 
 SET FOREIGN_KEY_CHECKS = 1;

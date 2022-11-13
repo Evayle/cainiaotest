@@ -18,10 +18,8 @@ class StoreMatchInfo extends Controller
      */
     public function  __construct(){
 
-        if(!self::$StoreMatch) {
+        if(!self::$StoreMatch) self::$StoreMatch = new StoreMatch();
 
-            self::$StoreMatch = new StoreMatch();
-        }
     }
 
     /**

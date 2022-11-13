@@ -21,14 +21,9 @@ class User extends Controller
      */
     public function __construct()
     {
-        if(!self::$AdminUser){
+        if(!self::$AdminUser)      self::$AdminUser      = new AdminUser();
+        if(!self::$AdminUserGroup) self::$AdminUserGroup = new AdminUserGroup();
 
-            self::$AdminUser = new AdminUser();
-        }
-        if(!self::$AdminUserGroup){
-
-            self::$AdminUserGroup = new AdminUserGroup();
-        }
     }
 
     /**
