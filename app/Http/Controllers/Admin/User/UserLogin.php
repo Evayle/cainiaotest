@@ -47,9 +47,9 @@ class UserLogin extends Controller
             Cache::forget($userInfo->user_token);
             Cache::put($token, json_encode($Userinfo,JSON_UNESCAPED_UNICODE));
 
-            $Userinfo['user_rights'] = $userInfo->user_rights;
-            $Userinfo['user_rights_pda'] = $userInfo->user_rights_pda;
-            $Userinfo['token'] = $userInfo->user_rights_pda;
+            $Userinfo['user_rights'] = json_decode($userInfo->user_rights);
+            $Userinfo['user_rights_pda'] = json_decode($userInfo->user_rights_pda);
+            $Userinfo['token'] = $token;
             $userInfo->update(['user_token' => $token, 'token_time' => date('Y-m-d H:i:s',(time() + 864000))]);
             unset($userInfo['user_token'],$Userinfo['token_time']);
             return $this->ReturnJson(200201,'获取成功', $Userinfo);

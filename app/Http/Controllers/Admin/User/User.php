@@ -182,6 +182,14 @@ class User extends Controller
             $Updata['user_phone'] = $request->user_phone;
         }
 
+        if($request->user_rights){
+            $Updata['user_rights'] = $request->user_rights;
+        }
+
+        if($request->user_rights_pda){
+            $Updata['user_rights_pda'] = $request->user_rights_pda;
+        }
+
         if($request->user_status){
             $Updata['user_status'] = '1';
         }else{
