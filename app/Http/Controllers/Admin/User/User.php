@@ -78,7 +78,7 @@ class User extends Controller
 
             $query['user_rights'] = json_decode($query['user_rights'], true);
         }else{
-            $query['user_rights'] = json_encode([]);
+            $query['user_rights'] = null;
 
         }
 
@@ -86,7 +86,7 @@ class User extends Controller
 
             $query['user_rights_pda'] = json_decode($query['user_rights_pda'], true);
         }else{
-            $query['user_rights_pda'] = json_encode([]);
+            $query['user_rights_pda'] = null;
 
         }
 
