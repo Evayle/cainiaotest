@@ -11,6 +11,10 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
+    public function __construct()
+    {
+        date_default_timezone_set("Asia/Macau");
+    }
 
     public function ReturnJson($code = 400403, $msg = '重要参数为空', $data = [], $resCode = 200)
     {

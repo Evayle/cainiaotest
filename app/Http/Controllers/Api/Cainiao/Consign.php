@@ -5,6 +5,10 @@ namespace App\Http\Controllers\Api\Cainiao;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Caoniaotext;
+use App\Models\Forecast;
+use App\Models\ForecastShop;
+use App\Models\ForecastCount;
+use App\Models\ForecastUserinfo;
 use Illuminate\Support\Facades\DB;
 
 class Consign extends Controller
@@ -14,16 +18,20 @@ class Consign extends Controller
 
     private static $getdate;
 
-    private $shopData;
-    private $orderData;
-    private $paymentData;
+    private static $shopData;
+    private static $orderData;
+    private static $orderCount;
+    private static $paymentData;
+
 
     public function __construct()
     {
+        self::$getdate = date("Y-m-d H:i:s");
+        if(!self::$shopData)    self::$shopData    = new ForecastShop();
+        if(!self::$orderData)   self::$orderData   = new Forecast();
+        if(!self::$orderCount)  self::$orderCount  = new ForecastCount();
+        if(!self::$paymentData) self::$paymentData = new ForecastUserinfo();
 
-        date_default_timezone_set("Asia/Macau");
-
-        $getdate = date("Y_m_d_H_i_s");
     }
 
     /**
@@ -73,30 +81,26 @@ class Consign extends Controller
 
             $paymentDetail =$this->paymentData($body);
 
-
         }catch (\Exception $e){
 
             return $this->ReturnCainiaoError('参数异常');
         }
-
+//        dd($orderData, $shopData, $paymentDetail);
         DB::beginTransaction();
         try {
+            $OrderById = self::$orderData->insertGetId($orderData);
 
-
-
+            $shopData['d_id']      = $OrderById;
+            $paymentDetail['d_id'] = $OrderById;
+            self::$shopData->create($shopData);
+            self::$paymentData->create($paymentDetail);
+            self::$orderCount->datacount(self::$getdate);
+            DB::commit();
+            return $this->ReturnCainiao();
         }catch (\Exception $e){
-
-
-
+            DB::rollBack();
+            return $this->ReturnCainiaoError('数据接收异常,请联系管理员');
         }
-
-
-
-
-
-
-
-
     }
 
 
@@ -116,7 +120,7 @@ class Consign extends Controller
             'user_name'          => $body['buyerDetail']['name'],
             'dereRecogCode'      => $tradeDetail['dereRecogCode'],
             'user_phone'         => $body['buyerDetail']['mobile'],
-            'created_at'         => date('Y-m-d H:i:s')
+            'created_at'         => self::$getdate
         ];
     }
 
@@ -142,7 +146,7 @@ class Consign extends Controller
 //            'isPresent',
 
 //            'actualSenderName',
-            'created_at' => date('Y-m-d H:i:s')
+            'created_at' => self::$getdate
         ];
 
     }
@@ -170,7 +174,7 @@ class Consign extends Controller
             'sender_district' => $body['senderDetail']['district'],
 //            'sender_town' => $body['senderDetail']['town'],
             'sender_streetAddress' => $body['senderDetail']['streetAddress'],
-            'created_at' => date('Y-m-d H:i:s')
+            'created_at' => self::$getdate
         ];
 
     }
