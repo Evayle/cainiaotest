@@ -79,7 +79,7 @@ class ReservoirArea extends Controller
 
         $data = $query->offset($offset)->limit($limit)->with(['store' => function($query){
 
-            $query->select('area_id', 'id','cainiao_match', 'receiving_name', 'receiving_name_simple');
+            $query->select('area_id', 'receiving_id','cainiao_match', 'receiving_name', 'receiving_name_simple');
 
         }])->get()->toArray();
 
