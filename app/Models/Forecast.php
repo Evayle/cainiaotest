@@ -30,4 +30,9 @@ class Forecast extends Model
 
         return $date->format($this->dateFormat ?: 'Y-m-d H:i:s');
     }
+
+    public function islogisticsOrderCode($logisticsOrderCode) {
+
+        return $this->where('logisticsOrderCode', $logisticsOrderCode) ->select('id')->first();
+    }
 }
