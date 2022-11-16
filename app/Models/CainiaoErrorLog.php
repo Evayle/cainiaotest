@@ -19,7 +19,7 @@ class CainiaoErrorLog extends Model
 
     public    $timestamps = false;
 
-    protected $fillable = ['id', 'type', 'type', 'date'];
+    protected $fillable = ['id', 'type', 'text', 'date'];
 
     /**
      * 设置时间格式几个人法兰克福国际'螺丝刀快件管理我快递费加绿茶
