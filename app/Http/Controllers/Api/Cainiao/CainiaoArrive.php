@@ -9,6 +9,16 @@ class CainiaoArrive extends Controller
 {
     //包裹到达集运仓库
 
+    public function __construct()
+    {
 
-//if (isset($_POST['logistics_interface']) && $_POST['partner_code'] == 'TRAN_STORE_30792933' && $_POST['from_code'] == 'CNCTP' && $_POST['msg_type'] == 'CONSO_WAREHOUSE_CONSIGN') {
+
+    }
+
+    public function index() {
+
+
+
+    }
+
 }
