@@ -55,7 +55,6 @@ class Consign extends Controller
     public function  sign(Request $request)
     {
 
-
 //        dd($request->all());
 
 //        if(!$request->filled(['msg_type', 'msg_id', 'from_code', 'partner_code', 'data_digest', 'logistics_interface'])) return $this->ReturnCainiaoError('重要参数为空');
@@ -85,7 +84,7 @@ class Consign extends Controller
 
             return $this->ReturnCainiaoError('参数异常');
         }
-//        dd($orderData, $shopData, $paymentDetail);
+
         DB::beginTransaction();
         try {
             $OrderById = self::$orderData->insertGetId($orderData);
@@ -110,6 +109,7 @@ class Consign extends Controller
         return [
             'mailNo'             => $body['mailNo'],
             'consoType'          => $body['consoType'],
+            'carrierCode'        => $body['carrierCode'],
             'deliveryType'       => $body['deliveryType'],
             'isLastPackage'      => $body['isLastPackage'],
             'isSplitConsign'     => $body['isSplitConsign'],

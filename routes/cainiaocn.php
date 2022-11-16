@@ -9,17 +9,32 @@ Route::group(['namespace'=>'App\Http\Controllers\Api\Cainiao'], function ($api){
     /**
      * 菜鸟cn-->cp预报部分
      */
-    $api->post('cainiao/warehouse/sign', 'Consign@sign'); //菜鸟仓库签收预报
-    $api->post('cainiao/warehouse/update/sign', 'Consign@index'); //菜鸟仓库预报更新
-    $api->post('cainiao/warehouse/cancel/sign', 'Consign@index'); //菜鸟仓库预报取消
-    $api->post('cainiao/warehouse/return_refund/sign', 'Consign@index'); //菜鸟仓库预报退款取消
-
+    $api->post('cainiao/warehouse/forecast/notice', 'Consign@index'); //菜鸟仓库签收预报
+    $api->post('cainiao/warehouse/update/notice', 'Consign@index'); //菜鸟仓库预报更新
+    $api->post('cainiao/warehouse/cancel/notice', 'Consign@index'); //菜鸟仓库预报取消
+    $api->post('cainiao/warehouse/return_refund/notice', 'Consign@index'); //菜鸟仓库预报退款取消
 
     /**
      * 菜鸟cn-cp出库部分
      */
     $api->post('cainiao/warehouse/outbound/notice', 'Consign@index'); //菜鸟仓库出库通知
     $api->post('cainiao/warehouse/fee_status/notice', 'Consign@index'); //菜鸟仓库出库通知取消
+
+
+    /**
+     * 菜鸟本地预报下发的部分
+     */
+//    $api->post('cainiao/warehouse/sign', 'Consign@index'); //菜鸟仓库签收预报
+    $api->post('cainiao/warehouse/update/sign/test', 'ConsignUpdate@index'); //菜鸟仓库预报更新
+//    $api->post('cainiao/warehouse/cancel/sign', 'Consign@index'); //菜鸟仓库预报取消
+//    $api->post('cainiao/warehouse/return_refund/sign', 'Consign@index'); //菜鸟仓库预报退款取消
+//
+//
+//    /**
+//     * 菜鸟cn-cp出库部分
+//     */
+//    $api->post('cainiao/warehouse/outbound/notice', 'Consign@index'); //菜鸟仓库出库通知
+//    $api->post('cainiao/warehouse/fee_status/notice', 'Consign@index'); //菜鸟仓库出库通知取消
 
 
 });

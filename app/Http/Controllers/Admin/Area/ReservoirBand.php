@@ -75,4 +75,27 @@ class ReservoirBand extends Controller
 
     }
 
+    /**
+     * 门店库区操作
+     */
+    public function Storesort(Request $request) {
+
+            if(!$request->filled(['store_id', 'sort'])) return $this->ReturnJson();
+
+        $Storenfo = self::$Store->where('receiving_id', $request->store_id)->first();
+
+        if(!$Storenfo) return $this->ReturnJson(400403, '请确认门店或者库区是否存在');
+
+        DB::beginTransaction();
+        try {
+            $Storenfo->update(['sort' => $request->sort]);
+            DB::commit();
+            return $this->ReturnJson(200201, '处理成功');
+        }catch (\Exception $e){
+            DB::rollBack();
+            return $this->ReturnJson(400403, '处理失败,请联系管理员');
+        }
+
+    }
+
 }

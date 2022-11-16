@@ -33,8 +33,7 @@ class ForecastCount extends Model
 
     public  function datacount($date) {
 
-        $data = $this->where('date',date('Y-m-d',time(strtotime($date))))->first();
-        dd($data);
+        $data = $this->whereDate('date',date('Y-m-d',strtotime($date)))->first();
 
         return $data ? $data->increment('num', 1): $this->create(['num' => 1, 'date' => $date]);
     }

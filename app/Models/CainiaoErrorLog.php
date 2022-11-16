@@ -4,24 +4,22 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Store extends Model
+class CainiaoErrorLog extends Model
 {
     use HasFactory;
-    use SoftDeletes;
 
-    protected $table = 'cainiao_receivinglist';
+    protected $table = 'cainiao_error_log';
 
     /**
      * 处理时间格式
      */
 
-    protected $primaryKey = 'receiving_id';
+    protected $primaryKey = 'id';
 
-    public    $timestamps = true;
+    public    $timestamps = false;
 
-    protected $fillable = ['receiving_id', 'cainiao_match', 'receiving_name', 'receiving_name_simple', 'receiving_address','sort', 'type', 'latitude', 'area_id', 'longitude', 'created_at', 'updated_at', 'deleted_at'];
+    protected $fillable = ['id', 'type', 'type', 'date'];
 
     /**
      * 设置时间格式几个人法兰克福国际'螺丝刀快件管理我快递费加绿茶

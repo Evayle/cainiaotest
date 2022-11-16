@@ -25,6 +25,7 @@ Route::group(['namespace'=>'App\Http\Controllers\Admin\Area'], function ($api){
 
         $api->post('admin/area/bandarrive',  'ReservoirBand@BoundArea');
         $api->post('admin/area/cancelbandarrive',  'ReservoirBand@CancelBoundArea');
+        $api->post('admin/area/sort', 'ReservoirBand@Storesort');
 
 
     });
