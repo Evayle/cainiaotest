@@ -11,6 +11,8 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
+    protected static $url = 'https://prelink.cainiao.com/gateway/link.do';
+
     public function __construct()
     {
         date_default_timezone_set("Asia/Macau");
@@ -42,6 +44,7 @@ class Controller extends BaseController
         curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($curl, CURLOPT_POST, 1);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, ['Content-Type:application/x-www-form-urlencoded']);
         curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
         $result = curl_exec($curl);
@@ -50,5 +53,16 @@ class Controller extends BaseController
         }
         curl_close($curl);
         return $result;
+    }
+
+
+
+    protected function postData($apiname, $logistics_interface, $data_digest, $logistic_provider_id = 'TRAN_STORE_30792933'){
+
+        return 'msg_type=' . $apiname
+            . '&logistics_interface=' . urlencode($logistics_interface)
+            . '&data_digest=' . $data_digest
+            . '&logistic_provider_id=' . urlencode($logistic_provider_id);
+
     }
 }

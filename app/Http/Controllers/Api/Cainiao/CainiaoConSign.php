@@ -10,7 +10,7 @@ use App\Models\ForecastCount;
 use App\Models\ForecastUserinfo;
 use Illuminate\Support\Facades\DB;
 
-class CainiaoSign extends Controller
+class CainiaoConSign extends Controller
 {
     //CONSO_WAREHOUSE_CONSIGN
 
@@ -84,7 +84,6 @@ class CainiaoSign extends Controller
             return $this->ReturnCainiaoError('数据接收异常,请联系管理员');
         }
     }
-
 
     public function orderData($body, $tradeDetail,$shopInfo){
 

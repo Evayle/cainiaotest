@@ -3,182 +3,117 @@
 namespace App\Http\Controllers\Api\Cainiao;
 
 use App\Http\Controllers\Controller;
+use App\Models\CainiaoConfig;
 use Illuminate\Http\Request;
-use App\Models\Caoniaotext;
 use App\Models\Forecast;
-use App\Models\ForecastShop;
-use App\Models\ForecastCount;
-use App\Models\ForecastUserinfo;
 use Illuminate\Support\Facades\DB;
 
 class Consign extends Controller
 {
-    //CONSO_WAREHOUSE_CONSIGN
+    //CONSO_WAREHOUSE_SIGN
 
-
-    private static $getdate;
-
-    private static $shopData;
-    private static $orderData;
-    private static $orderCount;
-    private static $paymentData;
-
+    private static $Goods;
 
     public function __construct()
     {
-        self::$getdate = date("Y-m-d H:i:s");
-        if(!self::$shopData)    self::$shopData    = new ForecastShop();
-        if(!self::$orderData)   self::$orderData   = new Forecast();
-        if(!self::$orderCount)  self::$orderCount  = new ForecastCount();
-        if(!self::$paymentData) self::$paymentData = new ForecastUserinfo();
+        if(!self::$Goods) self::$Goods = new Forecast();
 
     }
 
     /**
-     * 接收菜鸟的部分
+     * 包裹签收
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function index(Request $request)
-    {
+    public function index(Request $request) {
 
+        if(!$request->mailNo) return $this->ReturnJson();
 
-        $param = $request->all();
+        $dataInfo = self::$Goods->where('mailNo', $request->mailNo)->first();
 
+        if(!$dataInfo) return $this->ReturnCainiaoError('未有该资料,请发预报');
 
-        Caoniaotext::create(['text' => json_encode($param)]);
+        $content = $this->ResDataSet($dataInfo->mailNo, $dataInfo->logisticsOrderCode,'CONSO_WAREHOUSE_SIGN');
 
-        return $this->ReturnCainiao('下发成功');
-    }
+        $contentInfo = CainiaoConfig::Setmd5Info($content);
 
+        $postData = $this->postData('CONSO_WAREHOUSE_SIGN',$content ,$contentInfo);
 
-    public function  sign(Request $request)
-    {
+        $res = self::Curl(self::$url,$postData);
 
-        if(!$request->filled(['logistics_interface', 'data_digest', 'partner_code', 'msg_type'])) return $this->ReturnCainiaoError();
+        if(!$res) return $this->ReturnJson(400403, '发送失败,请联系管理员');
 
-        if($request->msg_type !='CONSO_WAREHOUSE_CONSIGN' || $request->from_code != 'CNCTP' || $request->partner_code != 'TRAN_STORE_30792933')  return $this->ReturnCainiaoError();
-        //接收数据--主表信息--SKU等信息---商品支付等信息
+        $res = json_decode($res);
 
-        try {
+        if($res->success == 'true'){
 
-            $params        = $request->all();
-            $param         = json_decode($request->logistics_interface);
+            return $this->ReturnJson(200201, '包裹上游仓库已签收');
 
-            if(self::$orderData->islogisticsOrderCode($param->logisticsEvent->eventBody->logisticsDetail->logisticsOrderCode)){
-
-                return $this->ReturnCainiaoError('预报信息已存在');
-            }
-
-            $tradeDetail   = $param->logisticsEvent->eventBody->tradeDetail;
-            $paymentDetail = $param->logisticsEvent->eventBody->paymentDetail;
-            $body          = $param->logisticsEvent->eventBody->logisticsDetail;
-
-            $shopData = $this->shopData($paymentDetail, $body->items[0]);
-
-            $orderData = $this->orderData($body, $tradeDetail, $body->items[0]);
-
-            $paymentDetail =$this->paymentData($body);
-
-        }catch (\Exception $e){
-
-            return $this->ReturnCainiaoError('参数异常');
         }
 
-        DB::table('cainiao_yubaoinfo')->insert(['text' =>json_encode($params), 'date' => date('Y-m-d H:i:s')]);
+        return $this->ReturnJson(400403, '包裹上游仓库签收失败', $res);
 
-        DB::beginTransaction();
-        try {
-            $OrderById = self::$orderData->insertGetId($orderData);
-            $shopData['d_id']      = $OrderById;
-            $paymentDetail['d_id'] = $OrderById;
-            self::$shopData->create($shopData);
-            self::$paymentData->create($paymentDetail);
-            self::$orderCount->datacount(self::$getdate);
-            DB::commit();
-            return $this->ReturnCainiao();
-        }catch (\Exception $e){
-            DB::rollBack();
-            return $this->ReturnCainiaoError('数据接收异常,请联系管理员');
+    }
+
+    /**
+     * 签收失败
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function SignError(Request $request) {
+
+        if(!$request->filled(['mailNo', 'remark'])) return $this->ReturnJson();
+
+        $dataInfo = self::$Goods->where('mailNo', $request->mailNo)->first();
+
+        if(!$dataInfo) return $this->ReturnCainiaoError('未有该资料,请发预报');
+
+        $content = $this->ResDataSet($dataInfo->mailNo, $dataInfo->logisticsOrderCode,'CONSO_WAREHOUSE_SIGN',false,'签收失败', $request->remark, 404);
+
+        $contentInfo = CainiaoConfig::Setmd5Info($content);
+
+        $postData = $this->postData('CONSO_WAREHOUSE_SIGN',$content ,$contentInfo);
+
+        $res = self::Curl(self::$url,$postData);
+
+        if(!$res) return $this->ReturnJson(400403, '发送失败,请联系管理员');
+
+        $res = json_decode($res);
+
+        if($res->success == 'true'){
+
+            return $this->ReturnJson(200201, '包裹上游仓库取消签收');
+
         }
-    }
 
-
-    public function orderData($body, $tradeDetail,$shopInfo){
-
-
-        return [
-            'mailNo'             => $body->mailNo,
-            'consoType'          => $body->consoType,
-            'carrierCode'        => $body->carrierCode,
-            'deliveryType'       => $body->deliveryType,
-            'isLastPackage'      => $body->isLastPackage,
-            'isSplitConsign'     => $body->isSplitConsign,
-            'packageQuantity'    => $body->packageQuantity,
-            'shop_name'          => $shopInfo->categoryName,
-            'logisticsOrderCode' => $body->logisticsOrderCode,
-            'tradeOrderId'       => $tradeDetail->tradeOrderId,
-            'user_name'          => $body->buyerDetail->name,
-            'dereRecogCode'      => $tradeDetail->dereRecogCode,
-            'user_phone'         => $body->buyerDetail->mobile,
-            'created_at'         => self::$getdate
-        ];
-    }
-
-    public function  shopData($paymentDetail,$shopInfo){
-
-        return [
-
-            'skuId'              => $shopInfo->skuId,
-            'itemId'             => $shopInfo->itemId,
-            'itemName'           => $shopInfo->itemName,
-            'itemPicUrl'         => $shopInfo->itemPicUrl,
-            'categoryId'         => $shopInfo->categoryId,
-            'itemQuantity'       => $shopInfo->itemQuantity,
-            'categoryName'       => $shopInfo->categoryName,
-            'itemUnitPrice'      => $shopInfo->itemUnitPrice,
-            'itemSkuProperty'    => $shopInfo->itemSkuProperty,
-            'totalActualPayment' => $shopInfo->totalActualPayment,
-            'tradeOrderValue'    => $paymentDetail->tradeOrderValue,
-            'totalShippingFee'   => $paymentDetail->totalShippingFee,
-//            'gstCurrency'=> $shopInfo['gstCurrency'],
-//            'exchangeRate'=> $shopInfo['exchangeRate'],
-//            'isLevyTax',
-//            'isPresent',
-
-//            'actualSenderName',
-            'created_at' => self::$getdate
-        ];
+        return $this->ReturnJson(400403, '包裹上游仓库取消签收失败', $res);
 
     }
 
-    public function  paymentData($body) {
+    protected function ResDataSet( $mailNo, $logisticsOrderCode, $eventType, $status = true, $desc = '包裹正常', $remark = '包裹已签收',$code = 200) {
 
-        return [
-            'buyer_wangwangId' => $body->buyerDetail->wangwangId,
-            'buyer_name' => $body->buyerDetail->name,
-            'buyer_mobile' => $body->buyerDetail->mobile,
-//            'buyer_email'=> $body->buyerDetail->email,
-            'buyer_country' => $body->buyerDetail->country,
-            'buyer_province' => $body->buyerDetail->province,
-            'buyer_city' => $body->buyerDetail->city,
-            'buyer_district' => $body->buyerDetail->district,
-//            'buyer_town'  => $body->buyerDetail->town,
-            'buyer_streetAddress' => $body->buyerDetail->streetAddress,
-            'sender_wangwangId' => $body->senderDetail->wangwangId,
-            'sender_name' => $body->senderDetail->name,
-            'sender_shopName' => $body->senderDetail->shopName,
-            'mobile' => $body->senderDetail->mobile,
-            'country' => $body->senderDetail->country,
-            'province' => $body->senderDetail->province,
-            'sender_city' => $body->senderDetail->city,
-            'sender_district' => $body->senderDetail->district,
-//            'sender_town' => $body->senderDetail->town,
-            'sender_streetAddress' => $body->senderDetail->streetAddress,
-            'created_at' => self::$getdate
-        ];
+        $data =  ['logisticsEvent'=>[
+            'eventHeader' => [
+                'eventType' => $eventType,
+                'eventTime' => date("Y-m-d H:i:s")
+            ],
+            'eventBody' => [
+                'logisticsDetail' =>[
+                    'mailNo' =>$mailNo,
+                    'occurTime' => date("Y-m-d H:i:s"),
+                    'timeZone' => 'UTC+8',
+                    'logisticsOrderCode' => $logisticsOrderCode,
+                    'result' => [
+                        'success' => $status,
+                        'desc' => $desc,
+                        'remark' => $remark,
+                        'code' => $code,
+                    ],
+                ],
+            ],
+        ]];
 
+        return json_encode($data);
     }
-
 
 }

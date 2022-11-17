@@ -7,22 +7,19 @@ use App\Models\CainiaoConfig;
 use App\Models\Forecast;
 use Illuminate\Http\Request;
 
-class CainiaoBeginPick extends Controller
+class CainiaoSortingcenterInbnbound extends Controller
 {
-    //开始拣货
-    //CONSO_WAREHOUSE_BEGIN_PICK
-
+    //CAINIAO_GLOBAL_SORTINGCENTER_INBOUND_CALLBACK
 
     private static $Goods;
 
     public function __construct()
     {
         if(!self::$Goods) self::$Goods = new Forecast();
-
     }
 
     /**
-     * 开始挑拣
+     * 分拨仓入库
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
@@ -34,11 +31,11 @@ class CainiaoBeginPick extends Controller
 
         if(!$dataInfo) return $this->ReturnCainiaoError('未有该资料,请发预报');
 
-        $content = $this->ResDataSet($dataInfo->logisticsOrderCode,'CONSO_WAREHOUSE_BEGIN_PICK');
+        $content = $this->ResDataSet($dataInfo->logisticsOrderCode,'CAINIAO_GLOBAL_SORTINGCENTER_INBOUND_CALLBACK');
 
         $contentInfo = CainiaoConfig::Setmd5Info($content);
 
-        $postData = $this->postData('CONSO_WAREHOUSE_BEGIN_PICK',$content ,$contentInfo);
+        $postData = $this->postData('CAINIAO_GLOBAL_SORTINGCENTER_INBOUND_CALLBACK',$content ,$contentInfo);
 
         $res = self::Curl(self::$url,$postData);
 
@@ -55,27 +52,24 @@ class CainiaoBeginPick extends Controller
 
     }
 
-    protected function ResDataSet( $logisticsOrderCode, $eventType, $desc = '开始挑拣', $remark = '仓库人员开始挑拣') {
+    protected function ResDataSet( $logisticsOrderCode, $eventType ) {
 
         $data = [
-            'logisticsEvent' =>[
-                'eventHeader' =>[
-                    'eventType' => $eventType,
-                    'eventTime' => date('Y-m-d H:i:s'),
-                    'eventTimeZone' => 'UTC+8',
-                ],
-                'eventBody' =>[
-                    'logisticsDetail'=>[
-                        'logisticsOrderCode' => $logisticsOrderCode,
-                        'occurTime' => date('Y-m-d H:i:s'),
-                        'result' => [
-                            'desc' => $desc,
-                            'remark' => $remark
-                        ],
-                    ],
-                ],
+           'logisticsOrderCode',
+            'trackingNumber',
+            'opTime',
+            'timeZone',
+            'opCode',
+            'parcel' =>[
+                'weight',
+                'weightUnit',
+                'length',
+                'width',
+                'height',
+                'dimensionUnit'
             ],
         ];
+
         return json_encode($data);
     }
 
