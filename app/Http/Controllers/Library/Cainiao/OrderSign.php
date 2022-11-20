@@ -4,23 +4,20 @@ namespace App\Http\Controllers\Library\Cainiao;
 
 use App\Http\Controllers\Controller;
 use App\Models\CainiaoConfig;
+use Illuminate\Http\Request;
 use App\Models\CainiaoErrorOrderLog;
 
-class OrderArrive extends Controller
+class OrderSign extends Controller
 {
+    //CONSO_WAREHOUSE_SIGN
 
-    /**
-     * 快件到达
-     * @param $dataInfo
-     * @return bool
-     */
-    public static function OrderArrive($dataInfo){
+    public static function  SignInfo($mailNo, $logisticsOrderCode) {
 
-        $content = self::ResDataSet($dataInfo->mailNo, $dataInfo->logisticsOrderCode,'CONSO_WAREHOUSE_ARRIVE');
+        $content = self::ResDataSet($mailNo, $logisticsOrderCode,'CONSO_WAREHOUSE_SIGN');
 
         $contentInfo = CainiaoConfig::Setmd5Info($content);
 
-        $postData = self::postData('CONSO_WAREHOUSE_ARRIVE',$content ,$contentInfo);
+        $postData = self::postData('CONSO_WAREHOUSE_SIGN',$content ,$contentInfo);
 
         $res = self::Curl(self::$url,$postData);
 
@@ -32,20 +29,16 @@ class OrderArrive extends Controller
 
         if(isset($res->success) && $res->success == 'true') return true;
 
-        $errorlog = ['content' => $errlog, 'cainiao_api' => 'CONSO_WAREHOUSE_ARRIVE', 'order' => $dataInfo->mailNo, 'created_at' => date('Y-m-d H:i:s')];
+        $errorlog = ['content' => $errlog, 'cainiao_api' => 'CONSO_WAREHOUSE_ARRIVE', 'order' => $mailNo, 'created_at' => date('Y-m-d H:i:s')];
 
         CainiaoErrorOrderLog::create($errorlog);
 
         return false;
+
     }
 
-    /**
-     * @param $mailNo
-     * @param $logisticsOrderCode
-     * @param $eventType
-     * @return false|string
-     */
-    protected function ResDataSet( $mailNo, $logisticsOrderCode, $eventType) {
+
+    protected function ResDataSet( $mailNo, $logisticsOrderCode, $eventType, $status = true, $desc = '包裹正常', $remark = '包裹已签收',$code = 200) {
 
         $data =  ['logisticsEvent'=>[
             'eventHeader' => [
@@ -57,11 +50,19 @@ class OrderArrive extends Controller
                     'mailNo' =>$mailNo,
                     'occurTime' => date("Y-m-d H:i:s"),
                     'timeZone' => 'UTC+8',
-                    'logisticsOrderCode' => $logisticsOrderCode
-                ]
+                    'logisticsOrderCode' => $logisticsOrderCode,
+                    'result' => [
+                        'success' => $status,
+                        'desc' => $desc,
+                        'remark' => $remark,
+                        'code' => $code,
+                    ],
+                ],
             ],
         ]];
 
         return json_encode($data);
     }
+
+
 }

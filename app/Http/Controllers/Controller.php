@@ -65,4 +65,54 @@ class Controller extends BaseController
             . '&logistic_provider_id=' . urlencode($logistic_provider_id);
 
     }
+
+    protected function OrderStatusInfo($status) {
+
+        switch ($status){
+
+            case 0:
+                return '订单已预报';
+                break;
+            case 1:
+                return '订单到达';
+                break;
+            case 5:
+                return '订单签收';
+                break;
+            case 6:
+                return '订单拒绝签收';
+                break;
+            case 10:
+                return '该订单已入库';
+                break;
+            case 15:
+                return '该订单已上架';
+                break;
+            case 20:
+                return '该订单已下架';
+                break;
+            case 25:
+                return '该订单在分拨中';
+                break;
+            case 30:
+                return '该订单分拨完成';
+                break;
+            case 35:
+                return '该订单出库扫码中';
+                break;
+            case 40:
+                return '订单已出库';
+                break;
+            case 45:
+                return '订单已打包';
+                break;
+            case 50:
+                return '订单已上车';
+                break;
+            default:
+                return '状态不详';
+                break;
+
+        }
+    }
 }

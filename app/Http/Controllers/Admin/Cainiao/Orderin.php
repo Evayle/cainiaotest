@@ -9,7 +9,8 @@ use App\Models\Forecast;
 use App\Models\CainiaoOrderLog;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cache;
-use  App\Http\Controllers\Library\Cainiao\OrderArrive;
+use App\Http\Controllers\Library\Cainiao\OrderArrive;
+
 
 class Orderin extends Controller
 {
@@ -32,24 +33,28 @@ class Orderin extends Controller
     public function index(Request $request) {
 
         $adminInfo = $request->get('adminInfo');
-        dd($adminInfo);
+
         if(!$request->mailNo) return $this->ReturnJson();
 
         if(Cache::get($request->mailNo)) return $this->ReturnJson(400403,'该订单是无主件,请知悉!');
+        if(Cache::get($request->mailNo.'arrive')) return $this->ReturnJson(200201,'该订单已到达');
 
-        $GoodsInfo = self::$Goods->where('mailNo', $request->mailNo)->select('id', 'order_status', 'mailNo')->first();
+        $GoodsInfo = self::$Goods->where('mailNo', $request->mailNo)->select('id', 'logisticsOrderCode','order_status', 'mailNo')->first();
 
         if(!$GoodsInfo){
 
             //入库失败,是无主件
             Cache::put($request->mailNo,'1',10);
 
-            return $this->ReturnJson(400403,'该订单是无主件,请知悉1!');
+            return $this->ReturnJson(400403,'该订单是无主件,请知悉!');
         }
+
+        Cache::put($request->mailNo.'arrive','1',10);
 
         $StatusInfo = $this->VerifyStatus($GoodsInfo->order_status);
 
-        if($StatusInfo !== 1){
+        if($StatusInfo != 1){
+
             //修改订单状态
             return $this->ReturnJson(400403,'该订单的状态是:'.$StatusInfo);
         }
@@ -57,7 +62,7 @@ class Orderin extends Controller
         //处理订单
         $data = OrderArrive::OrderArrive($GoodsInfo);
 
-        if(!$data) return $this->ReturnJson(400403,'快件到达操作失败,请重新操作一次');
+        if(!$data) return $this->ReturnJson(400403,'请重新操作一次');
 
         //如果订单是入库过的话,
         DB::beginTransaction();
@@ -71,38 +76,13 @@ class Orderin extends Controller
             return $this->ReturnJson(400403, '到达失败!');
         }
     }
-
     private function VerifyStatus($status) {
 
         if($status === 0 ) {
             return 1;
         }
-
         //处理异的员因
-        switch ($status){
+        return $this->OrderStatusInfo($status);
 
-            case 1:
-                return '上游仓库已入库';
-                break;
-            case 5:
-                return '上游仓库已上架';
-                break;
-            case 10:
-                return '上游仓库已下架';
-                break;
-            case 15:
-                return '上游仓库开始分拨';
-                break;
-            case 20:
-                return '上游仓打包出库';
-                break;
-            case 25:
-                return '上游仓出库';
-                break;
-            default:
-                return '状态不详';
-                break;
-
-        }
     }
 }
