@@ -142,7 +142,6 @@ class EquipmenSignOrder extends Controller
 
     }
 
-
     /**
      * yanzhen
      */
