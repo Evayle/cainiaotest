@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Cache;
 use App\Http\Controllers\Library\Cainiao\OrderArrive;
 use App\Http\Controllers\Library\Cainiao\OrderQuery;
 use App\Http\Controllers\Library\Cainiao\OrderSign;
+use App\Http\Controllers\Library\Cainiao\OrderInbound;
 
 class EquipmenSignOrder extends Controller
 {
@@ -72,60 +73,79 @@ class EquipmenSignOrder extends Controller
         $conso_order_query = $GoodsInfo->conso_order_query;
 
         //没有到达节点
+
+        $arrive = null;
         if($GoodsInfo->order_status < 1){
 
-            //到达,签收
-
+            //到达
             $OrderArrive = OrderArrive::OrderArrive($GoodsInfo);
-
+            $arrive = true;
             if(!$OrderArrive) return $this->ReturnJson(400403, '包裹到达失败');
-
         }
 
         //有到达
+        $OrderQuery = OrderQuery::index($GoodsInfo->logisticsOrderCode);
+        $OrderSign  = OrderSign::SignInfo($GoodsInfo->mailNo, $GoodsInfo->logisticsOrderCode);
 
-        $OrderQuery =  OrderQuery::index($GoodsInfo->logisticsOrderCode);
-
-
-        $OrderSign   = OrderSign::SignInfo($GoodsInfo->mailNo, $GoodsInfo->logisticsOrderCode);
+        $infos = null;
 
         if(!$OrderSign) {
 
+            if($arrive){
+
+                DB::beginTransaction();
+                try {
+                    self::$Goods->where('mailNo')->update(['order_status' => 1, 'cainiao_node' => 4, 'long' => $request->long, 'wide' => $request->width, 'height' => $request->height, 'weight' => $request->weight]);
+                    self::$GoodsLog->create(['text' => '菜鸟上游仓库快件已到达,操作人员的账号是:'.$adminInfo->user_name, 'user_name' => $adminInfo->user_name, 'cainiao_api' => 'CONSO_WAREHOUSE_ARRIVE']);
+                    DB::commit();
+                }catch (\Exception $e){
+                    DB::rollBack();
+                }
+            }
+
+            return $this->ReturnJson(400403, '包裹入库成功,签收失败');
+
+        }else{
             DB::beginTransaction();
             try {
-                self::$Goods->where('mailNo')->update(['order_status' => 1, 'cainiao_node' => 4]);
-                self::$GoodsLog->create(['text' => '菜鸟上游仓库快件已到达,操作人员的账号是:'.$adminInfo->user_name, 'user_name' => $adminInfo->user_name, 'cainiao_api' => 'CONSO_WAREHOUSE_ARRIVE']);
+                self::$Goods->where('mailNo')->update(['order_status' => 5, 'cainiao_node' => 5,'long' => $request->long, 'wide' => $request->width, 'height' => $request->height, 'weight' => $request->weight]);
+                self::$GoodsLog->create(['text' => '菜鸟上游仓库快件已到达,已签收,操作人员的账号是:'.$adminInfo->user_name, 'user_name' => $adminInfo->user_name, 'cainiao_api' => 'CONSO_WAREHOUSE_ARRIVE']);
+
                 DB::commit();
+//                return $this->ReturnJson(200201, '包裹,到达,签收成功');
+//                $infos = true;
             }catch (\Exception $e){
                 DB::rollBack();
+                return $this->ReturnJson(400403, '包裹数据写入失败,请重新录入!');
             }
-            return $this->ReturnJson(400403, '包裹入库成功,签收失败');
+
         }
 
         //查询是不是单件,单件要做个入库动作
         if($OrderQuery == 1){
 
+            $OrderInbound = OrderInbound::Inbond($GoodsInfo->mailNo, $GoodsInfo->logisticsOrderCode);
+            if(!$OrderInbound) return $this->ReturnJson(200201, '快件已到达,签收');
 
+            DB::beginTransaction();
+            try {
+                self::$Goods->where('mailNo')->update(['order_status' => 10, 'cainiao_node' => 7,'long' => $request->long, 'wide' => $request->width, 'height' => $request->height, 'weight' => $request->weight]);
+                self::$GoodsLog->create(['text' => '菜鸟上游仓库快件已到达,已签收,已入库,操作人员的账号是:'.$adminInfo->user_name, 'user_name' => $adminInfo->user_name, 'cainiao_api' => 'CONSO_WAREHOUSE_ARRIVE']);
+                DB::commit();
+                return $this->ReturnJson(200201, '包裹,到达,签收,入库成功');
+            }catch (\Exception $e){
+                DB::rollBack();
+                return $this->ReturnJson(400403, '入库日志失败,请重新写入入库操作');
+            }
 
         }
 
-        DB::beginTransaction();
-        try {
-            self::$Goods->where('mailNo')->update(['order_status' => 5, 'cainiao_node' => 5]);
-            self::$GoodsLog->create(['text' => '菜鸟上游仓库快件已到达,已签收,操作人员的账号是:'.$adminInfo->user_name, 'user_name' => $adminInfo->user_name, 'cainiao_api' => 'CONSO_WAREHOUSE_ARRIVE']);
-            DB::commit();
-            return $this->ReturnJson(200201, '包裹,到达,签收成功');
-        }catch (\Exception $e){
-            DB::rollBack();
-            return $this->ReturnJson(400403, '包裹数据写入失败,请重新录入!');
-        }
     }
 
 
     /**
      * yanzhen
      */
-
     public function VerifyNum($option) {
 
         foreach ($option as $item){

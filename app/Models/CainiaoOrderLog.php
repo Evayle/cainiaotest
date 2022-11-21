@@ -19,7 +19,7 @@ class CainiaoOrderLog extends Model
 
     public    $timestamps = true;
 
-    protected $fillable = ['id', 'text', 'user_name', 'cainiao_api', 'created_at' ,'updated_at'];
+    protected $fillable = ['id', 'order','text', 'user_name', 'cainiao_api', 'created_at' ,'updated_at'];
 
     /**
      * 设置时间格式几个人法兰克福国际'螺丝刀快件管理我快递费加绿茶
