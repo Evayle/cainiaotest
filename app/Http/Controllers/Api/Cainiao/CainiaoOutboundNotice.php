@@ -16,7 +16,7 @@ class CainiaoOutboundNotice extends Controller
 //        try {
             $param         = json_decode($request->logistics_interface);
 
-            DB::table('cainiao_yubao')->insert(['text' => $param, 'crerated_at' => date('Y-m-d H:i:s',time())]);
+            DB::table('cainiao_yubao')->insert(['text' => $param, 'created_at' => date('Y-m-d H:i:s',time())]);
             return $this->ReturnCainiao();
 //        }catch (\Exception $e){
 //
