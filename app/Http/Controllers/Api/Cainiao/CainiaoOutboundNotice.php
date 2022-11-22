@@ -13,15 +13,15 @@ class CainiaoOutboundNotice extends Controller
 
     public function index(Request $request){
 
-//        try {
+        try {
             $param         = json_decode($request->logistics_interface);
 
             DB::table('cainiao_yubao')->insert(['text' => $param, 'created_at' => date('Y-m-d H:i:s',time())]);
             return $this->ReturnCainiao();
-//        }catch (\Exception $e){
-//
-//            return $this->ReturnCainiaoError('数据接收异常,请联系管理员');
-//        }
+        }catch (\Exception $e){
+
+            return $this->ReturnCainiaoError('数据接收异常,请联系管理员');
+        }
 
     }
 
