@@ -14,7 +14,7 @@ class CainiaoOutboundNotice extends Controller
     public function index(Request $request){
 
         try {
-            DB::table('cainiao_yubao')->insert(['text' => json_decode($request->all()), 'crerated_at' => date('Y-m-d H:i:s')]);
+            DB::table('cainiao_yubao')->insert(['text' => json_encode($request->all()), 'crerated_at' => date('Y-m-d H:i:s')]);
             return $this->ReturnCainiao();
         }catch (\Exception $e){
 
