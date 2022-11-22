@@ -13,10 +13,12 @@ class CainiaoOutboundNotice extends Controller
 
     public function index(Request $request){
 
-        try {
-            $param         = json_decode($request->all());
 
-            DB::table('cainiao_yubao')->insert(['text' => $param, 'created_at' => date('Y-m-d H:i:s',time())]);
+        try {
+            $param = json_encode($request->all());
+
+            DB::table('cainiao_yubao')->insert(['text' => $param, 'created_at' => date('Y-m-d H:i:s')]);
+
             return $this->ReturnCainiao();
         }catch (\Exception $e){
 
