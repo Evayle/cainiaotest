@@ -17,7 +17,7 @@ Route::group(['namespace'=>'App\Http\Controllers\Api\Cainiao'], function ($api){
     $api->post('cainiao/warehouse/order/query', 'CainiaoOrderQuery@index'); //菜鸟查询订单
 
 
-    $api->post('cainiao/warehouse/outbound/apply', 'CainiaoOrderQuery@index'); //仓库开始挑拣
+    $api->post('cainiao/warehouse/outbound/apply', 'CainiaoOutboundApply@index'); //仓库开始挑拣
     $api->post('cainiao/warehouse/outbound', 'CainiaoOutbound@index'); //仓库开始出库
 
     /**

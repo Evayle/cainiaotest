@@ -17,6 +17,7 @@ class CainiaoOutboundApply extends Controller
 
     public function __construct()
     {
+
         if(!self::$Goods) self::$Goods = new Forecast();
 
     }
@@ -34,14 +35,15 @@ class CainiaoOutboundApply extends Controller
 
         if(!$dataInfo) return $this->ReturnCainiaoError('未有该资料,请发预报');
 
-        $content = $this->ResDataSet($dataInfo->logisticsOrderCode,'CONSO_WAREHOUSE_OUTBOUND_APPLY');
-
+        $content = $this->ResDataSet($dataInfo->two_logisticsOrderCode,'CONSO_WAREHOUSE_OUTBOUND_APPLY');
+//        dd($content);
         $contentInfo = CainiaoConfig::Setmd5Info($content);
 
         $postData = $this->postData('CONSO_WAREHOUSE_OUTBOUND_APPLY',$content ,$contentInfo);
 
-        $res = self::Curl(self::$url,$postData);
 
+        $res = self::Curl(self::$url,$postData);
+        dd($res);
         if(!$res) return $this->ReturnJson(400403, '发送失败,请联系管理员');
 
         $res = json_decode($res);
@@ -55,27 +57,23 @@ class CainiaoOutboundApply extends Controller
 
     }
 
-    protected function ResDataSet( $logisticsOrderCode, $logisticsOrderCodes, $eventType, $isSplitOut, $isMPS, $completeMPS, $subPackageQuantity, $subPackageIndex, $sublogisticsOrderCode ) {
+    protected function ResDataSet( $logisticsOrderCode, $eventType, $desc = '开始拣货了', $remark = '上游仓库已经开始拣货' ) {
 
         $data = [
             'logisticsEvent' =>[
                 'eventHeader' =>[
                     'eventType' => $eventType,
                     'eventTime' => date('Y-m-d H:i:s'),
-                    'eventTimeZone' => 'UTC+8',
+                    'eventTimeZone' => '8',
                 ],
                 'eventBody' =>[
                     'logisticsDetail'=>[
-                        'logisticsOrderCode'  => $logisticsOrderCode,
-                        'logisticsOrderCodes' => $logisticsOrderCodes,
-                        'isSplitOut' => $isSplitOut,
-                        'isMPS'      => $isMPS,
-                        'multipieceShipment'=> [
-                            'completeMPS'           => $completeMPS,
-                            'subPackageQuantity'    => $subPackageQuantity,
-                            'subPackageIndex'       => $subPackageIndex,
-                            'sublogisticsOrderCode' => $sublogisticsOrderCode
-                        ],
+                        'logisticsOrderCode' => $logisticsOrderCode,
+                        'timeZone' => 'UTC+8',
+                        'occurTime'=>date('Y-m-d H:i:s'),
+                        'logisticsOrderCodes' => 'LP00545806510768',
+                        'isSplitOut' => 'N',
+
                     ],
                 ],
             ],

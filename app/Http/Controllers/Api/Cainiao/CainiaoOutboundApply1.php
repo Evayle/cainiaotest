@@ -7,22 +7,23 @@ use App\Models\CainiaoConfig;
 use App\Models\Forecast;
 use Illuminate\Http\Request;
 
-class CainiaoOutbound extends Controller
+class CainiaoOutboundApply extends Controller
 {
-    //国际集运出库
+    //拣货完成--出库申请
 
-    //CONSO_WAREHOUSE_OUTBOUND
-
+    //CONSO_WAREHOUSE_OUTBOUND_APPLY
 
     private static $Goods;
 
     public function __construct()
     {
+
         if(!self::$Goods) self::$Goods = new Forecast();
+
     }
 
     /**
-     * 出库
+     * 开始挑拣
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
@@ -34,14 +35,15 @@ class CainiaoOutbound extends Controller
 
         if(!$dataInfo) return $this->ReturnCainiaoError('未有该资料,请发预报');
 
-        $content = $this->ResDataSet($dataInfo->logisticsOrderCode,'CONSO_WAREHOUSE_OUTBOUND');
-
+        $content = $this->ResDataSet($dataInfo->two_logisticsOrderCode,'CONSO_WAREHOUSE_BEGIN_PICK');
+//        dd($content);
         $contentInfo = CainiaoConfig::Setmd5Info($content);
 
-        $postData = $this->postData('CONSO_WAREHOUSE_OUTBOUND',$content ,$contentInfo);
+        $postData = $this->postData('CONSO_WAREHOUSE_OUTBOUND_APPLY',$content ,$contentInfo);
+
 
         $res = self::Curl(self::$url,$postData);
-
+        dd($res);
         if(!$res) return $this->ReturnJson(400403, '发送失败,请联系管理员');
 
         $res = json_decode($res);
@@ -55,38 +57,24 @@ class CainiaoOutbound extends Controller
 
     }
 
-    protected function ResDataSet( $logisticsOrderCode, $eventType, $logisticsOrderCodes, $mailNo, $success, $dessc, $remark) {
+    protected function ResDataSet( $logisticsOrderCode, $eventType, $desc = '开始拣货了', $remark = '上游仓库已经开始拣货' ) {
 
         $data = [
             'logisticsEvent' =>[
                 'eventHeader' =>[
                     'eventType' => $eventType,
                     'eventTime' => date('Y-m-d H:i:s'),
-                    'eventTimeZone' => 'UTC+8',
+                    'eventTimeZone' => '8',
                 ],
                 'eventBody' =>[
                     'logisticsDetail'=>[
-                        'logisticsOrderCode'  => $logisticsOrderCode,
-                        'logisticsOrderCodes' => $logisticsOrderCodes,
-                        'occurTime' => date('Y-m-d H:i:s'),
-                        'mailNo' => $mailNo,
-                        'senderDetail' => [
-                            'name',
-                            'country',
-                            'streetAddress',
-                        ],
-                        'receiverDetail' => [
-                            'receiverDetail',
-                            'name',
-                            'country',
-                            'streetAddress',
-                        ],
+                        'logisticsOrderCode' => $logisticsOrderCode,
+                        'timeZone' => 'UTC+8',
                         'result' => [
-                            'success' => $success,
-                            'desc'    => $dessc,
-                            'remark'  => $remark,
+                            'desc' => $desc,
+                            'remark' => $remark
                         ],
-                        'addService'
+                        'occurTime'=>date('Y-m-d H:i:s'),
 
                     ],
                 ],
@@ -94,9 +82,6 @@ class CainiaoOutbound extends Controller
         ];
         return json_encode($data);
     }
-
-
-
 
 
 }
