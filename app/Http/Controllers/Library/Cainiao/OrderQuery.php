@@ -10,14 +10,6 @@ class OrderQuery extends Controller
 {
     //CONSO_ORDER_QUERY
 
-    private static $Goods;
-
-    public function __construct()
-    {
-        if(!self::$Goods) self::$Goods = new Forecast();
-
-    }
-
 
     public  static function  index($logisticsOrderCode){
 
@@ -39,8 +31,9 @@ class OrderQuery extends Controller
         }
 
         $conso_order_query = $res->isSingle ? 1: 2 ;
-        $isLastPackage     = $res->isLastPackage ? 1: 2 ;
-        self::$Goods->where('logisticsOrderCode', $logisticsOrderCode)->update(['conso_order_query' => $conso_order_query, 'isLastPackage' => $isLastPackage]);
+        $isLastPackage     = $res->isTail ? 'Y': 'N' ;
+        Forecast::where('logisticsOrderCode', '=', $logisticsOrderCode)->update(['conso_order_query' => $conso_order_query, 'isLastPackage' => $isLastPackage]);
+
         return $conso_order_query;
     }
 

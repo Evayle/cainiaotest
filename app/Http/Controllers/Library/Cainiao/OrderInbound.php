@@ -13,14 +13,14 @@ class OrderInbound extends Controller
     public function Inbond($mailNo,$logisticsOrderCode) {
 
 
-        $content = $this->ResDataSet($logisticsOrderCode->logisticsOrderCode,'CONSO_WAREHOUSE_INBOUND',1);
+        $content = self::ResDataSet($logisticsOrderCode,'CONSO_WAREHOUSE_INBOUND',1);
 
         $contentInfo = CainiaoConfig::Setmd5Info($content);
 
-        $postData = $this->postData('CONSO_WAREHOUSE_INBOUND',$content ,$contentInfo);
+        dd();
+        $postData = self::postData('CONSO_WAREHOUSE_INBOUND',$content ,$contentInfo);
 
         $res = self::Curl(self::$url,$postData);
-
         if(!$res) return false;
 
         $errlog = $res;

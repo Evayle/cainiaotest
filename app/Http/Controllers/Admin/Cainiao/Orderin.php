@@ -67,7 +67,7 @@ class Orderin extends Controller
         //如果订单是入库过的话,
         DB::beginTransaction();
         try {
-            self::$Goods->where('mailNo')->update(['order_status' => 1, 'cainiao_node' => 4]);
+            self::$Goods->where('mailNo')->update(['order_status' => 5, 'cainiao_node' => 4]);
             self::$GoodsLog->create(['text' => '菜鸟上游仓库快件已到达,操作人员的账号是:'.$adminInfo->user_name, 'user_name' => $adminInfo->user_name, 'cainiao_api' => 'CONSO_WAREHOUSE_ARRIVE']);
             DB::commit();
             return $this->ReturnJson(200201, '到达成功');

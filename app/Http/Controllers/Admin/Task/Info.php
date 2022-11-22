@@ -22,6 +22,8 @@ class Info extends Controller
 
         $data = self::$Goods->where('cainiao_node', 10)->select('created_at', 'mailNo', 'user_phone', 'trackingNumber')->get();
 
+        //处理分组的部分
+
     }
 
 }

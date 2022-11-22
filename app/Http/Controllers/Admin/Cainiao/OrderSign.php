@@ -58,7 +58,6 @@ class OrderSign extends Controller
             return $this->ReturnJson(400403,'订单签收异常,请联系管理员');
         }
 
-        //签收成功
         DB::beginTransaction();
         try {
             self::$Goods->where('mailNo')->update(['order_status' => 5, 'cainiao_node' => 5]);

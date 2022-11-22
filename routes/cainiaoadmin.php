@@ -22,6 +22,11 @@ Route::group(['namespace'=>'App\Http\Controllers\Admin\Cainiao'], function ($api
         //天机入库签收等操作
         $api->post('cainiao/tj/admin/order/sign', 'EquipmenSignOrder@index');
 
+        //手动入库部分
+
+        $api->post('cainiao/tj/admin/order/inbond', 'OrderInbound@index');
+
+
 
 
 

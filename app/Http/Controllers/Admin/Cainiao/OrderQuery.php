@@ -35,19 +35,7 @@ class OrderQuery extends Controller
 
         $dataInfo = Query::index($GoodsInfo->logisticsOrderCode);
 
-        if(!$dataInfo) return $this->ReturnJson(400403, '查询失败!请知悉');
-
-        //查询时,处理订单的状态 isTail isSingle
-        DB::beginTransaction();
-        try {
-            self::$Goods->where('mailNo', $request->mailNo)->update(['conso_order_query' => $dataInfo->isSingle, 'isLastPackage' => $dataInfo->isSingle]);
-
-            DB::commit();
-            return $this->ReturnJson(200201, '查询成功');
-        }catch (\Exception $e){
-            DB::rollBack();
-            return $this->ReturnJson(400403, '查询成功,状态设置失败,请知悉!');
-        }
+        return $dataInfo ? $this->ReturnJson(200201, '查询成功') : $this->ReturnJson(400403, '查询失败!请知悉');
     }
 
 }
