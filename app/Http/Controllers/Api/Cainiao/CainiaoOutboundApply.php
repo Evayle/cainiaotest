@@ -35,7 +35,7 @@ class CainiaoOutboundApply extends Controller
 
         if(!$dataInfo) return $this->ReturnCainiaoError('未有该资料,请发预报');
 
-        $content = $this->ResDataSet($dataInfo->two_logisticsOrderCode,'CONSO_WAREHOUSE_OUTBOUND_APPLY');
+        $content = $this->ResDataSet($dataInfo->logisticsOrderCode,$dataInfo->two_logisticsOrderCode,'CONSO_WAREHOUSE_OUTBOUND_APPLY');
 //        dd($content);
         $contentInfo = CainiaoConfig::Setmd5Info($content);
 
@@ -57,7 +57,7 @@ class CainiaoOutboundApply extends Controller
 
     }
 
-    protected function ResDataSet( $logisticsOrderCode, $eventType, $desc = '开始拣货了', $remark = '上游仓库已经开始拣货' ) {
+    protected function ResDataSet( $logisticsOrderCode, $two_logisticsOrderCode,$eventType, $desc = '开始拣货了', $remark = '上游仓库已经开始拣货' ) {
 
         $data = [
             'logisticsEvent' =>[
@@ -68,10 +68,10 @@ class CainiaoOutboundApply extends Controller
                 ],
                 'eventBody' =>[
                     'logisticsDetail'=>[
-                        'logisticsOrderCode' => $logisticsOrderCode,
+                        'logisticsOrderCode' => $two_logisticsOrderCode,
                         'timeZone' => 'UTC+8',
                         'occurTime'=>date('Y-m-d H:i:s'),
-                        'logisticsOrderCodes' => 'LP00545806510768',
+                        'logisticsOrderCodes' => $logisticsOrderCode,
                         'isSplitOut' => 'N',
 
                     ],

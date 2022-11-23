@@ -21,7 +21,7 @@ class CainiaoInbound extends Controller
     }
 
     /**
-     * 包裹到达
+     * 包裹入库
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
@@ -83,7 +83,7 @@ class CainiaoInbound extends Controller
 
         if($res->success == 'true'){
 
-            return $this->ReturnJson(200201, '包裹入库成功');
+            return $this->ReturnJson(200201, '包裹入库失败成功');
         }
 
         return $this->ReturnJson(400403, '包裹入库失败', $res);
@@ -109,14 +109,19 @@ class CainiaoInbound extends Controller
                         'height' => $height,
                         'occurTime' => date('Y-m-d H:i:s'),
                         'result' => [
-                            'success' => $success
+                            'success' => $success,
                         ],
                     ],
                 ],
 
             ],
         ];
-        return json_encode($data);
+
+        if(!$success){
+            $data['logisticsEvent']['eventBody']['logisticsDetail']['result']['code'] = 403;
+            $data['logisticsEvent']['eventBody']['logisticsDetail']['result']['desc'] = '包裹过大';
+            $data['logisticsEvent']['eventBody']['logisticsDetail']['result']['remark'] = '包裹的长度超限，签收失败';
+        }        return json_encode($data);
     }
 
 

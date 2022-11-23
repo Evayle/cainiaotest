@@ -17,14 +17,22 @@ Route::group(['namespace'=>'App\Http\Controllers\Admin\Cainiao'], function ($api
 
         //包裹签收操作
         $api->post('cainiao/admin/order/sign', 'OrderSign@index');
+        //包裹签收失败
+        $api->post('cainiao/admin/order/sign/error', 'OrderSign@index');
+
 
 
         //天机入库签收等操作
-        $api->post('cainiao/tj/admin/order/sign', 'EquipmenSignOrder@index');
+//        $api->post('cainiao/tj/admin/order/sign', 'EquipmenSignOrder@index');
 
         //手动入库部分
+//        $api->post('cainiao/tj/admin/order/inbond', 'OrderInbound@index');
 
-        $api->post('cainiao/tj/admin/order/inbond', 'OrderInbound@index');
+        //入库操作
+
+
+
+
 
 
 

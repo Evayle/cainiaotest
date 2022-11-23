@@ -7,11 +7,10 @@ use App\Models\CainiaoConfig;
 use App\Models\Forecast;
 use Illuminate\Http\Request;
 
-class CainiaoOutboundApply extends Controller
+class CainiaoOutboundPick extends Controller
 {
-    //拣货完成--出库申请
-
-    //CONSO_WAREHOUSE_OUTBOUND_APPLY
+    //拣货
+    //CONSO_WAREHOUSE_BEGIN_PICK
 
     private static $Goods;
 
@@ -39,11 +38,10 @@ class CainiaoOutboundApply extends Controller
 //        dd($content);
         $contentInfo = CainiaoConfig::Setmd5Info($content);
 
-        $postData = $this->postData('CONSO_WAREHOUSE_OUTBOUND_APPLY',$content ,$contentInfo);
-
+        $postData = $this->postData('CONSO_WAREHOUSE_BEGIN_PICK',$content ,$contentInfo);
 
         $res = self::Curl(self::$url,$postData);
-        dd($res);
+//        dd($res);
         if(!$res) return $this->ReturnJson(400403, '发送失败,请联系管理员');
 
         $res = json_decode($res);

@@ -16,15 +16,21 @@ Route::group(['namespace'=>'App\Http\Controllers\Api\Cainiao'], function ($api){
     $api->post('cainiao/warehouse/inbound/error', 'CainiaoInbound@inboundError'); //菜鸟入库操作--失败
     $api->post('cainiao/warehouse/order/query', 'CainiaoOrderQuery@index'); //菜鸟查询订单
 
-
-    $api->post('cainiao/warehouse/outbound/apply', 'CainiaoOutboundApply@index'); //仓库开始挑拣
+    $api->post('cainiao/warehouse/outbound/pick', 'CainiaoOutboundPick@index'); //仓库开始挑拣
+    $api->post('cainiao/warehouse/outbound/apply', 'CainiaoOutboundApply@index'); //仓库出库申请
     $api->post('cainiao/warehouse/outbound', 'CainiaoOutbound@index'); //仓库开始出库
+    $api->post('cainiao/warehouse/outbound/error', 'CainiaoOutbound@out'); //仓库开始出库/失败
 
     /**
      * 分拨仓库
      */
     $api->post('cainiao/warehouse/sortingcenter/inbound',   'CainiaoSortingcenterInbnbound@index'); //分拨仓仓库入库
     $api->post('cainiao/warehouse/sortingcenter/ountbound', 'CainiaoSortingcenterOutbound@index'); //分拨仓仓库出库
+
+    /**
+     * 无主件识别
+     */
+    $api->post('cainiao/warehouse/dereliction',   'CainiaoDereliction@index'); //分拨仓仓库入库
 
 });
 

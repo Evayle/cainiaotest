@@ -37,7 +37,6 @@ class OrderSign extends Controller
 
     }
 
-
     protected function ResDataSet( $mailNo, $logisticsOrderCode, $eventType, $status = true, $desc = '包裹正常', $remark = '包裹已签收',$code = 200) {
 
         $data =  ['logisticsEvent'=>[
@@ -62,6 +61,33 @@ class OrderSign extends Controller
         ]];
 
         return json_encode($data);
+    }
+
+
+    public static function  SignError($mailNo, $logisticsOrderCode, $text) {
+
+        $content = self::ResDataSet($mailNo, $logisticsOrderCode,'CONSO_WAREHOUSE_SIGN',false,'包裹异常',$text, 403);
+
+        $contentInfo = CainiaoConfig::Setmd5Info($content);
+
+        $postData = self::postData('CONSO_WAREHOUSE_SIGN',$content ,$contentInfo);
+
+        $res = self::Curl(self::$url,$postData);
+
+        if(!$res) return false;
+
+        $errlog = $res;
+
+        $res = json_decode($res);
+
+        if(isset($res->success) && $res->success == 'true') return true;
+
+        $errorlog = ['content' => $errlog, 'cainiao_api' => 'CONSO_WAREHOUSE_ARRIVE', 'order' => $mailNo, 'created_at' => date('Y-m-d H:i:s')];
+
+        CainiaoErrorOrderLog::create($errorlog);
+
+        return false;
+
     }
 
 
