@@ -12,12 +12,9 @@ use App\Http\Controllers\Library\Cainiao\OrderArrive;
 use App\Http\Controllers\Library\Cainiao\OrderQuery;
 use App\Http\Controllers\Library\Cainiao\OrderSign;
 
-
-
 class OrderArriveSign extends Controller
 {
     //快件到达签收
-
     private static $Goods;
     private static $GoodsLog;
 
@@ -73,7 +70,7 @@ class OrderArriveSign extends Controller
 
                 if($OrderSignError){
 
-                    self::$GoodsLog->create(['text' => '菜鸟上游仓库快件已退件,退件理由是:'.$request->text.',操作人员的账号是:'.$adminInfo->user_name, 'user_name' => $adminInfo->user_name, 'cainiao_api' => 'CONSO_WAREHOUSE_ARRIVE']);
+                    self::$GoodsLog->create(['text' => '菜鸟上游仓库快件已退件,退件理由是:'.$request->text.',操作人员的账号是:'.$adminInfo->user_name, 'user_name' => $adminInfo->user_name, 'cainiao_api' => 'CONSO_WAREHOUSE_ARRIVE', 'order' => $request->mailNo, 'created_at' => date('Y-m-d H:i:s')]);
 
                     return $this->ReturnJson(200201, '签收异常件,以上传至菜鸟部分');
 
@@ -93,7 +90,7 @@ class OrderArriveSign extends Controller
                 DB::beginTransaction();
                 try {
                     self::$Goods->where('mailNo', $request->mailNo)->update(['order_status' => 1, 'cainiao_node' => 4]);
-                    self::$GoodsLog->create(['text' => '菜鸟上游仓库快件已到达,操作人员的账号是:'.$adminInfo->user_name, 'user_name' => $adminInfo->user_name, 'cainiao_api' => 'CONSO_WAREHOUSE_ARRIVE']);
+                    self::$GoodsLog->create(['text' => '菜鸟上游仓库快件已到达,操作人员的账号是:'.$adminInfo->user_name, 'user_name' => $adminInfo->user_name, 'cainiao_api' => 'CONSO_WAREHOUSE_ARRIVE', 'order' => $request->mailNo, 'created_at' => date('Y-m-d H:i:s')]);
                     DB::commit();
                     return $this->ReturnJson(200201, '到达成功');
                 }catch (\Exception $e){
@@ -106,7 +103,7 @@ class OrderArriveSign extends Controller
             try {
                 self::$Goods->where('mailNo', $request->mailNo)->update(['order_status' => '5', 'cainiao_node' => '5']);
 
-                $dataText = [['text' => '菜鸟上游仓库快件已到达,操作人员的账号是:'.$adminInfo->user_name, 'user_name' => $adminInfo->user_name, 'cainiao_api' => 'CONSO_WAREHOUSE_ARRIVE', 'created_at' => date('Y-m-d H:i:s')],['text' => '菜鸟上游仓库快件已签收,操作人员的账号是:'.$adminInfo->user_name, 'user_name' => $adminInfo->user_name, 'cainiao_api' => 'CONSO_WAREHOUSE_ARRIVE', 'created_at' => date('Y-m-d H:i:s')]];
+                $dataText = [['text' => '菜鸟上游仓库快件已到达,操作人员的账号是:'.$adminInfo->user_name, 'user_name' => $adminInfo->user_name, 'cainiao_api' => 'CONSO_WAREHOUSE_ARRIVE', 'created_at' => date('Y-m-d H:i:s'), 'order' => $request->mailNo],['text' => '菜鸟上游仓库快件已签收,操作人员的账号是:'.$adminInfo->user_name, 'user_name' => $adminInfo->user_name, 'cainiao_api' => 'CONSO_WAREHOUSE_ARRIVE', 'created_at' => date('Y-m-d H:i:s'), 'order' => $request->mailNo]];
                 self::$GoodsLog->insert($dataText);
                 DB::commit();
                 return $this->ReturnJson(200201, '到达签收成功');
