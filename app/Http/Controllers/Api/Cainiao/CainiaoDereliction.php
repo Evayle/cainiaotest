@@ -24,7 +24,7 @@ class CainiaoDereliction extends Controller
         $postData = $this->postData('CONSO_WAREHOUSE_DERELICTION',$content ,$contentInfo);
 
         $res = self::Curl(self::$url,$postData);
-        dd($res);
+//        dd($res);
         if(!$res) return $this->ReturnJson(400403, '发送失败,请联系管理员');
 
         $res = json_decode($res);
@@ -35,8 +35,6 @@ class CainiaoDereliction extends Controller
         }
 
         return $this->ReturnJson(400403, '包裹挑拣异常,请可联系管理员', $res);
-
-
 
     }
 
@@ -61,7 +59,6 @@ class CainiaoDereliction extends Controller
             ],
         ];
 
-//        dd($data);
         return json_encode($data);
     }
 

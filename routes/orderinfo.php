@@ -8,7 +8,6 @@ Route::group(['namespace'=>'App\Http\Controllers\Admin\Order'], function ($api){
     $api->group(['middleware' => 'adminToken'], function ($api){
 
         //客服查询订单的部分
-
         $api->get ('admin/order/infos/query', 'Search@index');
 
 
