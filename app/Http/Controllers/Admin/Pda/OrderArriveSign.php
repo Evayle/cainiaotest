@@ -76,7 +76,7 @@ class OrderArriveSign extends Controller
 
                 }else{
 
-                    return $this->ReturnJson(400403, '订单退款异常,请联系管理员');
+                    return $this->ReturnJson(400403, '订单退货异常,请联系管理员');
                 }
             }
 
