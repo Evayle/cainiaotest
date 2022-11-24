@@ -61,7 +61,6 @@ class Search extends Controller
 
             $query->select('id', 'text', 'user_name', 'cainiao_api', 'created_at', 'order');
 
-
         }])->offset($offset)->limit($limit)->select('id', 'mailNo','logisticsOrderCode','user_phone', 'deliveryType', 'trackingNumber','user_name', 'shop_name', 'order_status', 'cainiao_node', 'created_at', 'long', 'wide', 'height', 'weight', 'in_time', 'over_time')->get()->toArray();
 
         return $this->ReturnJson(200201,'获取成功',['data' => $data, 'count' => $count, 'page' => ($offset + 1)]);

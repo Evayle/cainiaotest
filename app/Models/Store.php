@@ -32,4 +32,15 @@ class Store extends Model
 
         return $date->format($this->dateFormat ?: 'Y-m-d H:i:s');
     }
+
+    /**
+     * 查询菜鸟标识
+     */
+    public static function  cainiao_match($param){
+
+        $data =  self::where('receiving_address', $param)->select('cainiao_match')->first();
+
+        return $data ? $data->cainiao_match : 'AYDTTT';
+    }
+
 }

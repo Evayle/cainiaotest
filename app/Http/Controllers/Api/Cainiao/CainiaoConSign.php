@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Cainiao;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Store;
 use App\Models\Forecast;
 use App\Models\ForecastShop;
 use App\Models\ForecastCount;
@@ -45,7 +46,8 @@ class CainiaoConSign extends Controller
         try {
 
             $params        = $request->all();
-            $param         = json_decode($request->logistics_interface);
+
+            $param         = json_decode(json_encode($request->logistics_interface));
 
             if(self::$orderData->islogisticsOrderCode($param->logisticsEvent->eventBody->logisticsDetail->logisticsOrderCode)){
 
@@ -62,10 +64,14 @@ class CainiaoConSign extends Controller
 
             $paymentDetail =$this->paymentData($body);
 
+
         }catch (\Exception $e){
 
             return $this->ReturnCainiaoError('参数异常');
         }
+
+        $store_name = Store::cainiao_match($body->buyerDetail->streetAddress);
+        $orderData['store_name'] = $store_name;
 
         DB::table('cainiao_yubaoinfo')->insert(['text' =>json_encode($params), 'date' => date('Y-m-d H:i:s')]);
 
@@ -87,15 +93,14 @@ class CainiaoConSign extends Controller
 
     public function orderData($body, $tradeDetail,$shopInfo){
 
-
         return [
             'mailNo'             => $body->mailNo,
             'consoType'          => $body->consoType,
-            'carrierCode'        => $body->carrierCode,
+            'carrierCode'        => isset($body->carrierCode) ? $body->carrierCode : null,
             'deliveryType'       => $body->deliveryType,
             'isLastPackage'      => $body->isLastPackage,
             'isSplitConsign'     => $body->isSplitConsign,
-            'packageQuantity'    => $body->packageQuantity,
+            'packageQuantity'    => isset($body->packageQuantity) ? $body->packageQuantity :1,
             'shop_name'          => $shopInfo->categoryName,
             'logisticsOrderCode' => $body->logisticsOrderCode,
             'tradeOrderId'       => $tradeDetail->tradeOrderId,
@@ -104,6 +109,7 @@ class CainiaoConSign extends Controller
             'user_phone'         => $body->buyerDetail->mobile,
             'created_at'         => self::$getdate
         ];
+
     }
 
     public function  shopData($paymentDetail,$shopInfo){
@@ -131,6 +137,7 @@ class CainiaoConSign extends Controller
             'created_at' => self::$getdate
         ];
 
+
     }
 
     public function  paymentData($body) {
@@ -139,23 +146,23 @@ class CainiaoConSign extends Controller
             'buyer_wangwangId' => $body->buyerDetail->wangwangId,
             'buyer_name' => $body->buyerDetail->name,
             'buyer_mobile' => $body->buyerDetail->mobile,
-//            'buyer_email'=> $body->buyerDetail->email,
+//            'buyer_email'=> $body->buyerDetail->email,------
             'buyer_country' => $body->buyerDetail->country,
             'buyer_province' => $body->buyerDetail->province,
             'buyer_city' => $body->buyerDetail->city,
             'buyer_district' => $body->buyerDetail->district,
-//            'buyer_town'  => $body->buyerDetail->town,
+//            'buyer_town'  => $body->buyerDetail->town,------
             'buyer_streetAddress' => $body->buyerDetail->streetAddress,
             'sender_wangwangId' => $body->senderDetail->wangwangId,
-            'sender_name' => $body->senderDetail->name,
-            'sender_shopName' => $body->senderDetail->shopName,
-            'mobile' => $body->senderDetail->mobile,
-            'country' => $body->senderDetail->country,
-            'province' => $body->senderDetail->province,
-            'sender_city' => $body->senderDetail->city,
-            'sender_district' => $body->senderDetail->district,
-//            'sender_town' => $body->senderDetail->town,
-            'sender_streetAddress' => $body->senderDetail->streetAddress,
+            'sender_name' => isset($body->senderDetail->name) ? $body->senderDetail->name : null,
+            'sender_shopName' => isset($body->senderDetail->shopName) ? $body->senderDetail->shopName: null ,
+            'mobile' => isset($body->senderDetail->mobile) ?$body->senderDetail->mobile :null ,
+            'country' => isset($body->senderDetail->country) ?  $body->senderDetail->country:  null,
+            'province' => isset($body->senderDetail->province) ? $body->senderDetail->province :  null,
+            'sender_city' => isset($body->senderDetail->city) ? $body->senderDetail->city : null ,
+            'sender_district' => isset($body->senderDetail->district) ?  $body->senderDetail->district: null,
+//            'sender_town' => $body->senderDetail->town,------
+            'sender_streetAddress' => isset($body->senderDetail->streetAddress) ? $body->senderDetail->streetAddress : null ,
             'created_at' => self::$getdate
         ];
 

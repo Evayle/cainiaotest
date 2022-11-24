@@ -52,10 +52,24 @@ class Forecast extends Model
         return $this->hasOne(ForecastUserinfo::class, 'd_id', 'id');
     }
 
+    /**
+     * 关联日志
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function  orderlog(){
 
         return $this->hasMany(CainiaoOrderLog::class, 'order', 'mailNo');
 
     }
+
+
+    /**
+     * 关联用户
+     */
+    public function storename(){
+
+//        return $this->hasOne();
+    }
+
 
 }
