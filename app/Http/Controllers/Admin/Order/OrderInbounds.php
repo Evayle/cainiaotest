@@ -10,7 +10,7 @@ use App\Models\ShelfInfo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class OrderInbound extends Controller
+class OrderInbounds extends Controller
 {
     //pc订单入库
 
@@ -29,7 +29,7 @@ class OrderInbound extends Controller
     }
 
     /**
-     * 单件入库
+     * 多件入库
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
@@ -39,7 +39,7 @@ class OrderInbound extends Controller
 
         if(!$request->filled('mailNo'))  return $this->ReturnJson();
 
-        $Goodsinfo = self::$Goods->where('mailNo', $request->mailNo)->select('mailNo', 'logisticsOrderCode', 'order_status', 'cainiao_node', 'conso_order_query', 'store_name')->first();
+        $Goodsinfo = self::$Goods->where('mailNo', $request->mailNo)->select('mailNo', 'logisticsOrderCode', 'order_status', 'cainiao_node', 'conso_order_query','store_name')->first();
 
         if(!$Goodsinfo) return $this->ReturnJson(400403, '订单不存在');
 
