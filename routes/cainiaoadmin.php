@@ -28,11 +28,6 @@ Route::group(['namespace'=>'App\Http\Controllers\Admin\Cainiao'], function ($api
         //手动入库部分
 //        $api->post('cainiao/tj/admin/order/inbond', 'OrderInbound@index');
 
-        //入库操作
-
-
-
-
 
 
 

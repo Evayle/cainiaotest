@@ -43,4 +43,35 @@ class Store extends Model
         return $data ? $data->cainiao_match : 'AYDTTT';
     }
 
+    /**
+     * 查询关联库区
+     * @param $param
+     * @return array
+     */
+    public function  area_infos($param){
+
+        if(!$param) return false;
+
+        $data =  self::where('cainiao_match', $param)->with(['areainfo' => function($query){
+
+            $query->select('id', 'area_name');
+
+        }])->select('area_id')->first();
+
+        return  $data
+            ? ['area_id' => $data->areainfo->id, 'area_name' => $data->areainfo->area_name]
+            : null;
+    }
+
+
+
+    /**
+     * 关联库区
+     */
+    public function areainfo(){
+
+        return $this->hasOne(Area::class, 'id', 'area_id');
+    }
+
+
 }

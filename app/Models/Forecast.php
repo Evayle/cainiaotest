@@ -71,5 +71,15 @@ class Forecast extends Model
 //        return $this->hasOne();
     }
 
+    /**
+     * 关联出库上架库区
+     */
+    public function areainfo(){
+
+        return  $this->hasOne(ShelfInfo::class, 'order', 'mailNo');
+
+    }
+
+
 
 }
