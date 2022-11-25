@@ -43,7 +43,7 @@ class OrderInbounds extends Controller
 
         if(!$Goodsinfo) return $this->ReturnJson(400403, '订单不存在');
 
-        if($Goodsinfo->conso_order_query ==1) return $this->ReturnJson(400405, '该功能是多件入库');
+        if($Goodsinfo->conso_order_query == 1) return $this->ReturnJson(400405, '该功能是多件入库,单件请切换');
 
         if($Goodsinfo->order_status < 7 ||  $Goodsinfo->order_status > 10) {
 

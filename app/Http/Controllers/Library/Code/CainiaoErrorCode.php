@@ -80,6 +80,8 @@ class CainiaoErrorCode extends Controller
             case '5205':
                 return '您的包裹由于下单时未选择“菜鸟跨境物流”运输方式，集运仓无法正常收入，包裹已经拒签返回给卖家，您可联系卖家发起【仅退款】，告知卖家商品会被集运仓自动退回。退款处理中如有问题，您可联系淘宝平台客服寻求帮助哦';
                 break;
+            default:
+                return '包裹退回';
         }
     }
 
@@ -142,6 +144,8 @@ class CainiaoErrorCode extends Controller
             case '5269':
                 return '包裹因错发货无法正常入库，请联系卖家处理';
                 break;
+            default:
+                return '包裹退回';
         }
 
     }
@@ -170,6 +174,8 @@ class CainiaoErrorCode extends Controller
             case '5277':
                 return '由于您的订单已超目的地进口免税额，请联系客服处理。';
                 break;
+            default:
+                return '包裹退回';
 
         }
     }

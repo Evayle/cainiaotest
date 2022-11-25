@@ -37,8 +37,12 @@ class OrderArriveSign extends Controller
 
         if($GoodsInfo->order_status == 5) return $this->ReturnJson(200201,'该订单已到达签收');
         if($GoodsInfo->order_status == 6) return $this->ReturnJson(400415,'快件已退回取消');
+        if($GoodsInfo->order_status > 6)  return $this->ReturnJson(400423,$this->OrderStatusInfo($GoodsInfo->order_status));
 
-        if(!OrderArrive::OrderArrive($GoodsInfo)) return $this->ReturnJson(400416,'订单到达异常,请联系管理员');
+        if($GoodsInfo->order_status < 1){
+
+            if(!OrderArrive::OrderArrive($GoodsInfo)) return $this->ReturnJson(400416,'订单到达异常,请联系管理员');
+        }
 
         //到达签收异常处理
         if($request->code != 200){
@@ -68,13 +72,15 @@ class OrderArriveSign extends Controller
 
             $SetDB = $this->SetDB($GoodsInfo->mailNo, $orderStatus, $datainfo);
 
-            return $SetDB ? $this->ReturnJson(200202, '签收异常已处理'): $this->ReturnJson(400418, '签收异常,数据写入失败,联系管理员') ;
+            return $SetDB
+                ? $this->ReturnJson(200202, '快件申请退仓处理成功')
+                : $this->ReturnJson(400418, '签收异常,数据写入失败,联系管理员') ;
 
         }
 
         //正常快件的签收
 
-        OrderQuery::index($GoodsInfo->logisticsOrderCode);
+        $OrderQuery = OrderQuery::index($GoodsInfo->logisticsOrderCode);
 
         $OrderSign = OrderSign::SignInfo($GoodsInfo->mailNo, $GoodsInfo->logisticsOrderCode);
 
@@ -93,11 +99,10 @@ class OrderArriveSign extends Controller
             $SetDB = $this->SetDB($GoodsInfo->mailNo, $orderStatus, $datainfo);
 
             return $SetDB
-                    ? $this->ReturnJson(200203, '快件已到达')
-                    : $this->ReturnJson(400419, '快件到达失败,请重现扫码,若再失败,请联系管理员') ;
+                    ? $this->ReturnJson(200203, '快件到达成功,未成功签收',['order_type' => $OrderQuery])
+                    : $this->ReturnJson(400419, '快件到达成功,未成功签收,数据写入失败') ;
 
         }
-
 
         $datainfo = [
             [
@@ -120,11 +125,10 @@ class OrderArriveSign extends Controller
         $SetDB = $this->SetDB($GoodsInfo->mailNo, $orderStatus, $datainfo);
 
         return $SetDB
-            ? $this->ReturnJson(200201, '快件已到达,签收')
-            : $this->ReturnJson(400420, '快件到达签收失败,请重现扫码,若再失败,请联系管理员') ;
+            ? $this->ReturnJson(200201, '快件已到达,签收',['order_type' => $OrderQuery])
+            : $this->ReturnJson(400420, '快件已到达,签收,数据写入失败,请联系管理员') ;
 
     }
-
 
     /**
      * 处理写入sql的部分
@@ -134,7 +138,6 @@ class OrderArriveSign extends Controller
      * @return bool
      */
     public function SetDB($mailNo, $orderStatus, $dataInfo){
-
 
         DB::beginTransaction();
         try {
@@ -146,7 +149,6 @@ class OrderArriveSign extends Controller
             DB::rollBack();
             return false;
         }
-
     }
 
 }
