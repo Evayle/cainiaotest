@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\CainiaoConfig;
 use Illuminate\Http\Request;
 use App\Models\CainiaoErrorOrderLog;
+use App\Http\Controllers\Library\Code\CainiaoErrorCode;
 
 class OrderSign extends Controller
 {
@@ -64,9 +65,11 @@ class OrderSign extends Controller
     }
 
 
-    public static function  SignError($mailNo, $logisticsOrderCode, $text) {
+    public static function  SignError($mailNo, $logisticsOrderCode, $code) {
 
-        $content = self::ResDataSet($mailNo, $logisticsOrderCode,'CONSO_WAREHOUSE_SIGN',false,'包裹异常',$text, 403);
+        $text = CainiaoErrorCode::SignCode($code);
+
+        $content = self::ResDataSet($mailNo, $logisticsOrderCode,'CONSO_WAREHOUSE_SIGN',false,'包裹签收异常',$text, $code);
 
         $contentInfo = CainiaoConfig::Setmd5Info($content);
 
