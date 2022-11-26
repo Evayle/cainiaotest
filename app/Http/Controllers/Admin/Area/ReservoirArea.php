@@ -41,7 +41,9 @@ class ReservoirArea extends Controller
 
         try {
             $data = [
-                'area_name'  => $request->area_name,
+                'area_name'        => $request->area_name,
+                'area_task_num'    => $request->area_task_num,
+                'area_task_people' =>  $request->area_task_people,
                 'created_at' => date('Y-m-d H:i:s'),
                 'admin_name' => $request->get('adminInfo')->user_name.'修改于'.date('Y-m-d H:i:s'),
             ];
@@ -103,6 +105,18 @@ class ReservoirArea extends Controller
             $Updata['area_name'] = $request->area_name;
             $Updata['admin_name'] =$request->get('adminInfo')->user_name.'修改于'.date('Y-m-d H:i:s');
         }
+
+        if($request->area_task_num){
+
+            $Updata['area_task_num'] = $request->area_task_num;
+        }
+
+        if($request->area_task_people){
+
+            $Updata['area_task_people'] = $request->area_task_people;
+        }
+
+
 
         DB::beginTransaction();
         try {

@@ -10,6 +10,12 @@ Route::group(['namespace'=>'App\Http\Controllers\Admin\Pda'], function ($api){
 
         $api->post('cainiao/admin/pda/order/arrive', 'OrderArriveSign@index');
 
+        //PDA上架部分
+        $api->post('cainiao/admin/pda/order/shelf', 'OrderShelf@index');
+
+        //PDA任务列表
+        $api->get('cainiao/admin/pda/task/list', 'OrderTaskList@index');
+
     });
 
 });
