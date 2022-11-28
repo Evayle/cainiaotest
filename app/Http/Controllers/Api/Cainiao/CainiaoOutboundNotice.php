@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\DB;
 
 class CainiaoOutboundNotice extends Controller
 {
-    //出库通知
+    //菜鸟出库通知
     //CONSO_WAREHOUSE_OUTBOUND_NOTICE
 
 
@@ -56,6 +56,7 @@ class CainiaoOutboundNotice extends Controller
         foreach($outOrders as $key => $item) {
 
             DB::beginTransaction();
+
             try {
                 self::$Goods->where('logisticsOrderCode', $item)->update(['cainiao_node' => 10, 'two_logisticsOrderCode' => $logisticsOrderCode, 'outbound_time' =>  $outbound_time, 'carrierCode' => $carrierCode]);
                 $log = ['text' => '该快件菜鸟下发预报,等待出库,预报的时间是:'.$date, 'user_name' => '菜鸟API发送', 'order' => $item, 'created_at' => $date, 'cainiao_api' => 'CONSO_WAREHOUSE_OUTBOUND_NOTICE'];

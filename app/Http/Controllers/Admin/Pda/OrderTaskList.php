@@ -4,23 +4,17 @@ namespace App\Http\Controllers\Admin\Pda;
 
 use App\Http\Controllers\Controller;
 use App\Models\CainiaoBoundTask;
-use App\Models\CainiaoOrderLog;
 use Illuminate\Http\Request;
-use App\Models\Forecast;
 use Illuminate\Support\Facades\DB;
 
 
 class OrderTaskList extends Controller
 {
 
-    private static $Goods;
-    private static $GoodsLog;
     private static $BoundTask;
 
     public function __construct()
     {
-        if(!self::$Goods)     self::$Goods     = new Forecast();
-        if(!self::$GoodsLog)  self::$GoodsLog  = new CainiaoOrderLog();
         if(!self::$BoundTask) self::$BoundTask = new CainiaoBoundTask();
     }
 
@@ -28,47 +22,32 @@ class OrderTaskList extends Controller
 
     public  function index(Request $request){
 
-        //任务列表
-        $query = self::$Goods->where('order_status', 15);
+       //搜索任务列表
 
+        $dataChunk = self::$BoundTask->where('tesk_status', 0)->select(DB::raw('count(two_logisticsOrderCode) num'),'two_logisticsOrderCode')->groupBy('two_logisticsOrderCode','bound_time')->orderBy('bound_time')->get()->toArray();
 
-        $dataInfo = $query->with(['areainfo' => function($query){
+        //获取区域领任务的部分
+        $tasklistnum = 2;
 
-            $query->select('order', 'area_id', 'area_name', 'code');
+        $i = 0;
+        $t = 0;
+        $count = 0;
+        $dataTsk = [];
+        foreach ($dataChunk as $key => $item){
 
-        }])->select('two_logisticsOrderCode', 'mailNo','logisticsOrderCode', 'outbound_time')->get()->toArray();
-
-        if($dataInfo){
-
-            $date = date('Y-m-d H:i:s');
-            foreach ($dataInfo as  $key => $vals){
-
-                DB::beginTransaction();
-                try {
-                    $data = [
-                        'created_at' =>$date,
-                        'mailNo'     => $vals['mailNo'],
-                        'bound_time' => $vals['outbound_time'],
-                        'code'       =>$vals['areainfo']['code'],
-                        'area_id'    => $vals['areainfo']['area_id'],
-                        'area_name'  => $vals['areainfo']['area_name'],
-                        'logisticsOrderCode' => $vals['logisticsOrderCode'],
-                        'two_logisticsOrderCode' => $vals['two_logisticsOrderCode'],
-                    ];
-                    self::$BoundTask->create($data);
-                    self::$GoodsLog->create(['order' => $vals['mailNo'], 'text' => '待出库任务已同步任务列表']);
-                    DB::commit();
-                }catch (\Exception $e){
-                    DB::rollBack();
-                }
+            $dataTsk[$t][$i]['taskID'] = $item['two_logisticsOrderCode'];
+            $dataTsk[$t][$i]['num'] = $item['num'];
+            $i++;
+            if($i == $tasklistnum){
+                $i = 0;
+                $t++;
             }
+
+            $count += $item['num'];
         }
 
-        $query->update(['order_status' => 17]);
-
-        return $this->ReturnCainiao(200201, 'ok');
+        return $this->ReturnJson(200201, '获取成功',['data' => $dataTsk, 'count' => $count]);
     }
-
 
     private  function DateSet(){
 

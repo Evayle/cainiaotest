@@ -16,6 +16,15 @@ Route::group(['namespace'=>'App\Http\Controllers\Admin\Pda'], function ($api){
         //PDA任务列表
         $api->get('cainiao/admin/pda/task/list', 'OrderTaskList@index');
 
+        //领取任务
+        $api->post('cainiao/admin/pda/set/task', 'OrderTaskSet@index');
+
+        //我的任务
+        $api->get('cainiao/admin/pda/my/task/list', 'OrderTaskListInfo@index');
+
+        //下架操作
+        $api->post('cainiao/admin/pda/order/offshelf', 'OrderShelves@index');
+
     });
 
 });
