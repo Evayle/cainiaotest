@@ -62,7 +62,6 @@ class Forecast extends Model
 
     }
 
-
     /**
      * 关联用户
      */
@@ -77,6 +76,15 @@ class Forecast extends Model
     public function areainfo(){
 
         return  $this->hasOne(ShelfInfo::class, 'order', 'mailNo');
+
+    }
+
+    /**
+     * 关联打印
+     */
+    public function printinfo(){
+
+        return  $this->hasOne(CainiaoPrintInfo::class, 'order', 'trackingNumber');
 
     }
 

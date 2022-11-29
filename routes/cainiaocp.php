@@ -32,6 +32,9 @@ Route::group(['namespace'=>'App\Http\Controllers\Api\Cainiao'], function ($api){
      */
     $api->post('cainiao/warehouse/dereliction',   'CainiaoDereliction@index'); //分拨仓仓库入库
 
+
+
+
 });
 
 

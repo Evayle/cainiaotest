@@ -25,6 +25,15 @@ Route::group(['namespace'=>'App\Http\Controllers\Admin\Pda'], function ($api){
         //下架操作
         $api->post('cainiao/admin/pda/order/offshelf', 'OrderShelves@index');
 
+        //绑定播种区
+        $api->post('cainiao/admin/pda/baundswoing/baound', 'BaundSwoing@index');
+
+        //播种扫描--获取播种的坑位
+        $api->post('cainiao/admin/pda/baundswoing/sacn', 'BaoundSwoingScan@index');
+
+        //大包号出库
+        $api->post('cainiao/admin/pda/order/ountbound', 'PakageOut@index');
+
     });
 
 });

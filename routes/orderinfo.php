@@ -23,3 +23,21 @@ Route::group(['namespace'=>'App\Http\Controllers\Admin\Order'], function ($api){
 });
 
 
+
+Route::group(['namespace'=>'App\Http\Controllers\Admin\Bozhong'], function ($api){
+
+    $api->group(['middleware' => 'adminToken'], function ($api){
+        //pc 扫码待出库
+        $api->post('cainiao/admin/order/scan/bound', 'BozhongScan@index');
+
+        //打印
+        $api->post('cainiao/admin/order/bound/print', 'PrintSBKJ@index');
+
+    });
+});
+
+
+
+
+
+

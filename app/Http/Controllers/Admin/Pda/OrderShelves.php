@@ -41,7 +41,7 @@ class OrderShelves extends Controller
 
         if(strlen($request->maliNo) < 5) return $this->ReturnJson(400415, '单号长度太短');
 
-        $BoundTaskInfo = self::$BoundTask->where('tesk_status', 0)->where('mailNo', $request->mailNo)->select('id', 'order_status', 'mailNo', 'logisticsOrderCode')->first();
+        $BoundTaskInfo = self::$BoundTask->where('tesk_status', 0)->where('mailNo', $request->mailNo)->select('id')->first();
 //
         $GoodsInfo = self::$Goods->where('mailNo', $request->mailNo)->select('id', 'two_logisticsOrderCode', 'mailNo')->first();
 
@@ -69,7 +69,7 @@ class OrderShelves extends Controller
 
             self::$GoodsLog->where('order', $request->mailNo)->create($log);
 
-            self::$PickBox->create(['order' => $request->mailNo, 'code' => $request->code]);
+            self::$PickBox->create(['order' => $request->mailNo, 'code' => $request->code, 'two_logisticsOrderCode' => $GoodsInfo->two_logisticsOrderCode]);
 
             DB::commit();
 

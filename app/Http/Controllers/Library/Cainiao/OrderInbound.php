@@ -17,10 +17,10 @@ class OrderInbound extends Controller
 
         $contentInfo = CainiaoConfig::Setmd5Info($content);
 
-        dd();
         $postData = self::postData('CONSO_WAREHOUSE_INBOUND',$content ,$contentInfo);
 
         $res = self::Curl(self::$url,$postData);
+
         if(!$res) return false;
 
         $errlog = $res;

@@ -5,11 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class BeginPickBox extends Model
+class BoundSwoing extends Model
 {
     use HasFactory;
 
-    protected $table = 'cainiao_beginpick_box';
+    protected $table = 'cainiao_baundswoing';
 
     /**
      * 处理时间格式
@@ -18,7 +18,7 @@ class BeginPickBox extends Model
 
     public    $timestamps = true;
 
-    protected $fillable = ['id', 'code', 'order', 'status', 'two_logisticsOrderCode', 'swoing_code', 'out_sort','created_at', 'updated_at'];
+    protected $fillable = ['id', 'name', 'code', 'created_at', 'updated_at'];
 
     /**
      * 设置时间格式几个人法兰克福国际'螺丝刀快件管理我快递费加绿茶
@@ -29,5 +29,6 @@ class BeginPickBox extends Model
 
         return $date->format($this->dateFormat ?: 'Y-m-d H:i:s');
     }
+
 
 }

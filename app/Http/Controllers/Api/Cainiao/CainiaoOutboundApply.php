@@ -23,7 +23,7 @@ class CainiaoOutboundApply extends Controller
     }
 
     /**
-     * 开始挑拣
+     * 出库申请
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
