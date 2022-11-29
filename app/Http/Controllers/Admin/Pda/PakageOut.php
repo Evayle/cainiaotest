@@ -17,17 +17,19 @@ class PakageOut extends Controller
 
     public function __construct()
     {
-        if(!self::$Goods) self::$Goods = new Forecast();
+        if(!self::$Goods) self::$Goods = new Forecast(); 
         if(!self::$UserInfo) self::$UserInfo = new ForecastUserinfo();
     }
 
     public function index(Request $request){
 
-        if($request->filled(['bigBagId', 'trackingNumber'])) return $this->ReturnJson();
+        if(!$request->filled(['bigBagId', 'trackingNumber'])) return $this->ReturnJson();
 
-        $GoodsInfo = self::$Goods->where('trackingNumber', $request->trackingNumber)->select('id','logisticsOrderCode','two_logisticsOrderCode','trackingNumber')->get()->toArray();
+        $GoodsInfo = self::$Goods->where('trackingNumber', $request->trackingNumber)->select('id','logisticsOrderCode','two_logisticsOrderCode','trackingNumber', 'order_status')->get()->toArray();
 
         if(!$GoodsInfo) return  $this->ReturnJson(400413, '出库失败,请确认该订单可以出库');
+
+        if($GoodsInfo[0]['order_status'] == 45) return $this->ReturnJson(200201, '出库成功1');
 
         $logisticsOrderCodes = null;
 
@@ -40,7 +42,6 @@ class PakageOut extends Controller
 
         $two_logisticsOrderCode = $GoodsInfo[0]['two_logisticsOrderCode'];
 
-
         $userInfo = self::$UserInfo->where('d_id', $GoodsInfo['0']['id'])->first();
 
         $OrderOutbond = OrderOutbond::index($logisticsOrderCodes,$two_logisticsOrderCode, $request->trackingNumber,$request->bigBagId,$userInfo->buyer_name,$userInfo->buyer_mobile, $userInfo->buyer_wangwangId,$userInfo->buyer_streetAddress);
@@ -49,7 +50,7 @@ class PakageOut extends Controller
 
         DB::beginTransaction();
         try {
-            self::$Goods->where('two_logisticsOrderCode',$request->order)->update(['trackingNumber' => $request->trackingNumber, 'order_status' => 45, 'cainiao_node' => 13]);
+            self::$Goods->where('trackingNumber', $request->trackingNumber)->update([ 'bigBagId' => $request->bigBagId,'order_status' => 45, 'cainiao_node' => 13]);
             DB::commit();
             return $this->ReturnJson(200201, '出库成功');
         }catch (\Exception $e){

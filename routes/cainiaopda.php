@@ -8,6 +8,7 @@ Route::group(['namespace'=>'App\Http\Controllers\Admin\Pda'], function ($api){
 
     $api->group(['middleware' => 'adminToken'], function ($api){
 
+        //PDA签收入库
         $api->post('cainiao/admin/pda/order/arrive', 'OrderArriveSign@index');
 
         //PDA上架部分

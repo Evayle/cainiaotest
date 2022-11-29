@@ -37,13 +37,13 @@ class OrderShelves extends Controller
         $adminInfo = $request->get('adminInfo');
 
         //处理订单
-        if(!$request->filled(['mailNo', 'code'])) return $this->ReturnJson();
+        if(!$request->filled(['logisticsOrderCode', 'code'])) return $this->ReturnJson();
 
-        if(strlen($request->maliNo) < 5) return $this->ReturnJson(400415, '单号长度太短');
+        if(strlen($request->logisticsOrderCode) < 5) return $this->ReturnJson(400415, '单号长度太短');
 
-        $BoundTaskInfo = self::$BoundTask->where('tesk_status', 0)->where('mailNo', $request->mailNo)->select('id')->first();
+        $BoundTaskInfo = self::$BoundTask->where('tesk_status', 1)->where('logisticsOrderCode', $request->logisticsOrderCode)->select('id')->first();
 //
-        $GoodsInfo = self::$Goods->where('mailNo', $request->mailNo)->select('id', 'two_logisticsOrderCode', 'mailNo')->first();
+        $GoodsInfo = self::$Goods->where('logisticsOrderCode', $request->logisticsOrderCode)->select('id', 'two_logisticsOrderCode', 'mailNo')->first();
 
         if(!$GoodsInfo) return $this->ReturnJson(400416, '该订单是无主件!');
 
@@ -53,23 +53,23 @@ class OrderShelves extends Controller
 
         $OrderBeginPick = OrderBeginPick::BeginPick($GoodsInfo->two_logisticsOrderCode, $GoodsInfo->mailNo);
 
-        if(!$OrderBeginPick) return $this->ReturnJson(400419, '发送挑选申请失败,请重新扫码');
+        // if(!$OrderBeginPick) return $this->ReturnJson(400419, '发送挑选申请失败,请重新扫码');
 
         DB::beginTransaction();
 
         try {
 
-            self::$Goods->where('mailNo', $request->mailNo)->update(['order_status' => 20, 'cainiao_node' => 11]);
+            self::$Goods->where('logisticsOrderCode', $request->logisticsOrderCode)->update(['order_status' => 20, 'cainiao_node' => 11]);
 
-            self::$ShelfInfo->where('order', $request->mailNo)->update(['code' => $request->code, 'status' => 2]);
+            self::$ShelfInfo->where('order', $request->logisticsOrderCode)->update(['status' => 2]); //已下架
 
-            self::$BoundTask->where('maliNo', $request->mailNo)->update(['tesk_status' => 3]);
+            self::$BoundTask->where('logisticsOrderCode', $request->logisticsOrderCode)->update(['tesk_status' => 3]);
 
-            $log = ['text' => '该快件已下架,下架操作人是:'.$adminInfo->user_name.'操作时间是'.$date, 'user_name' => $adminInfo->user_name, 'order' => $request->mailNo, 'created_at' => $date];
+            $log = ['text' => '该快件已下架,下架操作人是:'.$adminInfo->user_name.'操作时间是'.$date, 'user_name' => $adminInfo->user_name, 'cainiao_api' => 'CONSO_WAREHOUSE_BEGIN_PICK','order' => $request->logisticsOrderCode, 'created_at' => $date];
 
-            self::$GoodsLog->where('order', $request->mailNo)->create($log);
+            self::$GoodsLog->where('order', $request->logisticsOrderCode)->create($log);
 
-            self::$PickBox->create(['order' => $request->mailNo, 'code' => $request->code, 'two_logisticsOrderCode' => $GoodsInfo->two_logisticsOrderCode]);
+            self::$PickBox->create(['order' => $request->logisticsOrderCode, 'code' => $request->code, 'two_logisticsOrderCode' => $GoodsInfo->two_logisticsOrderCode]);
 
             DB::commit();
 

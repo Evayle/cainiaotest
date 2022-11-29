@@ -26,13 +26,15 @@ class OrderOutBoundTask extends Controller
     public  function index(Request $request){
 
         //任务列表--出库才有任务
-        $query = self::$Goods->where('order_status', 15);
+        $query = self::$Goods->where('order_status', 17);
+
 
         $dataInfo = $query->with(['areainfo' => function($query){
 
             $query->select('order', 'area_id', 'area_name', 'code');
 
         }])->select('two_logisticsOrderCode', 'mailNo','logisticsOrderCode', 'outbound_time')->get()->toArray();
+
 
         if($dataInfo){
 
@@ -52,8 +54,10 @@ class OrderOutBoundTask extends Controller
                         'logisticsOrderCode' => $vals['logisticsOrderCode'],
                         'two_logisticsOrderCode' => $vals['two_logisticsOrderCode'],
                     ];
+
+                    // dd($data);
                     self::$BoundTask->create($data);
-                    self::$GoodsLog->create(['order' => $vals['mailNo'], 'text' => '待出库任务已同步任务列表']);
+                    self::$GoodsLog->create(['order' => $vals['logisticsOrderCode'], 'text' => '待出库任务已同步任务列表']);
                     DB::commit();
                 }catch (\Exception $e){
                     DB::rollBack();
@@ -61,7 +65,7 @@ class OrderOutBoundTask extends Controller
             }
         }
 
-        $query->update(['order_status' => 17]);
+        $query->update(['order_status' => 18]);
 
         return $this->ReturnJson(200201, 'ok');
     }

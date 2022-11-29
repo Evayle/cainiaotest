@@ -39,13 +39,7 @@ class CainiaoOrderQuery extends Controller
         if(!$res) return $this->ReturnJson(400403, '发送失败,请联系管理员');
 
         $res = json_decode($res);
-
-        if($res->success == 'true'){
-
-            return $this->ReturnJson(200201, '包裹入库成功');
-        }
-
-        return $this->ReturnJson(400403, '包裹入库失败', $res);
+        return $this->ReturnJson(200201, '包裹查询成功',$res);
 
     }
 

@@ -11,7 +11,7 @@ class OrderOutbond extends Controller
 {
     //CONSO_WAREHOUSE_OUTBOUND
 
-    public static function index($logisticsOrderCodes, $two_logisticsOrderCod, $trackingNumber, $bigBagId,$buyer_name, $buyer_mobile, $buyer_wangwangId,$buyer_streetAddress) {
+    public static function index($logisticsOrderCodes, $two_logisticsOrderCod, $trackingNumber, $bigBagId , $buyer_name, $buyer_mobile, $buyer_wangwangId, $buyer_streetAddress) {
 
         $content =  self::ResDataSet($logisticsOrderCodes,'CONSO_WAREHOUSE_OUTBOUND', $two_logisticsOrderCod, $trackingNumber, $bigBagId, $buyer_name, $buyer_mobile, $buyer_wangwangId, $buyer_streetAddress);
 
@@ -20,7 +20,7 @@ class OrderOutbond extends Controller
         $postData = self::postData('CONSO_WAREHOUSE_OUTBOUND',$content ,$contentInfo);
 
         $res = self::Curl(self::$url,$postData);
-
+        dump($res);
         if(!$res) return false;
 
         $errlog = $res;

@@ -70,7 +70,7 @@ class CainiaoOutboundNotice extends Controller
 
         if($error){
 
-            DB::table('cainiao_outbount__error_log')->insert(['text' => $param]);
+            DB::table('cainiao_outbount_error_log')->insert(['text' => $param]);
             return $this->ReturnCainiaoError('数据接收异常,请重新发送');
         }
         return  $this->ReturnCainiao();

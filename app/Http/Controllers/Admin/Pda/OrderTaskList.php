@@ -35,8 +35,8 @@ class OrderTaskList extends Controller
         $dataTsk = [];
         foreach ($dataChunk as $key => $item){
 
-            $dataTsk[$t][$i]['taskID'] = $item['two_logisticsOrderCode'];
-            $dataTsk[$t][$i]['num'] = $item['num'];
+            $dataTsk[$i]['taskID'] = $item['two_logisticsOrderCode'];
+            $dataTsk[$i]['num'] = $item['num'];
             $i++;
             if($i == $tasklistnum){
                 $i = 0;

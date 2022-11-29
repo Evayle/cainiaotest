@@ -40,18 +40,19 @@ class CainiaoConSign extends Controller
 
         if(!$request->filled(['logistics_interface', 'data_digest', 'partner_code', 'msg_type'])) return $this->ReturnCainiaoError();
 
-        if($request->msg_type !='CONSO_WAREHOUSE_CONSIGN' || $request->from_code != 'CNCTP' || $request->partner_code != 'TRAN_STORE_30792933')  return $this->ReturnCainiaoError();
+        if($request->msg_type !='CONSO_WAREHOUSE_CONSIGN' || $request->partner_code != 'TRAN_STORE_30792933')  return $this->ReturnCainiaoError();
         //接收数据--主表信息--SKU等信息---商品支付等信息
+
 
         try {
 
             $params        = $request->all();
+            $param         = json_decode($request->logistics_interface);
 
-            $param         = json_decode(json_encode($request->logistics_interface));
 
             if(self::$orderData->islogisticsOrderCode($param->logisticsEvent->eventBody->logisticsDetail->logisticsOrderCode)){
 
-                return $this->ReturnCainiaoError('预报信息已存在');
+                return $this->ReturnCainiao('预报信息已存在');
             }
 
             $tradeDetail   = $param->logisticsEvent->eventBody->tradeDetail;

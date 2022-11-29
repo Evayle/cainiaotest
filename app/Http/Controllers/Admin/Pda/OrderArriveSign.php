@@ -33,9 +33,9 @@ class OrderArriveSign extends Controller
 
         $GoodsInfo = self::$Goods->where('mailNo', $request->mailNo)->select('id', 'logisticsOrderCode','order_status', 'mailNo')->first();
 
-        if(!$GoodsInfo) return $this->ReturnJson(400413, '该订单是无主件');
+        if(!$GoodsInfo) return $this->ReturnJson(200205, '该订单是无主件');
 
-        if($GoodsInfo->order_status == 5) return $this->ReturnJson(200201,'该订单已到达签收');
+        if($GoodsInfo->order_status == 5) return $this->ReturnJson(200202,'该订单已到达签收');
         if($GoodsInfo->order_status == 6) return $this->ReturnJson(400415,'快件已退回取消');
         if($GoodsInfo->order_status > 6)  return $this->ReturnJson(400423,$this->OrderStatusInfo($GoodsInfo->order_status));
 
@@ -73,7 +73,7 @@ class OrderArriveSign extends Controller
             $SetDB = $this->SetDB($GoodsInfo->mailNo, $orderStatus, $datainfo);
 
             return $SetDB
-                ? $this->ReturnJson(200202, '快件申请退仓处理成功')
+                ? $this->ReturnJson(200204, '快件申请退仓处理成功')
                 : $this->ReturnJson(400418, '签收异常,数据写入失败,联系管理员') ;
 
         }

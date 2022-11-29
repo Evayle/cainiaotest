@@ -40,27 +40,32 @@ class OrderInbounds extends Controller
         if(!$request->filled('mailNo'))  return $this->ReturnJson();
 
         $Goodsinfo = self::$Goods->where('mailNo', $request->mailNo)->select('mailNo', 'logisticsOrderCode', 'order_status', 'cainiao_node', 'conso_order_query','store_name')->first();
-
+       
         if(!$Goodsinfo) return $this->ReturnJson(400403, '订单不存在');
 
         if($Goodsinfo->conso_order_query == 1) return $this->ReturnJson(400405, '该功能是多件入库,单件请切换');
 
-        if($Goodsinfo->order_status < 7 ||  $Goodsinfo->order_status > 10) {
+        if($Goodsinfo->order_status < 5 ||  $Goodsinfo->order_status > 10) {
 
             return $this->ReturnJson(400403, $this->OrderStatusInfo($Goodsinfo->order_status));
         }
 
         if($Goodsinfo->order_status == 10) return $this->ReturnJson(200201, '该订单订单已入库');
+        if($Goodsinfo->order_status == 6)  return $this->ReturnJson(400415, '该订单订单已退回');
 
         //查询绑定的库区
         $storeinfo = self::$Store->area_infos($Goodsinfo->store_name);
 
         if(!$storeinfo) return $this->ReturnJson(400403, '该订单的快件没有绑定库区,请联系仓管!');
 
+        $ShelfInfo = self::$ShelfInfo->where('order', $Goodsinfo->logisticsOrderCode)->select('id')->first();
+
+        if($ShelfInfo) return $this->ReturnJson(200202, '入库成功,等待上架');
+
         DB::beginTransaction();
         try {
             self::$Goods->where('mailNo', $request->mailNo)->update(['order_status' => 10, 'created_at' => date('Y-m-d H:i:s')]);
-            self::$ShelfInfo->create(['order' => $request->mailNo, 'area_id' => $storeinfo['area_id'], 'area_name' => $storeinfo['area_name'],'created_at' => date('Y-m-d H:i:s')]);
+            self::$ShelfInfo->create(['order' => $Goodsinfo->logisticsOrderCode, 'area_id' => $storeinfo['area_id'], 'area_name' => $storeinfo['area_name'],'created_at' => date('Y-m-d H:i:s')]);
             self::$GoodsLog->create(['text' => '该快件已入库,快件库区是:'.$storeinfo['area_name'].',操作人员的账号是:'.$adminInfo->user_name, 'user_name' => $adminInfo->user_name]);
             DB::commit();
             return $this->ReturnJson(200201, '入库成功');

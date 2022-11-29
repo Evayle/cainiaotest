@@ -22,14 +22,14 @@ class OrderOutBoundApply extends Controller
         $postData = self::postData('CONSO_WAREHOUSE_OUTBOUND_APPLY',$content ,$contentInfo);
 
         $res = self::Curl(self::$url,$postData);
-
+        
         if(!$res) return false;
 
         $errlog = $res;
 
         $res = json_decode($res);
 
-        if(isset($res->success) && $res->success == 'true') return true;
+        if(isset($res->success) && $res->success == 'true') return $res;
 
         $errorlog = ['content' => $errlog, 'cainiao_api' => 'CONSO_WAREHOUSE_ARRIVE', 'order' => $logisticsOrderCode, 'created_at' => date('Y-m-d H:i:s')];
 

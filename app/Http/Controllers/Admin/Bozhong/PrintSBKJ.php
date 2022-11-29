@@ -8,6 +8,7 @@ use App\Models\BeginPickBox;
 use App\Models\Forecast;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Library\Cainiao\OrderOutBoundApply;
+use App\Http\Controllers\Library\Cainiao\OrderOutbond;
 use Illuminate\Support\Facades\DB;
 
 
@@ -56,9 +57,9 @@ class PrintSBKJ extends Controller
         }
 
         $two_logisticsOrderCode = substr($two_logisticsOrderCode,0,strlen($two_logisticsOrderCode)-1);
-
-        $PrintInfo = OrderOutBoundApply::APPLY($logisticsOrderCode, $two_logisticsOrderCode);
-
+     
+        $PrintInfo = OrderOutBoundApply::APPLY($two_logisticsOrderCode,$logisticsOrderCode );
+     
         if(!$PrintInfo) return $this->ReturnJson(400417, '获取打印面单失效,请联系管理员');
 
         $trackingNumber = $PrintInfo->waybillDetail->mailNo;

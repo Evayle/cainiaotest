@@ -19,7 +19,7 @@ class Forecast extends Model
 
     public    $timestamps = true;
 
-    protected $fillable = ['id', 'mailNo', 'logisticsOrderCode', 'two_logisticsOrderCode', 'parcel_weight', 'mailNo', 'long', 'width', 'height', 'weight','trackingNumber', 'parcel_weight', 'conso_order_query', 'deliveryType', 'consoType', 'isSplitConsign', 'isLastPackage', 'packageQuantity', 'tradeOrderId', 'dereRecogCode', 'user_phone', 'user_name', 'shop_name', 'order_status', 'in_time', 'over_time', 'created_at' ,'updated_at'];
+    protected $fillable = ['id', 'mailNo', 'logisticsOrderCode', 'two_logisticsOrderCode', 'parcel_weight', 'mailNo', 'long', 'width', 'bigBagId', 'height', 'weight','trackingNumber', 'parcel_weight', 'conso_order_query', 'deliveryType', 'consoType', 'isSplitConsign', 'isLastPackage', 'packageQuantity', 'tradeOrderId', 'dereRecogCode', 'user_phone', 'user_name', 'shop_name', 'order_status', 'in_time', 'over_time', 'created_at' ,'updated_at'];
 
     /**
      * 设置时间格式几个人法兰克福国际'螺丝刀快件管理我快递费加绿茶
@@ -58,7 +58,7 @@ class Forecast extends Model
      */
     public function  orderlog(){
 
-        return $this->hasMany(CainiaoOrderLog::class, 'order', 'mailNo');
+        return $this->hasMany(CainiaoOrderLog::class, 'order', 'logisticsOrderCode');
 
     }
 
@@ -75,7 +75,7 @@ class Forecast extends Model
      */
     public function areainfo(){
 
-        return  $this->hasOne(ShelfInfo::class, 'order', 'mailNo');
+        return  $this->hasOne(ShelfInfo::class, 'order', 'logisticsOrderCode');
 
     }
 

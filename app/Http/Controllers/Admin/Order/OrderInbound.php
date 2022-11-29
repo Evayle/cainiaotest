@@ -9,6 +9,7 @@ use App\Models\Forecast;
 use App\Models\ShelfInfo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+// use App\Http\Controllers\Library\Cainiao\OrderBeginPick;
 
 class OrderInbound extends Controller
 {
@@ -29,7 +30,7 @@ class OrderInbound extends Controller
     }
 
     /**
-     * 单件入库
+     * 单件入库--需要入库
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
@@ -56,6 +57,9 @@ class OrderInbound extends Controller
         $storeinfo = self::$Store->area_infos($Goodsinfo->store_name);
 
         if(!$storeinfo) return $this->ReturnJson(400403, '该订单的快件没有绑定库区,请联系仓管!');
+
+
+
 
         DB::beginTransaction();
         try {

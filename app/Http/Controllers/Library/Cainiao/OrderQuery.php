@@ -30,8 +30,8 @@ class OrderQuery extends Controller
             return false;
         }
 
-        $conso_order_query = $res->isSingle ? 1: 2 ;
-        $isLastPackage     = $res->isTail ? 'Y': 'N' ;
+        $conso_order_query = $res->isSingle == 'true' ? 1 : 2 ;
+        $isLastPackage     = $res->isTail =='true' ? 'Y': 'N' ;
         Forecast::where('logisticsOrderCode', '=', $logisticsOrderCode)->update(['conso_order_query' => $conso_order_query, 'isLastPackage' => $isLastPackage]);
 
         return $conso_order_query;

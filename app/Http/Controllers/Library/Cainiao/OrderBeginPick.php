@@ -19,7 +19,7 @@ class OrderBeginPick extends Controller
         $postData = self::postData('CONSO_WAREHOUSE_BEGIN_PICK',$content ,$contentInfo);
 
         $res = self::Curl(self::$url,$postData);
-
+        // dump($res);
         if(!$res) return false;
 
         $errlog = $res;

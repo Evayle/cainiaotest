@@ -11,7 +11,7 @@
  Target Server Version : 50736
  File Encoding         : 65001
 
- Date: 26/11/2022 18:03:37
+ Date: 29/11/2022 18:20:02
 */
 
 SET NAMES utf8mb4;
@@ -44,7 +44,7 @@ CREATE TABLE `admin_user`  (
 -- Records of admin_user
 -- ----------------------------
 INSERT INTO `admin_user` VALUES (4, 'Eva', '$2y$10$mg9OkWLjnNTB.HWKB5wWXenMLwNRnZzaV5knlq1NwxvJBO.A1VTLi', '1', '[\"123123\"]', '[\"12312312SBKJ\"]', 13543853501, '3b6eee82cce72e429bc317ca8d311f63', NULL, '1', '2022-11-07 09:44:16', '2022-11-11 18:18:40', NULL, 1);
-INSERT INTO `admin_user` VALUES (8, '海宁', '$2y$10$RvOw29C/3DE1sEdB95.Ki.Sb986aYHqdOnJvRPYctyPH.k5uzQZG2', '1', '[\"123123\"]', '[\"12312312SBKJ\"]', 15626906056, '89f521e63ef6439f11fb824ce885b861', '2022-11-11 16:35:35', '1', '2022-11-07 09:47:11', '2022-11-26 14:27:29', NULL, 2);
+INSERT INTO `admin_user` VALUES (8, '海宁', '$2y$10$RvOw29C/3DE1sEdB95.Ki.Sb986aYHqdOnJvRPYctyPH.k5uzQZG2', '1', '[\"123123\"]', '[\"12312312SBKJ\"]', 15626906056, 'c85ee154abba5a9384f7d0b2faaa9a1d', '2022-11-11 16:35:35', '1', '2022-11-07 09:47:11', '2022-11-29 15:57:09', NULL, 2);
 
 -- ----------------------------
 -- Table structure for admin_user_group
@@ -160,6 +160,46 @@ CREATE TABLE `cainiao_area_task`  (
 INSERT INTO `cainiao_area_task` VALUES (1, '库区一认领部分', 1, 10, 50);
 
 -- ----------------------------
+-- Table structure for cainiao_baundswoing
+-- ----------------------------
+DROP TABLE IF EXISTS `cainiao_baundswoing`;
+CREATE TABLE `cainiao_baundswoing`  (
+  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '播种区名称',
+  `code` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '播种区code',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE INDEX `code`(`code`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Compact;
+
+-- ----------------------------
+-- Records of cainiao_baundswoing
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for cainiao_beginpick_box
+-- ----------------------------
+DROP TABLE IF EXISTS `cainiao_beginpick_box`;
+CREATE TABLE `cainiao_beginpick_box`  (
+  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `code` varchar(60) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '条码',
+  `two_logisticsOrderCode` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '二段单号',
+  `order` varchar(120) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '单号',
+  `status` smallint(1) NOT NULL DEFAULT 1 COMMENT '状态:1已装框,2待出框,3已出框',
+  `swoing_code` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '绑定播种区code',
+  `out_sort` smallint(1) NULL DEFAULT NULL COMMENT '播种区部分',
+  `created_at` timestamp NULL DEFAULT NULL COMMENT '添加时间',
+  `updated_at` timestamp NULL DEFAULT NULL COMMENT '修改时间',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 9 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Compact;
+
+-- ----------------------------
+-- Records of cainiao_beginpick_box
+-- ----------------------------
+INSERT INTO `cainiao_beginpick_box` VALUES (8, 'CHE001', 'LP00547062717351', 'LP00546146351149', 3, NULL, NULL, '2022-11-29 17:43:45', '2022-11-29 17:59:15');
+
+-- ----------------------------
 -- Table structure for cainiao_bount_task_list
 -- ----------------------------
 DROP TABLE IF EXISTS `cainiao_bount_task_list`;
@@ -168,36 +208,25 @@ CREATE TABLE `cainiao_bount_task_list`  (
   `mailNo` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '订单号',
   `logisticsOrderCode` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '一段单号',
   `two_logisticsOrderCode` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '二段单号',
+  `tesk_status` smallint(1) NOT NULL DEFAULT 0 COMMENT '任务状态:0待认领,1已认领3已完成',
   `area_id` int(11) NOT NULL COMMENT '库区ID',
   `area_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '库区名称',
   `code` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '货架号',
   `bound_time` timestamp NULL DEFAULT NULL COMMENT '处理通知时间',
+  `admin_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '认领人员',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `order`(`mailNo`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 69 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 39 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of cainiao_bount_task_list
 -- ----------------------------
-INSERT INTO `cainiao_bount_task_list` VALUES (1, '545806510768', 'LP00545806510768', 'LP00544427410761', 1, 'AYD001', '213123', '2022-11-26 16:08:31', '2022-11-26 17:51:50', '2022-11-26 17:51:50');
-INSERT INTO `cainiao_bount_task_list` VALUES (2, '546094278624', 'LP00546094278624', 'LP00544427410761', 1, 'AYD001', '213123', NULL, '2022-11-26 17:51:50', '2022-11-26 17:51:50');
-INSERT INTO `cainiao_bount_task_list` VALUES (3, '546094278675', 'LP00546094278675', 'LP00544427410761', 1, 'AYD001', '213123', NULL, '2022-11-26 17:51:50', '2022-11-26 17:51:50');
-INSERT INTO `cainiao_bount_task_list` VALUES (21, '546094278731', 'LP00546094278731', 'LP00544427410761', 1, 'AYD001', '213123', NULL, '2022-11-26 17:52:54', '2022-11-26 17:52:54');
-INSERT INTO `cainiao_bount_task_list` VALUES (22, '546138921620', 'LP00546138921620', 'LP00544427410761', 1, 'AYD001', '213123', NULL, '2022-11-26 17:52:54', '2022-11-26 17:52:54');
-INSERT INTO `cainiao_bount_task_list` VALUES (23, '546146350613', 'LP00546146350613', 'LP00544427410761', 1, 'AYD001', '213123', NULL, '2022-11-26 17:52:54', '2022-11-26 17:52:54');
-INSERT INTO `cainiao_bount_task_list` VALUES (24, '546146350814', 'LP00546146350814', 'LP00544427410761', 1, 'AYD001', '213123', NULL, '2022-11-26 17:52:54', '2022-11-26 17:52:54');
-INSERT INTO `cainiao_bount_task_list` VALUES (25, '546146351072', 'LP00546146351150', 'LP00544427410762', 1, 'AYD001', '213123', NULL, '2022-11-26 17:52:54', '2022-11-26 17:52:54');
-INSERT INTO `cainiao_bount_task_list` VALUES (26, '546146351070', 'LP00546146351139', 'LP00544427410762', 1, 'AYD001', '213123', NULL, '2022-11-26 17:52:54', '2022-11-26 17:52:54');
-INSERT INTO `cainiao_bount_task_list` VALUES (27, '546146351071', 'LP00546146351149', 'LP00544427410762', 1, 'AYD001', '213123', NULL, '2022-11-26 17:52:54', '2022-11-26 17:52:54');
-INSERT INTO `cainiao_bount_task_list` VALUES (28, '546146351254', 'LP00546146351254', '3121321355545', 1, 'AYD001', '213123', NULL, '2022-11-26 17:52:54', '2022-11-26 17:52:54');
-INSERT INTO `cainiao_bount_task_list` VALUES (29, '546146351386', 'LP00546146351386', '3121321355545', 1, 'AYD001', '213123', NULL, '2022-11-26 17:52:54', '2022-11-26 17:52:54');
-INSERT INTO `cainiao_bount_task_list` VALUES (30, '546146350818', 'LP00546146350818', '3121321355545', 1, 'AYD001', '213123', NULL, '2022-11-26 17:52:54', '2022-11-26 17:52:54');
-INSERT INTO `cainiao_bount_task_list` VALUES (31, '546146351264', 'LP00546146351264', '3121321355545', 1, 'AYD001', '213123', NULL, '2022-11-26 17:52:54', '2022-11-26 17:52:54');
-INSERT INTO `cainiao_bount_task_list` VALUES (32, '544879146188', 'LP00544879146188', '3121321355545', 1, 'AYD001', '213123', NULL, '2022-11-26 17:52:54', '2022-11-26 17:52:54');
-INSERT INTO `cainiao_bount_task_list` VALUES (33, '546146351303', 'LP00546146351303', '3121321355545', 1, 'AYD001', '213123', NULL, '2022-11-26 17:52:54', '2022-11-26 17:52:54');
-INSERT INTO `cainiao_bount_task_list` VALUES (34, '30357937081526455191', 'LP005462114710451', '3121321355545', 1, 'AYD001', '213123', NULL, '2022-11-26 17:52:54', '2022-11-26 17:52:54');
+INSERT INTO `cainiao_bount_task_list` VALUES (35, '546146351072', 'LP00546146351150', 'LP00547062717351', 1, 1, '2库区1', 'TEST0001', NULL, '海宁', '2022-11-29 17:16:59', '2022-11-29 17:25:37');
+INSERT INTO `cainiao_bount_task_list` VALUES (36, '546146351070', 'LP00546146351139', 'LP00547062717351', 1, 1, '2库区1', 'TEST0001', NULL, '海宁', '2022-11-29 17:16:59', '2022-11-29 17:25:37');
+INSERT INTO `cainiao_bount_task_list` VALUES (37, '546146351071', 'LP00546146351149', 'LP00547062717351', 3, 1, '2库区1', 'TEST0001', NULL, '海宁', '2022-11-29 17:16:59', '2022-11-29 17:43:45');
+INSERT INTO `cainiao_bount_task_list` VALUES (38, '12312', '1231', '123', 0, 1, '1', '1', NULL, NULL, NULL, NULL);
 
 -- ----------------------------
 -- Table structure for cainiao_config
@@ -268,36 +297,38 @@ CREATE TABLE `cainiao_forecast`  (
   `over_time` timestamp NULL DEFAULT NULL,
   `outbound_time` timestamp NULL DEFAULT NULL COMMENT '处理通知时间',
   `store_name` varchar(40) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '柜点名称',
+  `bigBagId` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '出库大包号',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 88 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 89 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of cainiao_forecast
 -- ----------------------------
-INSERT INTO `cainiao_forecast` VALUES (64, '544878835398', 'LP00544878835398', NULL, NULL, NULL, 0, 'HOME_DELIVERY', '002', 'N', 'Y', 1, '3034418148098645519', 'R5JY443U2XCE1', '853-22221111', 'YTO', '澳门', '女装/女士精品_连衣裙', '0', '2022-11-16 17:45:02', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO `cainiao_forecast` VALUES (65, '544888642108', 'LP00544888642108', NULL, NULL, NULL, 0, 'HOME_DELIVERY', '002', 'N', 'Y', 1, '3036104462270645519', 'R5LAVQYV81JSJ', '86-15158121000', 'YTO', '澳门', '饰品/流行首饰/时尚饰品新_发饰', '0', '2022-11-16 18:00:54', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO `cainiao_forecast` VALUES (66, '544879146179', 'LP00544879146179', NULL, NULL, NULL, 0, 'HOME_DELIVERY', '002', 'N', 'Y', 1, '3036493045160645519', 'R5L1DC9M4KYHD', '86-15158121000', 'YTO', '澳门', '饰品/流行首饰/时尚饰品新_发饰', '0', '2022-11-17 16:41:53', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO `cainiao_forecast` VALUES (67, '544879146178', 'LP00545108197720', NULL, NULL, NULL, 0, 'HOME_DELIVERY', '002', 'N', 'Y', 1, '3036493045160645519', 'R5L1DC9M4KYHD', '86-15158121000', 'ZTO', '澳门', '饰品/流行首饰/时尚饰品新_发饰', '0', '2022-11-17 16:50:48', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO `cainiao_forecast` VALUES (68, '544888642167', 'LP00544888642167', NULL, NULL, NULL, 0, 'HOME_DELIVERY', '002', 'N', 'Y', 1, '3036491281156645519', 'R5L1AZ6RYWW4C', '86-15158121000', 'YTO', '澳门', '饰品/流行首饰/时尚饰品新_发饰', '0', '2022-11-17 17:52:01', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO `cainiao_forecast` VALUES (69, '544888642168', 'LP00544888642168', NULL, NULL, NULL, 0, 'HOME_DELIVERY', '002', 'N', 'Y', 1, '3036493045167645519', 'R5L1DC91EWTK2', '86-15158121000', 'YTO', '澳门', '饰品/流行首饰/时尚饰品新_发饰', '0', '2022-11-21 10:10:45', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO `cainiao_forecast` VALUES (70, '545724935152', 'LP00545724935152', NULL, NULL, NULL, 0, 'HOME_DELIVERY', '002', 'N', 'Y', 1, '3044131345226645519', 'R54WUHQDE2WH8', '853-22221111', 'YTO', '澳门', '女装/女士精品_连衣裙', '0', '2022-11-21 10:18:46', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO `cainiao_forecast` VALUES (71, '545806510768', 'LP00545806510768', 'LP00544427410761', 'LP00545724935152', NULL, 0, 'HOME_DELIVERY', '002', 'N', 'Y', 1, '3044795113620645519', 'R545DV9AKF6KD', '853-22221111', 'DISTRIBUTOR_13476787', '澳门', '女装/女士精品_连衣裙', '17', '2022-11-21 16:12:51', '2022-11-26 18:02:11', '10', NULL, NULL, NULL, NULL, NULL, NULL, '2022-11-26 18:02:11', NULL);
-INSERT INTO `cainiao_forecast` VALUES (72, '546094278624', 'LP00546094278624', 'LP00544427410761', 'LP00545724935152', NULL, 0, 'HOME_DELIVERY', '002', 'N', 'Y', 1, '3048393133021645519', 'R59AHSW3CGYXA', '853-22221111', 'YTO', '澳门', '女装/女士精品_连衣裙', '17', '2022-11-23 11:47:21', '2022-11-26 17:55:24', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO `cainiao_forecast` VALUES (73, '546094278675', 'LP00546094278675', 'LP00544427410761', 'LP00545724935152', NULL, 0, 'HOME_DELIVERY', '002', 'N', 'Y', 1, '3048626774073645519', 'R59ZAUUU9Q6XL', '853-22221111', 'YTO', '澳门', '女装/女士精品_连衣裙', '17', '2022-11-23 11:48:08', '2022-11-26 17:55:24', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO `cainiao_forecast` VALUES (74, '546094278731', 'LP00546094278731', 'LP00544427410761', 'LP00545724935152', NULL, 0, 'HOME_DELIVERY', '002', 'N', 'Y', 1, '3046418064626645519', 'R564MZD5AQTN4', '853-22221111', 'YTO', '澳门', '女装/女士精品_连衣裙', '17', '2022-11-23 11:48:46', '2022-11-26 17:55:24', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO `cainiao_forecast` VALUES (75, '546138921620', 'LP00546138921620', 'LP00544427410761', 'LP00545724935152', NULL, 0, 'HOME_DELIVERY', '002', 'N', 'Y', 1, '3046328532887645519', 'R561DXRJG64SC', '853-22221111', 'YTO', '澳门', '女装/女士精品_连衣裙', '17', '2022-11-23 15:14:49', '2022-11-26 17:55:24', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO `cainiao_forecast` VALUES (76, '546146350613', 'LP00546146350613', 'LP00544427410761', 'LP00545724935152', NULL, 1, 'HOME_DELIVERY', '002', 'N', 'Y', 1, '3049156046205645519', 'R6QYA2V1U996N', '853-22221111', 'YTO', '澳门', '女装/女士精品_连衣裙', '17', '2022-11-23 17:05:58', '2022-11-26 17:55:24', '5', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO `cainiao_forecast` VALUES (77, '546146350814', 'LP00546146350814', 'LP00544427410761', 'LP00545724935152', NULL, 1, 'HOME_DELIVERY', '002', 'N', 'Y', 1, '3049155434218645519', 'R6QYAWHT56D8V', '853-22221111', 'YTO', '澳门', '女装/女士精品_连衣裙', '17', '2022-11-23 17:06:30', '2022-11-26 17:55:24', '5', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO `cainiao_forecast` VALUES (78, '546146351072', 'LP00546146351150', 'LP00544427410762', 'LP00545724935153', NULL, 0, 'HOME_DELIVERY', '002', 'Y', 'Y', 3, '3049145426309645519', 'R6QT5DVMS4A7E', '1-01046923153', 'YTO', 'coco', '饰品/流行首饰/时尚饰品新_发饰', '17', '2022-11-23 17:25:22', '2022-11-26 17:55:24', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO `cainiao_forecast` VALUES (79, '546146351070', 'LP00546146351139', 'LP00544427410762', 'LP00545724935153', NULL, 0, 'HOME_DELIVERY', '002', 'Y', 'Y', 3, '3049145426309645519', 'R6QT5DVMS4A7E', '1-01046923153', 'YTO', 'coco', '饰品/流行首饰/时尚饰品新_发饰', '17', '2022-11-23 17:25:58', '2022-11-26 17:55:24', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO `cainiao_forecast` VALUES (80, '546146351071', 'LP00546146351149', 'LP00544427410762', 'LP00545724935153', NULL, 0, 'HOME_DELIVERY', '002', 'Y', 'Y', 3, '3049145426309645519', 'R6QT5DVMS4A7E', '1-01046923153', 'YTO', 'coco', '饰品/流行首饰/时尚饰品新_发饰', '17', '2022-11-23 17:25:58', '2022-11-26 17:55:24', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO `cainiao_forecast` VALUES (81, '546146351254', 'LP00546146351254', '3121321355545', 'LP005457249351521', NULL, 0, 'HOME_DELIVERY', '002', 'N', 'Y', 1, '3049156046275645519', 'R6QYA2V3N3MMY', '853-22221111', 'YTO', '澳门', '女装/女士精品_连衣裙', '17', '2022-11-23 17:33:01', '2022-11-26 17:55:24', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO `cainiao_forecast` VALUES (82, '546146351386', 'LP00546146351386', '3121321355545', 'LP0054572493515212', NULL, 0, 'HOME_DELIVERY', '002', 'N', 'Y', 1, '3048823045287645519', 'R592NFW9RFLTK', '853-22221111', 'YTO', '澳门', '女装/女士精品_连衣裙', '17', '2022-11-23 17:46:01', '2022-11-26 17:55:24', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO `cainiao_forecast` VALUES (83, '546146350818', 'LP00546146350818', '3121321355545', 'LP00545724935157', NULL, 0, 'HOME_DELIVERY', '002', 'N', 'Y', 1, '3049488219204645519', 'R6QX4ARCCMLJ1', '853-22221111', 'YTO', '澳门', '女装/女士精品_连衣裙', '17', '2022-11-23 21:56:31', '2022-11-26 17:55:24', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO `cainiao_forecast` VALUES (84, '546146351264', 'LP00546146351264', '3121321355545', 'LP00545724935157', NULL, 0, 'HOME_DELIVERY', '002', 'N', 'Y', 1, '3049157450252645519', 'R6QYDHN13ZQWF', '853-22221111', 'YTO', '澳门', '女装/女士精品_连衣裙', '17', '2022-11-23 21:57:27', '2022-11-26 17:55:24', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO `cainiao_forecast` VALUES (85, '544879146188', 'LP00544879146188', '3121321355545', 'LP00545724935157', NULL, 0, 'HOME_DELIVERY', '002', 'N', 'Y', 1, '3037446903156645519', 'R5Z6G944HU2V5', '86-15158121000', 'YTO', '澳门', '饰品/流行首饰/时尚饰品新_发饰', '17', '2022-11-23 21:58:42', '2022-11-26 17:55:24', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO `cainiao_forecast` VALUES (86, '546146351303', 'LP00546146351303', '3121321355545', 'LP00545724935157', NULL, 0, 'HOME_DELIVERY', '002', 'N', 'Y', 1, '3049140818272645519', 'R6QTN7TXYYEJG', '853-22221111', 'YTO', '澳门', '女装/女士精品_连衣裙', '17', '2022-11-23 22:21:06', '2022-11-26 17:55:24', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO `cainiao_forecast` VALUES (87, '30357937081526455191', 'LP005462114710451', '3121321355545', 'LP00545724935157', NULL, 0, 'HOME_DELIVERY', '002', 'N', 'N', 1, '3035793708152645519', 'R5K55NUC8Y8XN', '86-15158121000', NULL, '澳门', '饰品/流行首饰/时尚饰品新_发饰', '17', '2022-11-24 14:39:54', '2022-11-26 17:55:24', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'AYDTTT');
+INSERT INTO `cainiao_forecast` VALUES (64, '544878835398', 'LP00544878835398', NULL, 'SBKJ0131972604CN', NULL, 0, 'HOME_DELIVERY', '002', 'N', 'Y', 1, '3034418148098645519', 'R5JY443U2XCE1', '853-22221111', 'YTO', '澳门', '女装/女士精品_连衣裙', '45', '2022-11-16 17:45:02', '2022-11-29 18:14:18', '13', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'AYDTTT', 'TEST123456');
+INSERT INTO `cainiao_forecast` VALUES (65, '544888642108', 'LP00544888642108', NULL, 'SBKJ0131972604CN', NULL, 0, 'HOME_DELIVERY', '002', 'N', 'Y', 1, '3036104462270645519', 'R5LAVQYV81JSJ', '86-15158121000', 'YTO', '澳门', '饰品/流行首饰/时尚饰品新_发饰', '45', '2022-11-16 18:00:54', '2022-11-29 18:14:18', '13', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'AYDTTT', 'TEST123456');
+INSERT INTO `cainiao_forecast` VALUES (66, '544879146179', 'LP00544879146179', NULL, 'SBKJ0131972604CN', NULL, 0, 'HOME_DELIVERY', '002', 'N', 'Y', 1, '3036493045160645519', 'R5L1DC9M4KYHD', '86-15158121000', 'YTO', '澳门', '饰品/流行首饰/时尚饰品新_发饰', '45', '2022-11-17 16:41:53', '2022-11-29 18:14:18', '13', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'AYDTTT', 'TEST123456');
+INSERT INTO `cainiao_forecast` VALUES (67, '544879146178', 'LP00545108197720', NULL, 'SBKJ0131972604CN', NULL, 0, 'HOME_DELIVERY', '002', 'N', 'Y', 1, '3036493045160645519', 'R5L1DC9M4KYHD', '86-15158121000', 'ZTO', '澳门', '饰品/流行首饰/时尚饰品新_发饰', '45', '2022-11-17 16:50:48', '2022-11-29 18:14:18', '13', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'AYDTTT', 'TEST123456');
+INSERT INTO `cainiao_forecast` VALUES (68, '544888642167', 'LP00544888642167', NULL, 'SBKJ0131972604CN', NULL, 0, 'HOME_DELIVERY', '002', 'N', 'Y', 1, '3036491281156645519', 'R5L1AZ6RYWW4C', '86-15158121000', 'YTO', '澳门', '饰品/流行首饰/时尚饰品新_发饰', '45', '2022-11-17 17:52:01', '2022-11-29 18:14:18', '13', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'AYDTTT', 'TEST123456');
+INSERT INTO `cainiao_forecast` VALUES (69, '544888642168', 'LP00544888642168', NULL, 'SBKJ0131972604CN', NULL, 0, 'HOME_DELIVERY', '002', 'N', 'Y', 1, '3036493045167645519', 'R5L1DC91EWTK2', '86-15158121000', 'YTO', '澳门', '饰品/流行首饰/时尚饰品新_发饰', '45', '2022-11-21 10:10:45', '2022-11-29 18:14:18', '13', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'AYDTTT', 'TEST123456');
+INSERT INTO `cainiao_forecast` VALUES (70, '545724935152', 'LP00545724935152', NULL, 'SBKJ0131972604CN', NULL, 0, 'HOME_DELIVERY', '002', 'N', 'Y', 1, '3044131345226645519', 'R54WUHQDE2WH8', '853-22221111', 'YTO', '澳门', '女装/女士精品_连衣裙', '45', '2022-11-21 10:18:46', '2022-11-29 18:14:18', '13', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'AYDTTT', 'TEST123456');
+INSERT INTO `cainiao_forecast` VALUES (71, '545806510768', 'LP00545806510768', NULL, 'SBKJ0131972604CN', NULL, 0, 'HOME_DELIVERY', '002', 'N', 'Y', 1, '3044795113620645519', 'R545DV9AKF6KD', '853-22221111', 'DISTRIBUTOR_13476787', '澳门', '女装/女士精品_连衣裙', '45', '2022-11-21 16:12:51', '2022-11-29 18:14:18', '13', NULL, NULL, NULL, NULL, NULL, NULL, '2022-11-26 18:02:11', 'AYDTTT', 'TEST123456');
+INSERT INTO `cainiao_forecast` VALUES (72, '546094278624', 'LP00546094278624', NULL, 'SBKJ0131972604CN', NULL, 0, 'HOME_DELIVERY', '002', 'N', 'Y', 1, '3048393133021645519', 'R59AHSW3CGYXA', '853-22221111', 'YTO', '澳门', '女装/女士精品_连衣裙', '45', '2022-11-23 11:47:21', '2022-11-29 18:14:18', '13', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'AYDTTT', 'TEST123456');
+INSERT INTO `cainiao_forecast` VALUES (73, '546094278675', 'LP00546094278675', NULL, 'SBKJ0131972604CN', NULL, 0, 'HOME_DELIVERY', '002', 'N', 'Y', 1, '3048626774073645519', 'R59ZAUUU9Q6XL', '853-22221111', 'YTO', '澳门', '女装/女士精品_连衣裙', '45', '2022-11-23 11:48:08', '2022-11-29 18:14:18', '13', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'AYDTTT', 'TEST123456');
+INSERT INTO `cainiao_forecast` VALUES (74, '546094278731', 'LP00546094278731', NULL, 'SBKJ0131972604CN', NULL, 0, 'HOME_DELIVERY', '002', 'N', 'Y', 1, '3046418064626645519', 'R564MZD5AQTN4', '853-22221111', 'YTO', '澳门', '女装/女士精品_连衣裙', '45', '2022-11-23 11:48:46', '2022-11-29 18:14:18', '13', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'AYDTTT', 'TEST123456');
+INSERT INTO `cainiao_forecast` VALUES (75, '546138921620', 'LP00546138921620', NULL, 'SBKJ0131972604CN', NULL, 0, 'HOME_DELIVERY', '002', 'N', 'Y', 1, '3046328532887645519', 'R561DXRJG64SC', '853-22221111', 'YTO', '澳门', '女装/女士精品_连衣裙', '45', '2022-11-23 15:14:49', '2022-11-29 18:14:18', '13', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'AYDTTT', 'TEST123456');
+INSERT INTO `cainiao_forecast` VALUES (76, '546146350613', 'LP00546146350613', NULL, 'SBKJ0131972604CN', NULL, 1, 'HOME_DELIVERY', '002', 'N', 'Y', 1, '3049156046205645519', 'R6QYA2V1U996N', '853-22221111', 'YTO', '澳门', '女装/女士精品_连衣裙', '45', '2022-11-23 17:05:58', '2022-11-29 18:14:18', '13', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'AYDTTT', 'TEST123456');
+INSERT INTO `cainiao_forecast` VALUES (77, '546146350814', 'LP00546146350814', NULL, 'SBKJ0131972604CN', NULL, 1, 'HOME_DELIVERY', '002', 'N', 'Y', 1, '3049155434218645519', 'R6QYAWHT56D8V', '853-22221111', 'YTO', '澳门', '女装/女士精品_连衣裙', '45', '2022-11-23 17:06:30', '2022-11-29 18:14:18', '13', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'AYDTTT', 'TEST123456');
+INSERT INTO `cainiao_forecast` VALUES (78, '546146351072', 'LP00546146351150', 'LP00547062717351', 'SBKJ0131972604CN', NULL, 2, 'HOME_DELIVERY', '002', 'Y', 'Y', 3, '3049145426309645519', 'R6QT5DVMS4A7E', '1-01046923153', 'YTO', 'coco', '饰品/流行首饰/时尚饰品新_发饰', '40', '2022-11-29 16:41:07', '2022-11-29 17:59:15', '12', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'AYDTTT', NULL);
+INSERT INTO `cainiao_forecast` VALUES (79, '546146351070', 'LP00546146351139', 'LP00547062717351', 'SBKJ0131972604CN', NULL, 2, 'HOME_DELIVERY', '002', 'Y', 'Y', 3, '3049145426309645519', 'R6QT5DVMS4A7E', '1-01046923153', 'YTO', 'coco', '饰品/流行首饰/时尚饰品新_发饰', '40', '2022-11-29 16:41:35', '2022-11-29 17:59:15', '12', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'AYDTTT', NULL);
+INSERT INTO `cainiao_forecast` VALUES (80, '546146351071', 'LP00546146351149', 'LP00547062717351', 'SBKJ0131972604CN', NULL, 2, 'HOME_DELIVERY', '002', 'Y', 'Y', 3, '3049145426309645519', 'R6QT5DVMS4A7E', '1-01046923153', 'YTO', 'coco', '饰品/流行首饰/时尚饰品新_发饰', '40', '2022-11-29 16:41:39', '2022-11-29 17:59:15', '12', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'AYDTTT', NULL);
+INSERT INTO `cainiao_forecast` VALUES (81, '546146351254', 'LP00546146351254', 'LP00547086206138', NULL, NULL, 1, 'HOME_DELIVERY', '002', 'N', 'Y', 1, '3049156046275645519', 'R6QYA2V3N3MMY', '853-22221111', 'YTO', '澳门', '女装/女士精品_连衣裙', '5', '2022-11-23 17:33:01', '2022-11-29 16:00:38', '5', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'AYDTTT', NULL);
+INSERT INTO `cainiao_forecast` VALUES (82, '546146351386', 'LP00546146351386', 'LP00547086206141', NULL, NULL, 1, 'HOME_DELIVERY', '002', 'N', 'Y', 1, '3048823045287645519', 'R592NFW9RFLTK', '853-22221111', 'YTO', '澳门', '女装/女士精品_连衣裙', '5', '2022-11-23 17:46:01', '2022-11-29 16:00:46', '5', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'AYDTTT', NULL);
+INSERT INTO `cainiao_forecast` VALUES (83, '546146350818', 'LP00546146350818', NULL, 'SBKJ0131972604CN', NULL, 0, 'HOME_DELIVERY', '002', 'N', 'Y', 1, '3049488219204645519', 'R6QX4ARCCMLJ1', '853-22221111', 'YTO', '澳门', '女装/女士精品_连衣裙', '45', '2022-11-23 21:56:31', '2022-11-29 18:14:18', '13', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'AYDTTT', 'TEST123456');
+INSERT INTO `cainiao_forecast` VALUES (84, '546146351264', 'LP00546146351264', NULL, 'SBKJ0131972604CN', NULL, 0, 'HOME_DELIVERY', '002', 'N', 'Y', 1, '3049157450252645519', 'R6QYDHN13ZQWF', '853-22221111', 'YTO', '澳门', '女装/女士精品_连衣裙', '45', '2022-11-23 21:57:27', '2022-11-29 18:14:18', '13', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'AYDTTT', 'TEST123456');
+INSERT INTO `cainiao_forecast` VALUES (85, '544879146188', 'LP00544879146188', NULL, 'SBKJ0131972604CN', NULL, 0, 'HOME_DELIVERY', '002', 'N', 'Y', 1, '3037446903156645519', 'R5Z6G944HU2V5', '86-15158121000', 'YTO', '澳门', '饰品/流行首饰/时尚饰品新_发饰', '45', '2022-11-23 21:58:42', '2022-11-29 18:14:18', '13', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'AYDTTT', 'TEST123456');
+INSERT INTO `cainiao_forecast` VALUES (86, '546146351303', 'LP00546146351303', NULL, 'SBKJ0131972604CN', NULL, 0, 'HOME_DELIVERY', '002', 'N', 'Y', 1, '3049140818272645519', 'R6QTN7TXYYEJG', '853-22221111', 'YTO', '澳门', '女装/女士精品_连衣裙', '45', '2022-11-23 22:21:06', '2022-11-29 18:14:18', '13', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'AYDTTT', 'TEST123456');
+INSERT INTO `cainiao_forecast` VALUES (87, '30357937081526455191', 'LP005462114710451', NULL, 'SBKJ0131972604CN', NULL, 0, 'HOME_DELIVERY', '002', 'N', 'N', 1, '3035793708152645519', 'R5K55NUC8Y8XN', '86-15158121000', NULL, '澳门', '饰品/流行首饰/时尚饰品新_发饰', '45', '2022-11-24 14:39:54', '2022-11-29 18:14:18', '13', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'AYDTTT', 'TEST123456');
+INSERT INTO `cainiao_forecast` VALUES (88, '3035793708152645519', 'LP00546211471045', NULL, 'SBKJ0131972604CN', NULL, 0, 'HOME_DELIVERY', '002', 'N', 'N', 1, '3035793708152645519', 'R5K55NUC8Y8XN', '86-15158121000', NULL, '澳门', '饰品/流行首饰/时尚饰品新_发饰', '45', '2022-11-29 15:44:22', '2022-11-29 18:14:18', '13', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'AYDTTT', 'TEST123456');
 
 -- ----------------------------
 -- Table structure for cainiao_forecast_count
@@ -310,7 +341,7 @@ CREATE TABLE `cainiao_forecast_count`  (
   `created_at` timestamp NULL DEFAULT NULL COMMENT '当日时间',
   `updated_at` timestamp NULL DEFAULT NULL COMMENT '修改时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 15 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 16 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of cainiao_forecast_count
@@ -318,6 +349,7 @@ CREATE TABLE `cainiao_forecast_count`  (
 INSERT INTO `cainiao_forecast_count` VALUES (12, 3, '2022-11-15', '2022-11-16 10:17:40', '2022-11-16 10:17:43');
 INSERT INTO `cainiao_forecast_count` VALUES (13, 10, '2022-11-16', '2022-11-16 10:18:00', '2022-11-16 16:54:13');
 INSERT INTO `cainiao_forecast_count` VALUES (14, 1, '2022-11-24', '2022-11-24 14:34:55', '2022-11-24 14:34:55');
+INSERT INTO `cainiao_forecast_count` VALUES (15, 1, '2022-11-29', '2022-11-29 15:44:22', '2022-11-29 15:44:22');
 
 -- ----------------------------
 -- Table structure for cainiao_forecast_shopinfo
@@ -347,7 +379,7 @@ CREATE TABLE `cainiao_forecast_shopinfo`  (
   `created_at` timestamp NULL DEFAULT NULL COMMENT '添加数据时间',
   `updated_at` timestamp NULL DEFAULT NULL COMMENT '数据修改时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 66 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = COMPACT;
+) ENGINE = InnoDB AUTO_INCREMENT = 67 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = COMPACT;
 
 -- ----------------------------
 -- Records of cainiao_forecast_shopinfo
@@ -364,6 +396,7 @@ INSERT INTO `cainiao_forecast_shopinfo` VALUES (62, 72, '607136539151', '', '女
 INSERT INTO `cainiao_forecast_shopinfo` VALUES (63, 73, '607136539151', '', '女装，TBC，测试商品，请不要拍，拍下不发货', '16_50010850', '女装/女士精品_连衣裙', '1', '1', '1', 'https://img.alicdn.com/imgextra/i3/429504656/O1CN01mTmkIn1kGUZsU3xhB_!!429504656.jpg', '', '1', NULL, NULL, NULL, NULL, '0', NULL, NULL, '2022-11-23 11:48:08', '2022-11-23 11:48:08');
 INSERT INTO `cainiao_forecast_shopinfo` VALUES (64, 74, '607136539151', '', '女装，TBC，测试商品，请不要拍，拍下不发货', '16_50010850', '女装/女士精品_连衣裙', '1', '1', '1', 'https://img.alicdn.com/imgextra/i3/429504656/O1CN01mTmkIn1kGUZsU3xhB_!!429504656.jpg', '', '1', NULL, NULL, NULL, NULL, '0', NULL, NULL, '2022-11-23 11:48:46', '2022-11-23 11:48:46');
 INSERT INTO `cainiao_forecast_shopinfo` VALUES (65, 75, '667718304014', '4810140060309', '(测试商品请不要拍)克隆商品=42985775812', '50013864_50013878', '饰品/流行首饰/时尚饰品新_发饰', '1', '1', '1', 'https://img.alicdn.com/imgextra/i1/263669477/O1CN01fH0cbf2JsW8fvHFwx_!!263669477.jpg', '颜色分类:明黄色', '1', NULL, NULL, NULL, NULL, '0', NULL, NULL, '2022-11-24 14:34:55', '2022-11-24 14:34:55');
+INSERT INTO `cainiao_forecast_shopinfo` VALUES (66, 88, '667718304014', '4810140060309', '(测试商品请不要拍)克隆商品=42985775812', '50013864_50013878', '饰品/流行首饰/时尚饰品新_发饰', '1', '1', '1', 'https://img.alicdn.com/imgextra/i1/263669477/O1CN01fH0cbf2JsW8fvHFwx_!!263669477.jpg', '颜色分类:明黄色', '1', NULL, NULL, NULL, NULL, '0', NULL, NULL, '2022-11-29 15:44:22', '2022-11-29 15:44:22');
 
 -- ----------------------------
 -- Table structure for cainiao_forecast_userinfo
@@ -395,7 +428,7 @@ CREATE TABLE `cainiao_forecast_userinfo`  (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 65 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = COMPACT;
+) ENGINE = InnoDB AUTO_INCREMENT = 66 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = COMPACT;
 
 -- ----------------------------
 -- Records of cainiao_forecast_userinfo
@@ -424,6 +457,7 @@ INSERT INTO `cainiao_forecast_userinfo` VALUES (61, 84, '小壮测试账号01', 
 INSERT INTO `cainiao_forecast_userinfo` VALUES (62, 85, '小壮测试账号01', '澳门', '86-15158121000', NULL, '中国', '澳门特别行政区', '澳门半岛', '花地玛堂区', NULL, 'MO Rua Primeiro 1 de Maio, R. Um do Bairro da Areia Preta, 澳门', '商家测试账号（小壮）', '澳门', '商家测试账号（小壮）', '0086-15363780710', '中国', '广东省', '珠海市', '香洲区', NULL, '广东省^^^珠海市^^^香洲区^^^ 拱北街道   港二路56号1栋三楼LT倉【直邮仓】@X2M0E5G3#R5Z6G944HU2V5#', '2022-11-23 21:58:42', '2022-11-23 21:58:42');
 INSERT INTO `cainiao_forecast_userinfo` VALUES (63, 86, '小壮测试账号01', '澳门', '853-22221111', NULL, '中国', '澳门特别行政区', '澳门半岛', '花王堂区', NULL, '的滴滴答答滴滴答答滴滴答答的', 'c测试账号67', 'JESS', 'c测试账号67', '59810618', '中国', '上海', '上海市', '青浦区', NULL, '上海^^^上海市^^^青浦区^^^ 白鹤镇   腾新路65号  上海捷利跨境转运仓@9Y2WCZF3#R6QTN7TXYYEJG#', '2022-11-23 22:21:06', '2022-11-23 22:21:06');
 INSERT INTO `cainiao_forecast_userinfo` VALUES (64, 87, '小壮测试账号01', '澳门', '86-15158121000', NULL, '中国', '澳门特别行政区', '澳门半岛', '花地玛堂区', NULL, 'MO Rua Primeiro 1 de Maio, R. Um do Bairro da Areia Preta, 澳门', '商家测试账号（小壮）', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2022-11-24 14:39:54', '2022-11-24 14:39:54');
+INSERT INTO `cainiao_forecast_userinfo` VALUES (65, 88, '小壮测试账号01', '澳门', '86-15158121000', NULL, '中国', '澳门特别行政区', '澳门半岛', '花地玛堂区', NULL, 'MO Rua Primeiro 1 de Maio, R. Um do Bairro da Areia Preta, 澳门', '商家测试账号（小壮）', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2022-11-29 15:44:22', '2022-11-29 15:44:22');
 
 -- ----------------------------
 -- Table structure for cainiao_order_log
@@ -438,47 +472,37 @@ CREATE TABLE `cainiao_order_log`  (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 37 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = COMPACT;
+) ENGINE = InnoDB AUTO_INCREMENT = 98 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = COMPACT;
 
 -- ----------------------------
 -- Records of cainiao_order_log
 -- ----------------------------
-INSERT INTO `cainiao_order_log` VALUES (1, '菜鸟上游仓库快件已到达,操作人员的账号是:海宁', NULL, '海宁', 'CONSO_WAREHOUSE_ARRIVE', '2022-11-20 14:26:31', '2022-11-20 14:26:31');
-INSERT INTO `cainiao_order_log` VALUES (2, '菜鸟上游仓库快件已到达,操作人员的账号是:海宁', NULL, '海宁', 'CONSO_WAREHOUSE_ARRIVE', '2022-11-20 14:26:46', '2022-11-20 14:26:46');
-INSERT INTO `cainiao_order_log` VALUES (3, '菜鸟上游仓库快件已到达,操作人员的账号是:海宁', '544888642108', '海宁', 'CONSO_WAREHOUSE_ARRIVE', '2022-11-20 14:34:10', '2022-11-20 14:34:10');
-INSERT INTO `cainiao_order_log` VALUES (4, '菜鸟上游仓库快件已签收,操作人员的账号是:海宁', '544888642108', '海宁', 'CONSO_WAREHOUSE_ARRIVE', '2022-11-20 14:34:20', '2022-11-20 14:34:20');
-INSERT INTO `cainiao_order_log` VALUES (5, '菜鸟上游仓库快件已到达,操作人员的账号是:海宁', NULL, '海宁', 'CONSO_WAREHOUSE_ARRIVE', '2022-11-22 14:53:24', '2022-11-22 14:53:24');
-INSERT INTO `cainiao_order_log` VALUES (6, '菜鸟上游仓库快件已到达,操作人员的账号是:海宁', NULL, '海宁', 'CONSO_WAREHOUSE_ARRIVE', '2022-11-22 15:13:54', '2022-11-22 15:13:54');
-INSERT INTO `cainiao_order_log` VALUES (7, '菜鸟上游仓库快件已签收,操作人员的账号是:海宁', NULL, '海宁', 'CONSO_WAREHOUSE_ARRIVE', '2022-11-22 15:20:22', '2022-11-22 15:20:22');
-INSERT INTO `cainiao_order_log` VALUES (8, '菜鸟上游仓库快件已签收,操作人员的账号是:海宁', NULL, '海宁', 'CONSO_WAREHOUSE_ARRIVE', '2022-11-22 15:20:25', '2022-11-22 15:20:25');
-INSERT INTO `cainiao_order_log` VALUES (9, '菜鸟上游仓库快件已签收,操作人员的账号是:海宁', NULL, '海宁', 'CONSO_WAREHOUSE_ARRIVE', '2022-11-22 15:20:26', '2022-11-22 15:20:26');
-INSERT INTO `cainiao_order_log` VALUES (10, '菜鸟上游仓库快件已到达,操作人员的账号是:海宁', NULL, '海宁', 'CONSO_WAREHOUSE_ARRIVE', '2022-11-22 15:32:56', '2022-11-22 15:32:56');
-INSERT INTO `cainiao_order_log` VALUES (11, '菜鸟上游仓库快件已到达,操作人员的账号是:海宁', NULL, '海宁', 'CONSO_WAREHOUSE_ARRIVE', '2022-11-23 12:03:16', '2022-11-23 12:03:16');
-INSERT INTO `cainiao_order_log` VALUES (12, '菜鸟上游仓库快件已到达,操作人员的账号是:海宁', NULL, '海宁', 'CONSO_WAREHOUSE_ARRIVE', '2022-11-23 12:03:20', '2022-11-23 12:03:20');
-INSERT INTO `cainiao_order_log` VALUES (13, '菜鸟上游仓库快件已到达,操作人员的账号是:海宁', NULL, '海宁', 'CONSO_WAREHOUSE_ARRIVE', '2022-11-23 12:03:24', '2022-11-23 12:03:24');
-INSERT INTO `cainiao_order_log` VALUES (14, '菜鸟上游仓库快件已到达,操作人员的账号是:海宁', NULL, '海宁', 'CONSO_WAREHOUSE_ARRIVE', NULL, NULL);
-INSERT INTO `cainiao_order_log` VALUES (15, '菜鸟上游仓库快件已签收,操作人员的账号是:海宁', NULL, '海宁', 'CONSO_WAREHOUSE_ARRIVE', NULL, NULL);
-INSERT INTO `cainiao_order_log` VALUES (16, '菜鸟上游仓库快件已到达,操作人员的账号是:海宁', NULL, '海宁', 'CONSO_WAREHOUSE_ARRIVE', '2022-11-23 16:50:52', NULL);
-INSERT INTO `cainiao_order_log` VALUES (17, '菜鸟上游仓库快件已签收,操作人员的账号是:海宁', NULL, '海宁', 'CONSO_WAREHOUSE_ARRIVE', '2022-11-23 16:50:52', NULL);
-INSERT INTO `cainiao_order_log` VALUES (18, '菜鸟上游仓库快件已到达,操作人员的账号是:海宁', NULL, '海宁', 'CONSO_WAREHOUSE_ARRIVE', '2022-11-23 16:50:53', NULL);
-INSERT INTO `cainiao_order_log` VALUES (19, '菜鸟上游仓库快件已签收,操作人员的账号是:海宁', NULL, '海宁', 'CONSO_WAREHOUSE_ARRIVE', '2022-11-23 16:50:53', NULL);
-INSERT INTO `cainiao_order_log` VALUES (20, '菜鸟上游仓库快件已到达,操作人员的账号是:海宁', NULL, '海宁', 'CONSO_WAREHOUSE_ARRIVE', '2022-11-23 16:54:56', NULL);
-INSERT INTO `cainiao_order_log` VALUES (21, '菜鸟上游仓库快件已签收,操作人员的账号是:海宁', NULL, '海宁', 'CONSO_WAREHOUSE_ARRIVE', '2022-11-23 16:54:56', NULL);
-INSERT INTO `cainiao_order_log` VALUES (22, '菜鸟上游仓库快件已到达,操作人员的账号是:海宁', NULL, '海宁', 'CONSO_WAREHOUSE_ARRIVE', '2022-11-23 16:54:58', NULL);
-INSERT INTO `cainiao_order_log` VALUES (23, '菜鸟上游仓库快件已签收,操作人员的账号是:海宁', NULL, '海宁', 'CONSO_WAREHOUSE_ARRIVE', '2022-11-23 16:54:58', NULL);
-INSERT INTO `cainiao_order_log` VALUES (24, '菜鸟上游仓库快件已到达,操作人员的账号是:海宁', '546094278624', '海宁', 'CONSO_WAREHOUSE_ARRIVE', '2022-11-23 16:58:00', NULL);
-INSERT INTO `cainiao_order_log` VALUES (25, '菜鸟上游仓库快件已签收,操作人员的账号是:海宁', '546094278624', '海宁', 'CONSO_WAREHOUSE_ARRIVE', '2022-11-23 16:58:00', NULL);
-INSERT INTO `cainiao_order_log` VALUES (26, '菜鸟上游仓库快件已到达,操作人员的账号是:海宁', '546146350613', '海宁', 'CONSO_WAREHOUSE_ARRIVE', '2022-11-25 14:16:35', NULL);
-INSERT INTO `cainiao_order_log` VALUES (27, '菜鸟上游仓库快件签收成功:,操作人员的账号是:海宁', '546146350613', '海宁', 'CONSO_WAREHOUSE_SIGN', '2022-11-25 14:16:35', NULL);
-INSERT INTO `cainiao_order_log` VALUES (28, '菜鸟上游仓库快件已到达,操作人员的账号是:海宁', '546146350613', '海宁', 'CONSO_WAREHOUSE_ARRIVE', '2022-11-25 14:24:24', NULL);
-INSERT INTO `cainiao_order_log` VALUES (29, '菜鸟上游仓库快件签收异常,异常原因是:您的包裹破损严重无法收件转运，目前已经拒签返回给卖家，您可联系卖家发起【仅退款】，告知卖家商品会被集运仓自动退回。退款处理中如有问题，建议联系淘宝小蜜寻求帮助哦,操作人员的账号是:海宁', '546146350613', '海宁', 'CONSO_WAREHOUSE_SIGN', '2022-11-25 14:24:24', NULL);
-INSERT INTO `cainiao_order_log` VALUES (30, '菜鸟上游仓库快件已到达,操作人员的账号是:海宁', '546146350613', '海宁', 'CONSO_WAREHOUSE_ARRIVE', '2022-11-25 14:24:41', NULL);
-INSERT INTO `cainiao_order_log` VALUES (31, '菜鸟上游仓库快件签收成功:,操作人员的账号是:海宁', '546146350613', '海宁', 'CONSO_WAREHOUSE_SIGN', '2022-11-25 14:24:41', NULL);
-INSERT INTO `cainiao_order_log` VALUES (32, '菜鸟上游仓库快件已到达,操作人员的账号是:海宁', '546146350814', '海宁', 'CONSO_WAREHOUSE_ARRIVE', '2022-11-25 15:52:57', NULL);
-INSERT INTO `cainiao_order_log` VALUES (33, '菜鸟上游仓库快件签收成功:,操作人员的账号是:海宁', '546146350814', '海宁', 'CONSO_WAREHOUSE_SIGN', '2022-11-25 15:52:57', NULL);
-INSERT INTO `cainiao_order_log` VALUES (34, '该快件菜鸟下发预报,等待出库,预报的时间是:2022-11-26 16:00:17', 'LP00545806510768', '菜鸟API发送', NULL, '2022-11-26 16:00:17', '2022-11-26 16:00:17');
-INSERT INTO `cainiao_order_log` VALUES (35, '该快件菜鸟下发预报,等待出库,预报的时间是:2022-11-26 16:08:31', 'LP00545806510768', '菜鸟API发送', NULL, '2022-11-26 16:08:31', '2022-11-26 16:08:31');
-INSERT INTO `cainiao_order_log` VALUES (36, '该快件菜鸟下发预报,等待出库,预报的时间是:2022-11-26 18:02:11', 'LP00545806510768', '菜鸟API发送', 'CONSO_WAREHOUSE_OUTBOUND_NOTICE', '2022-11-26 18:02:11', '2022-11-26 18:02:11');
+INSERT INTO `cainiao_order_log` VALUES (71, '菜鸟上游仓库快件已到达,操作人员的账号是:海宁', '546146351072', '海宁', 'CONSO_WAREHOUSE_ARRIVE', '2022-11-29 15:58:58', NULL);
+INSERT INTO `cainiao_order_log` VALUES (72, '菜鸟上游仓库快件签收成功:,操作人员的账号是:海宁', '546146351072', '海宁', 'CONSO_WAREHOUSE_SIGN', '2022-11-29 15:58:58', NULL);
+INSERT INTO `cainiao_order_log` VALUES (73, '菜鸟上游仓库快件已到达,操作人员的账号是:海宁', '546146351070', '海宁', 'CONSO_WAREHOUSE_ARRIVE', '2022-11-29 15:59:18', NULL);
+INSERT INTO `cainiao_order_log` VALUES (74, '菜鸟上游仓库快件签收成功:,操作人员的账号是:海宁', '546146351070', '海宁', 'CONSO_WAREHOUSE_SIGN', '2022-11-29 15:59:18', NULL);
+INSERT INTO `cainiao_order_log` VALUES (75, '菜鸟上游仓库快件已到达,操作人员的账号是:海宁', '546146351071', '海宁', 'CONSO_WAREHOUSE_ARRIVE', '2022-11-29 15:59:29', NULL);
+INSERT INTO `cainiao_order_log` VALUES (76, '菜鸟上游仓库快件签收成功:,操作人员的账号是:海宁', '546146351071', '海宁', 'CONSO_WAREHOUSE_SIGN', '2022-11-29 15:59:29', NULL);
+INSERT INTO `cainiao_order_log` VALUES (77, '菜鸟上游仓库快件已到达,操作人员的账号是:海宁', '546146351254', '海宁', 'CONSO_WAREHOUSE_ARRIVE', '2022-11-29 16:00:38', NULL);
+INSERT INTO `cainiao_order_log` VALUES (78, '菜鸟上游仓库快件签收成功:,操作人员的账号是:海宁', '546146351254', '海宁', 'CONSO_WAREHOUSE_SIGN', '2022-11-29 16:00:38', NULL);
+INSERT INTO `cainiao_order_log` VALUES (79, '菜鸟上游仓库快件已到达,操作人员的账号是:海宁', '546146351386', '海宁', 'CONSO_WAREHOUSE_ARRIVE', '2022-11-29 16:00:46', NULL);
+INSERT INTO `cainiao_order_log` VALUES (80, '菜鸟上游仓库快件签收成功:,操作人员的账号是:海宁', '546146351386', '海宁', 'CONSO_WAREHOUSE_SIGN', '2022-11-29 16:00:46', NULL);
+INSERT INTO `cainiao_order_log` VALUES (81, '该快件已入库,快件库区是:2库区1,操作人员的账号是:海宁', NULL, '海宁', NULL, '2022-11-29 16:41:07', '2022-11-29 16:41:07');
+INSERT INTO `cainiao_order_log` VALUES (82, '该快件已入库,快件库区是:2库区1,操作人员的账号是:海宁', NULL, '海宁', NULL, '2022-11-29 16:41:35', '2022-11-29 16:41:35');
+INSERT INTO `cainiao_order_log` VALUES (83, '该快件已入库,快件库区是:2库区1,操作人员的账号是:海宁', NULL, '海宁', NULL, '2022-11-29 16:41:39', '2022-11-29 16:41:39');
+INSERT INTO `cainiao_order_log` VALUES (84, '该快件已上架,上架货架号是:TEST0001', 'LP00546146351150', '海宁', NULL, '2022-11-29 16:47:18', '2022-11-29 16:47:18');
+INSERT INTO `cainiao_order_log` VALUES (85, '该快件已上架,上架货架号是:TEST0001', 'LP00546146351149', '海宁', NULL, '2022-11-29 16:47:23', '2022-11-29 16:47:23');
+INSERT INTO `cainiao_order_log` VALUES (86, '该快件已上架,上架货架号是:TEST0001', 'LP00546146351139', '海宁', NULL, '2022-11-29 16:47:28', '2022-11-29 16:47:28');
+INSERT INTO `cainiao_order_log` VALUES (87, '该快件已上架,上架货架号是:TEST0001', 'LP00546146351150', '海宁', NULL, '2022-11-29 16:53:09', '2022-11-29 16:53:09');
+INSERT INTO `cainiao_order_log` VALUES (88, '该快件已上架,上架货架号是:TEST0001', 'LP00546146351139', '海宁', NULL, '2022-11-29 16:53:16', '2022-11-29 16:53:16');
+INSERT INTO `cainiao_order_log` VALUES (89, '该快件已上架,上架货架号是:TEST0001', 'LP00546146351149', '海宁', NULL, '2022-11-29 16:53:19', '2022-11-29 16:53:19');
+INSERT INTO `cainiao_order_log` VALUES (90, '待出库任务已同步任务列表', 'LP00546146351150', NULL, NULL, '2022-11-29 17:16:59', '2022-11-29 17:16:59');
+INSERT INTO `cainiao_order_log` VALUES (91, '待出库任务已同步任务列表', 'LP00546146351139', NULL, NULL, '2022-11-29 17:16:59', '2022-11-29 17:16:59');
+INSERT INTO `cainiao_order_log` VALUES (92, '待出库任务已同步任务列表', 'LP00546146351149', NULL, NULL, '2022-11-29 17:16:59', '2022-11-29 17:16:59');
+INSERT INTO `cainiao_order_log` VALUES (93, '该快件任务已被海宁认领,认领时间是2022-11-29 17:25:37', '546146351072', '海宁', NULL, NULL, NULL);
+INSERT INTO `cainiao_order_log` VALUES (94, '该快件任务已被海宁认领,认领时间是2022-11-29 17:25:37', '546146351070', '海宁', NULL, NULL, NULL);
+INSERT INTO `cainiao_order_log` VALUES (95, '该快件任务已被海宁认领,认领时间是2022-11-29 17:25:37', '546146351071', '海宁', NULL, NULL, NULL);
+INSERT INTO `cainiao_order_log` VALUES (97, '该快件已下架,下架操作人是:海宁操作时间是2022-11-29 17:43:45', 'LP00546146351149', '海宁', 'CONSO_WAREHOUSE_BEGIN_PICK', '2022-11-29 17:43:45', '2022-11-29 17:43:45');
 
 -- ----------------------------
 -- Table structure for cainiao_outbount_error_log
@@ -508,11 +532,12 @@ CREATE TABLE `cainiao_print_info`  (
   `created_at` timestamp NULL DEFAULT NULL COMMENT '添加时间',
   `updated_at` timestamp NULL DEFAULT NULL COMMENT '修改时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of cainiao_print_info
 -- ----------------------------
+INSERT INTO `cainiao_print_info` VALUES (1, 'SBKJ0131972604CN', '{\"encryptedData\":\"AES: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\",\"signature\":\"MD:B7EBfoyqB77dA3jHktfPMA==\",\"templateURL\":\"https://cloudprint.cainiao.com/cloudprint/template/getStandardTemplate.json?template_id=431489\",\"ver\":\"\"}', 1, '2022-11-29 17:59:15', '2022-11-29 17:59:36');
 
 -- ----------------------------
 -- Table structure for cainiao_receivinglist
@@ -645,36 +670,21 @@ CREATE TABLE `cainiao_shelf_info`  (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `order` varchar(150) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '快递单号',
   `code` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '货架号',
-  `status` smallint(1) NOT NULL DEFAULT 0 COMMENT '状态:默认是0',
+  `status` smallint(1) NOT NULL DEFAULT 0 COMMENT '状态:默认是0,上架是1,2已下架',
   `area_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '库区名称',
   `area_id` int(11) NOT NULL COMMENT '库区ID',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `order`(`order`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 20 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 25 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of cainiao_shelf_info
 -- ----------------------------
-INSERT INTO `cainiao_shelf_info` VALUES (2, '544878835398', NULL, 0, '库区一', 1, '2022-11-24 16:30:18', '2022-11-24 16:30:18');
-INSERT INTO `cainiao_shelf_info` VALUES (3, '545806510768', '213123', 1, 'AYD001', 1, NULL, NULL);
-INSERT INTO `cainiao_shelf_info` VALUES (4, '546094278624', '213123', 1, 'AYD001', 1, NULL, NULL);
-INSERT INTO `cainiao_shelf_info` VALUES (5, '546094278675', '213123', 1, 'AYD001', 1, NULL, NULL);
-INSERT INTO `cainiao_shelf_info` VALUES (6, '546094278731', '213123', 1, 'AYD001', 1, NULL, NULL);
-INSERT INTO `cainiao_shelf_info` VALUES (7, '546138921620', '213123', 1, 'AYD001', 1, NULL, NULL);
-INSERT INTO `cainiao_shelf_info` VALUES (8, '546146350613', '213123', 1, 'AYD001', 1, NULL, NULL);
-INSERT INTO `cainiao_shelf_info` VALUES (9, '546146350814', '213123', 1, 'AYD001', 1, NULL, NULL);
-INSERT INTO `cainiao_shelf_info` VALUES (10, '546146351072', '213123', 1, 'AYD001', 1, NULL, NULL);
-INSERT INTO `cainiao_shelf_info` VALUES (11, '546146351070', '213123', 1, 'AYD001', 1, NULL, NULL);
-INSERT INTO `cainiao_shelf_info` VALUES (12, '546146351071', '213123', 1, 'AYD001', 1, NULL, NULL);
-INSERT INTO `cainiao_shelf_info` VALUES (13, '546146351254', '213123', 1, 'AYD001', 1, NULL, NULL);
-INSERT INTO `cainiao_shelf_info` VALUES (14, '546146351386', '213123', 1, 'AYD001', 1, NULL, NULL);
-INSERT INTO `cainiao_shelf_info` VALUES (15, '546146350818', '213123', 1, 'AYD001', 1, NULL, NULL);
-INSERT INTO `cainiao_shelf_info` VALUES (16, '546146351264', '213123', 1, 'AYD001', 1, NULL, NULL);
-INSERT INTO `cainiao_shelf_info` VALUES (17, '544879146188', '213123', 1, 'AYD001', 1, NULL, NULL);
-INSERT INTO `cainiao_shelf_info` VALUES (18, '546146351303', '213123', 1, 'AYD001', 1, NULL, NULL);
-INSERT INTO `cainiao_shelf_info` VALUES (19, '30357937081526455191', '213123', 1, 'AYD001', 1, NULL, NULL);
+INSERT INTO `cainiao_shelf_info` VALUES (22, 'LP00546146351150', 'TEST0001', 1, '2库区1', 1, '2022-11-29 16:41:07', '2022-11-29 16:53:09');
+INSERT INTO `cainiao_shelf_info` VALUES (23, 'LP00546146351139', 'TEST0001', 1, '2库区1', 1, '2022-11-29 16:41:35', '2022-11-29 16:53:16');
+INSERT INTO `cainiao_shelf_info` VALUES (24, 'LP00546146351149', 'TEST0001', 2, '2库区1', 1, '2022-11-29 16:41:39', '2022-11-29 17:43:45');
 
 -- ----------------------------
 -- Table structure for cainiao_yubao
@@ -719,7 +729,7 @@ CREATE TABLE `cainiao_yubaoinfo`  (
   `text` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL,
   `date` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 14 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 15 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of cainiao_yubaoinfo
@@ -737,6 +747,7 @@ INSERT INTO `cainiao_yubaoinfo` VALUES (10, '{\"logistics_interface\":\"{\\\"log
 INSERT INTO `cainiao_yubaoinfo` VALUES (11, '{\"logistics_interface\":\"{\\\"logisticsEvent\\\":{\\\"eventHeader\\\":{\\\"eventTime\\\":\\\"2022-11-16 14:18:07\\\",\\\"eventTimeZone\\\":\\\"UTC+8\\\",\\\"eventType\\\":\\\"CONSO_WAREHOUSE_CONSIGN\\\"},\\\"eventBody\\\":{\\\"logisticsDetail\\\":{\\\"isLastPackage\\\":\\\"Y\\\",\\\"orderSource\\\":\\\"1\\\",\\\"bizType\\\":\\\"CONSO4PL\\\",\\\"consoWarehouseCode\\\":\\\"TRAN_STORE_30792933\\\",\\\"buyerDetail\\\":{\\\"country\\\":\\\"\\u4e2d\\u56fd\\\",\\\"zipCode\\\":\\\"1233\\\",\\\"province\\\":\\\"\\u6fb3\\u95e8\\u7279\\u522b\\u884c\\u653f\\u533a\\\",\\\"userRecogCode\\\":\\\"X2M0E5G3\\\",\\\"phone\\\":\\\"\\\",\\\"city\\\":\\\"\\u6fb3\\u95e8\\u534a\\u5c9b\\\",\\\"streetAddress\\\":\\\"\\u7684\\u6ef4\\u6ef4\\u7b54\\u7b54\\u6ef4\\u6ef4\\u7b54\\u7b54\\u6ef4\\u6ef4\\u7b54\\u7b54\\u7684\\\",\\\"district\\\":\\\"\\u82b1\\u738b\\u5802\\u533a\\\",\\\"name\\\":\\\"\\u6fb3\\u95e8\\\",\\\"mobile\\\":\\\"853-22221111\\\",\\\"membership\\\":{\\\"paidType\\\":\\\"N\\\",\\\"userLevel\\\":\\\"regularMember\\\"},\\\"wangwangId\\\":\\\"\\u5c0f\\u58ee\\u6d4b\\u8bd5\\u8d26\\u53f701\\\"},\\\"deliveryType\\\":\\\"HOME_DELIVERY\\\",\\\"logisticsOrderCode\\\":\\\"LP00544878835398\\\",\\\"check\\\":\\\"false\\\",\\\"categoryFeature\\\":\\\"normal\\\",\\\"consoType\\\":\\\"002\\\",\\\"mailNo\\\":\\\"544878835398\\\",\\\"isSplitConsign\\\":\\\"N\\\",\\\"carrierCode\\\":\\\"YTO\\\",\\\"packageQuantity\\\":\\\"1\\\",\\\"senderDetail\\\":{\\\"country\\\":\\\"\\u4e2d\\u56fd\\\",\\\"zipCode\\\":\\\"000000\\\",\\\"province\\\":\\\"\\u4e0a\\u6d77\\\",\\\"town\\\":\\\"\\u767d\\u9e64\\u9547 \\u817e\\u65b0\\u8def65\\u53f7 \\u4e0a\\u6d77\\u6377\\u5229\\u8de8\\u5883\\u8f6c\\u8fd0\\u4ed3@9Y2WCZF3#R5JY443U2XCE1#\\\",\\\"city\\\":\\\"\\u4e0a\\u6d77\\u5e02\\\",\\\"streetAddress\\\":\\\"\\u4e0a\\u6d77^^^\\u4e0a\\u6d77\\u5e02^^^\\u9752\\u6d66\\u533a^^^ \\u767d\\u9e64\\u9547 \\u817e\\u65b0\\u8def65\\u53f7 \\u4e0a\\u6d77\\u6377\\u5229\\u8de8\\u5883\\u8f6c\\u8fd0\\u4ed3@9Y2WCZF3#R5JY443U2XCE1#\\\",\\\"district\\\":\\\"\\u9752\\u6d66\\u533a\\\",\\\"name\\\":\\\"JESS\\\",\\\"mobile\\\":\\\"59810618\\\",\\\"shopName\\\":\\\"c\\u6d4b\\u8bd5\\u8d26\\u53f767\\\",\\\"wangwangId\\\":\\\"c\\u6d4b\\u8bd5\\u8d26\\u53f767\\\"},\\\"items\\\":[{\\\"itemId\\\":\\\"607136539151\\\",\\\"itemUnitPrice\\\":\\\"1\\\",\\\"itemPicUrl\\\":\\\"https:\\/\\/img.alicdn.com\\/imgextra\\/i3\\/429504656\\/O1CN01mTmkIn1kGUZsU3xhB_!!429504656.jpg\\\",\\\"itemName\\\":\\\"\\u5973\\u88c5\\uff0cTBC\\uff0c\\u6d4b\\u8bd5\\u5546\\u54c1\\uff0c\\u8bf7\\u4e0d\\u8981\\u62cd\\uff0c\\u62cd\\u4e0b\\u4e0d\\u53d1\\u8d27\\\",\\\"itemQuantity\\\":\\\"1\\\",\\\"itemSkuProperty\\\":\\\"\\\",\\\"currency\\\":\\\"CNY\\\",\\\"categoryName\\\":\\\"\\u5973\\u88c5\\/\\u5973\\u58eb\\u7cbe\\u54c1_\\u8fde\\u8863\\u88d9\\\",\\\"totalActualPayment\\\":\\\"1\\\",\\\"skuId\\\":\\\"\\\",\\\"categoryId\\\":\\\"16_50010850\\\",\\\"currencyUnit\\\":\\\"CENT\\\"}]},\\\"paymentDetail\\\":{\\\"tradeOrderValue\\\":\\\"1\\\",\\\"currency\\\":\\\"CNY\\\",\\\"totalShippingFee\\\":\\\"0\\\",\\\"currencyUnit\\\":\\\"CENT\\\"},\\\"tradeDetail\\\":{\\\"tradeOrderId\\\":\\\"3034418148098645519\\\",\\\"dereRecogCode\\\":\\\"R5JY443U2XCE1\\\"}}}}\",\"data_digest\":\"BN6PfVDI\\/txh1Kby4+Jncg==\",\"partner_code\":\"TRAN_STORE_30792933\",\"from_code\":\"CNCTP\",\"msg_type\":\"CONSO_WAREHOUSE_CONSIGN\",\"msg_id\":\"1332806004202211161410\"}', '2022-11-16 16:54:13');
 INSERT INTO `cainiao_yubaoinfo` VALUES (12, '{\"logistics_interface\":{\"logisticsEvent\":{\"eventHeader\":{\"eventTime\":\"2022-11-24 10:29:32\",\"eventTimeZone\":\"UTC+8\",\"eventType\":\"CONSO_WAREHOUSE_CONSIGN\"},\"eventBody\":{\"logisticsDetail\":{\"isLastPackage\":\"N\",\"orderSource\":\"1\",\"bizType\":\"CONSO4PL\",\"consoWarehouseCode\":\"TRAN_STORE_30792933\",\"buyerDetail\":{\"country\":\"\\u4e2d\\u56fd\",\"zipCode\":\"000000\",\"province\":\"\\u6fb3\\u95e8\\u7279\\u522b\\u884c\\u653f\\u533a\",\"userRecogCode\":\"X2M0E5G3\",\"phone\":null,\"city\":\"\\u6fb3\\u95e8\\u534a\\u5c9b\",\"streetAddress\":\"MO Rua Primeiro 1 de Maio, R. Um do Bairro da Areia Preta, \\u6fb3\\u95e8\",\"district\":\"\\u82b1\\u5730\\u739b\\u5802\\u533a\",\"name\":\"\\u6fb3\\u95e8\",\"mobile\":\"86-15158121000\",\"membership\":{\"paidType\":\"N\",\"userLevel\":\"regularMember\"},\"wangwangId\":\"\\u5c0f\\u58ee\\u6d4b\\u8bd5\\u8d26\\u53f701\"},\"deliveryType\":\"HOME_DELIVERY\",\"logisticsOrderCode\":\"LP00546211471045\",\"check\":\"false\",\"categoryFeature\":\"normal\",\"consoType\":\"002\",\"mailNo\":\"3035793708152645519\",\"isSplitConsign\":\"N\",\"senderDetail\":{\"wangwangId\":\"\\u5546\\u5bb6\\u6d4b\\u8bd5\\u8d26\\u53f7\\uff08\\u5c0f\\u58ee\\uff09\"},\"items\":[{\"itemId\":\"667718304014\",\"itemUnitPrice\":\"1\",\"itemPicUrl\":\"https:\\/\\/img.alicdn.com\\/imgextra\\/i1\\/263669477\\/O1CN01fH0cbf2JsW8fvHFwx_!!263669477.jpg\",\"itemName\":\"(\\u6d4b\\u8bd5\\u5546\\u54c1\\u8bf7\\u4e0d\\u8981\\u62cd)\\u514b\\u9686\\u5546\\u54c1=42985775812\",\"itemQuantity\":\"1\",\"itemSkuProperty\":\"\\u989c\\u8272\\u5206\\u7c7b:\\u660e\\u9ec4\\u8272\",\"currency\":\"CNY\",\"categoryName\":\"\\u9970\\u54c1\\/\\u6d41\\u884c\\u9996\\u9970\\/\\u65f6\\u5c1a\\u9970\\u54c1\\u65b0_\\u53d1\\u9970\",\"totalActualPayment\":\"1\",\"skuId\":\"4810140060309\",\"categoryId\":\"50013864_50013878\",\"currencyUnit\":\"CENT\"}]},\"paymentDetail\":{\"tradeOrderValue\":\"1\",\"currency\":\"CNY\",\"totalShippingFee\":\"0\",\"currencyUnit\":\"CENT\"},\"tradeDetail\":{\"tradeOrderId\":\"3035793708152645519\",\"dereRecogCode\":\"R5K55NUC8Y8XN\"}}}},\"data_digest\":\"z1pDhgGkeiZKCGAOb1LRWA==\",\"partner_code\":\"TRAN_STORE_30792933\",\"from_code\":\"CNCTP\",\"msg_type\":\"CONSO_WAREHOUSE_CONSIGN\",\"msg_id\":\"1338656069202211240950\"}', '2022-11-24 14:34:19');
 INSERT INTO `cainiao_yubaoinfo` VALUES (13, '{\"logistics_interface\":{\"logisticsEvent\":{\"eventHeader\":{\"eventTime\":\"2022-11-24 10:29:32\",\"eventTimeZone\":\"UTC+8\",\"eventType\":\"CONSO_WAREHOUSE_CONSIGN\"},\"eventBody\":{\"logisticsDetail\":{\"isLastPackage\":\"N\",\"orderSource\":\"1\",\"bizType\":\"CONSO4PL\",\"consoWarehouseCode\":\"TRAN_STORE_30792933\",\"buyerDetail\":{\"country\":\"\\u4e2d\\u56fd\",\"zipCode\":\"000000\",\"province\":\"\\u6fb3\\u95e8\\u7279\\u522b\\u884c\\u653f\\u533a\",\"userRecogCode\":\"X2M0E5G3\",\"phone\":null,\"city\":\"\\u6fb3\\u95e8\\u534a\\u5c9b\",\"streetAddress\":\"MO Rua Primeiro 1 de Maio, R. Um do Bairro da Areia Preta, \\u6fb3\\u95e8\",\"district\":\"\\u82b1\\u5730\\u739b\\u5802\\u533a\",\"name\":\"\\u6fb3\\u95e8\",\"mobile\":\"86-15158121000\",\"membership\":{\"paidType\":\"N\",\"userLevel\":\"regularMember\"},\"wangwangId\":\"\\u5c0f\\u58ee\\u6d4b\\u8bd5\\u8d26\\u53f701\"},\"deliveryType\":\"HOME_DELIVERY\",\"logisticsOrderCode\":\"LP00546211471045\",\"check\":\"false\",\"categoryFeature\":\"normal\",\"consoType\":\"002\",\"mailNo\":\"3035793708152645519\",\"isSplitConsign\":\"N\",\"senderDetail\":{\"wangwangId\":\"\\u5546\\u5bb6\\u6d4b\\u8bd5\\u8d26\\u53f7\\uff08\\u5c0f\\u58ee\\uff09\"},\"items\":[{\"itemId\":\"667718304014\",\"itemUnitPrice\":\"1\",\"itemPicUrl\":\"https:\\/\\/img.alicdn.com\\/imgextra\\/i1\\/263669477\\/O1CN01fH0cbf2JsW8fvHFwx_!!263669477.jpg\",\"itemName\":\"(\\u6d4b\\u8bd5\\u5546\\u54c1\\u8bf7\\u4e0d\\u8981\\u62cd)\\u514b\\u9686\\u5546\\u54c1=42985775812\",\"itemQuantity\":\"1\",\"itemSkuProperty\":\"\\u989c\\u8272\\u5206\\u7c7b:\\u660e\\u9ec4\\u8272\",\"currency\":\"CNY\",\"categoryName\":\"\\u9970\\u54c1\\/\\u6d41\\u884c\\u9996\\u9970\\/\\u65f6\\u5c1a\\u9970\\u54c1\\u65b0_\\u53d1\\u9970\",\"totalActualPayment\":\"1\",\"skuId\":\"4810140060309\",\"categoryId\":\"50013864_50013878\",\"currencyUnit\":\"CENT\"}]},\"paymentDetail\":{\"tradeOrderValue\":\"1\",\"currency\":\"CNY\",\"totalShippingFee\":\"0\",\"currencyUnit\":\"CENT\"},\"tradeDetail\":{\"tradeOrderId\":\"3035793708152645519\",\"dereRecogCode\":\"R5K55NUC8Y8XN\"}}}},\"data_digest\":\"z1pDhgGkeiZKCGAOb1LRWA==\",\"partner_code\":\"TRAN_STORE_30792933\",\"from_code\":\"CNCTP\",\"msg_type\":\"CONSO_WAREHOUSE_CONSIGN\",\"msg_id\":\"1338656069202211240950\"}', '2022-11-24 14:34:55');
+INSERT INTO `cainiao_yubaoinfo` VALUES (14, '{\"logistics_interface\":\"{\\\"logisticsEvent\\\":{\\\"eventHeader\\\":{\\\"eventTime\\\":\\\"2022-11-29 15:16:51\\\",\\\"eventTimeZone\\\":\\\"UTC+8\\\",\\\"eventType\\\":\\\"CONSO_WAREHOUSE_CONSIGN\\\"},\\\"eventBody\\\":{\\\"logisticsDetail\\\":{\\\"isLastPackage\\\":\\\"N\\\",\\\"orderSource\\\":\\\"1\\\",\\\"bizType\\\":\\\"CONSO4PL\\\",\\\"consoWarehouseCode\\\":\\\"TRAN_STORE_30792933\\\",\\\"buyerDetail\\\":{\\\"country\\\":\\\"\\u4e2d\\u56fd\\\",\\\"zipCode\\\":\\\"000000\\\",\\\"province\\\":\\\"\\u6fb3\\u95e8\\u7279\\u522b\\u884c\\u653f\\u533a\\\",\\\"userRecogCode\\\":\\\"X2M0E5G3\\\",\\\"phone\\\":\\\"\\\",\\\"city\\\":\\\"\\u6fb3\\u95e8\\u534a\\u5c9b\\\",\\\"streetAddress\\\":\\\"MO Rua Primeiro 1 de Maio, R. Um do Bairro da Areia Preta, \\u6fb3\\u95e8\\\",\\\"district\\\":\\\"\\u82b1\\u5730\\u739b\\u5802\\u533a\\\",\\\"name\\\":\\\"\\u6fb3\\u95e8\\\",\\\"mobile\\\":\\\"86-15158121000\\\",\\\"membership\\\":{\\\"paidType\\\":\\\"N\\\",\\\"userLevel\\\":\\\"regularMember\\\"},\\\"wangwangId\\\":\\\"\\u5c0f\\u58ee\\u6d4b\\u8bd5\\u8d26\\u53f701\\\"},\\\"deliveryType\\\":\\\"HOME_DELIVERY\\\",\\\"logisticsOrderCode\\\":\\\"LP00546211471045\\\",\\\"check\\\":\\\"false\\\",\\\"categoryFeature\\\":\\\"normal\\\",\\\"consoType\\\":\\\"002\\\",\\\"mailNo\\\":\\\"3035793708152645519\\\",\\\"isSplitConsign\\\":\\\"N\\\",\\\"senderDetail\\\":{\\\"wangwangId\\\":\\\"\\u5546\\u5bb6\\u6d4b\\u8bd5\\u8d26\\u53f7\\uff08\\u5c0f\\u58ee\\uff09\\\"},\\\"items\\\":[{\\\"itemId\\\":\\\"667718304014\\\",\\\"itemUnitPrice\\\":\\\"1\\\",\\\"itemPicUrl\\\":\\\"https:\\/\\/img.alicdn.com\\/imgextra\\/i1\\/263669477\\/O1CN01fH0cbf2JsW8fvHFwx_!!263669477.jpg\\\",\\\"itemName\\\":\\\"(\\u6d4b\\u8bd5\\u5546\\u54c1\\u8bf7\\u4e0d\\u8981\\u62cd)\\u514b\\u9686\\u5546\\u54c1=42985775812\\\",\\\"itemQuantity\\\":\\\"1\\\",\\\"itemSkuProperty\\\":\\\"\\u989c\\u8272\\u5206\\u7c7b:\\u660e\\u9ec4\\u8272\\\",\\\"currency\\\":\\\"CNY\\\",\\\"categoryName\\\":\\\"\\u9970\\u54c1\\/\\u6d41\\u884c\\u9996\\u9970\\/\\u65f6\\u5c1a\\u9970\\u54c1\\u65b0_\\u53d1\\u9970\\\",\\\"totalActualPayment\\\":\\\"1\\\",\\\"skuId\\\":\\\"4810140060309\\\",\\\"categoryId\\\":\\\"50013864_50013878\\\",\\\"currencyUnit\\\":\\\"CENT\\\"}]},\\\"paymentDetail\\\":{\\\"tradeOrderValue\\\":\\\"1\\\",\\\"currency\\\":\\\"CNY\\\",\\\"totalShippingFee\\\":\\\"0\\\",\\\"currencyUnit\\\":\\\"CENT\\\"},\\\"tradeDetail\\\":{\\\"tradeOrderId\\\":\\\"3035793708152645519\\\",\\\"dereRecogCode\\\":\\\"R5K55NUC8Y8XN\\\"}}}}\",\"data_digest\":\"0INLBTrf1tqtxyfH4p+FYQ==\",\"partner_code\":\"TRAN_STORE_30792933\",\"from_code\":\"inner\",\"msg_type\":\"CONSO_WAREHOUSE_CONSIGN\",\"msg_id\":\"1669707571186\"}', '2022-11-29 15:44:22');
 
 -- ----------------------------
 -- Table structure for carniao_order_error_log
@@ -750,7 +761,7 @@ CREATE TABLE `carniao_order_error_log`  (
   `updated_at` timestamp NULL DEFAULT NULL,
   `cainiao_api` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 9 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 15 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of carniao_order_error_log
@@ -763,5 +774,11 @@ INSERT INTO `carniao_order_error_log` VALUES (5, '545806510768', '{\"success\":f
 INSERT INTO `carniao_order_error_log` VALUES (6, '545806510768', '{\"success\":false,\"errorCode\":\"S04\",\"errorMsg\":\"\\u5BF9\\u65B9\\u670D\\u52A1\\u5668ReadTimeOut:ReceiveServiceInvoker~serviceName=com.taobao.pac.client.sdk.receiveservice.ConsoWarehouseSignService,appName=CNCTP,version=1.0.0,\\u5F02\\u5E38\\u4FE1\\u606F=\\u5BF9\\u65B9\\u670D\\u52A1\\u5668ReadTimeOut traceId:2133cbb816691014997677012eaf5f\"}', '2022-11-22 15:18:29', '2022-11-22 15:18:29', 'CONSO_WAREHOUSE_ARRIVE');
 INSERT INTO `carniao_order_error_log` VALUES (7, '546146350613', '{\"success\":\"false\",\"errorCode\":\"RST_CTP_BIZ_JOB_STATUS_MACHINE_CHECK_ERROR\",\"errorMsg\":\"job statusMachine check error job执行状态机校验错误\"}', '2022-11-25 14:17:39', '2022-11-25 14:17:39', 'CONSO_WAREHOUSE_ARRIVE');
 INSERT INTO `carniao_order_error_log` VALUES (8, '546146350613', '{\"success\":\"false\",\"errorCode\":\"RST_CTP_BIZ_JOB_STATUS_MACHINE_CHECK_ERROR\",\"errorMsg\":\"job statusMachine check error job执行状态机校验错误\"}', '2022-11-25 14:23:16', '2022-11-25 14:23:16', 'CONSO_WAREHOUSE_ARRIVE');
+INSERT INTO `carniao_order_error_log` VALUES (9, '546146351072', '{\"success\":\"false\",\"errorCode\":\"RST_CTP_BIZ_JOB_IDEMPOTENT_ERROR\",\"errorMsg\":\"CODE: RST_CTP_BIZ_JOB_IDEMPOTENT, MESSAGE: job idempotent job执行幂等\"}', '2022-11-29 17:35:58', '2022-11-29 17:35:58', 'CONSO_WAREHOUSE_ARRIVE');
+INSERT INTO `carniao_order_error_log` VALUES (10, '546146351070', '{\"success\":\"false\",\"errorCode\":\"RST_CTP_BIZ_JOB_IDEMPOTENT_ERROR\",\"errorMsg\":\"CODE: RST_CTP_BIZ_JOB_IDEMPOTENT, MESSAGE: job idempotent job执行幂等\"}', '2022-11-29 17:39:12', '2022-11-29 17:39:12', 'CONSO_WAREHOUSE_ARRIVE');
+INSERT INTO `carniao_order_error_log` VALUES (11, '546146351070', '{\"success\":\"false\",\"errorCode\":\"RST_CTP_BIZ_JOB_IDEMPOTENT_ERROR\",\"errorMsg\":\"CODE: RST_CTP_BIZ_JOB_IDEMPOTENT, MESSAGE: job idempotent job执行幂等\"}', '2022-11-29 17:39:28', '2022-11-29 17:39:28', 'CONSO_WAREHOUSE_ARRIVE');
+INSERT INTO `carniao_order_error_log` VALUES (12, '546146351071', '{\"success\":\"false\",\"errorCode\":\"RST_CTP_BIZ_JOB_IDEMPOTENT_ERROR\",\"errorMsg\":\"CODE: RST_CTP_BIZ_JOB_IDEMPOTENT, MESSAGE: job idempotent job执行幂等\"}', '2022-11-29 17:39:38', '2022-11-29 17:39:38', 'CONSO_WAREHOUSE_ARRIVE');
+INSERT INTO `carniao_order_error_log` VALUES (13, '546146351071', '{\"success\":\"false\",\"errorCode\":\"RST_CTP_BIZ_JOB_IDEMPOTENT_ERROR\",\"errorMsg\":\"CODE: RST_CTP_BIZ_JOB_IDEMPOTENT, MESSAGE: job idempotent job执行幂等\"}', '2022-11-29 17:43:45', '2022-11-29 17:43:45', 'CONSO_WAREHOUSE_ARRIVE');
+INSERT INTO `carniao_order_error_log` VALUES (14, 'LP00547062717351', '{\"success\":\"false\",\"errorCode\":\"B512\",\"errorMsg\":\"there is not a locOrder in cainiao\"}', '2022-11-29 17:55:13', '2022-11-29 17:55:13', 'CONSO_WAREHOUSE_ARRIVE');
 
 SET FOREIGN_KEY_CHECKS = 1;
