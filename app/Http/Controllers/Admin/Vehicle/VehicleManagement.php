@@ -1,33 +1,30 @@
 <?php
 
-namespace App\Http\Controllers\Admin\Bozhong;
+namespace App\Http\Controllers\Admin\Vehicle;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\BoundSwoing;
+use App\Models\VehicleMangement;
 use Illuminate\Support\Facades\DB;
 
-class BozhongIndex extends Controller
+class VehicleManagement extends Controller
 {
-    //播种区部分
+    //车辆管理
 
-    /**
-     * @var BoundSwoing
-     */
-    private static $BoundSwoing;
+    private static $Vehicle;
 
     /**
      * UserGroup constructor
      */
     public function  __construct(){
 
-        if(!self::$BoundSwoing) self::$BoundSwoing = new BoundSwoing();
+        if(!self::$Vehicle) self::$Vehicle = new VehicleMangement();
 
     }
 
     public function add(Request $request){
 
-        if(!$request->filled(['code', 'name'])) return $this->ReturnJson(400403, '重要参数为空');
+        if(!$request->filled(['code', 'name'])) return $this->ReturnJson();
         //新增
         DB::beginTransaction();
         try {
@@ -36,12 +33,12 @@ class BozhongIndex extends Controller
                 'code'    => $request->code,
                 'created_at' => date('Y-m-d H:i:s'),
             ];
-            self::$BoundSwoing->create($data);
+            self::$Vehicle->create($data);
             DB::commit();
             return $this->ReturnJson(200201, '提交成功');
         }catch (\Exception $e){
             DB::rollBack();
-            return $this->ReturnJson(400403, '提交失败');
+            return $this->ReturnJson(400413, '提交失败');
         }
     }
 
@@ -50,7 +47,7 @@ class BozhongIndex extends Controller
         $offset = $request->input('offset',0);
         $limit  = $request->input('limit',10);
 
-        $query = self::$BoundSwoing;
+        $query = self::$Vehicle;
 
         if($request->name){
 
@@ -79,7 +76,7 @@ class BozhongIndex extends Controller
 
         if($request->name){
 
-           $data['name'] = $request->name;
+            $data['name'] = $request->name;
         }
         if($request->code){
 
@@ -89,12 +86,12 @@ class BozhongIndex extends Controller
         DB::beginTransaction();
         try {
 
-            self::$BoundSwoing->where('id', $request->id)->update($data);
+            self::$Vehicle->where('id', $request->id)->update($data);
             DB::commit();
             return $this->ReturnJson(200201, '修改成功');
         }catch (\Exception $e){
             DB::rollBack();
-            return $this->ReturnJson(400403, '修改失败');
+            return $this->ReturnJson(400413, '修改失败');
         }
 
     }
@@ -106,7 +103,7 @@ class BozhongIndex extends Controller
         DB::beginTransaction();
         try {
 
-            self::$BoundSwoing->where('id', $request->id)->delete();
+            self::$Vehicle->where('id', $request->id)->delete();
             DB::commit();
             return $this->ReturnJson(200201, '删除成功');
         }catch (\Exception $e){
@@ -114,4 +111,7 @@ class BozhongIndex extends Controller
             return $this->ReturnJson(400403, '删除失败');
         }
     }
+
+
+
 }

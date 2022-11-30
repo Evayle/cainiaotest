@@ -22,11 +22,20 @@ class OrderTaskList extends Controller
 
     public  function index(Request $request){
 
+
+        $query  = self::$BoundTask->where('tesk_status', 0);
+
        //搜索任务列表
+        if($request->filled('order_type')){
 
-        $dataChunk = self::$BoundTask->where('tesk_status', 0)->select(DB::raw('count(two_logisticsOrderCode) num'),'two_logisticsOrderCode')->groupBy('two_logisticsOrderCode','bound_time')->orderBy('bound_time')->get()->toArray();
+            $query = $query->where('order_type',$request->order_type);
+        }
 
-        //获取区域领任务的部分
+        $dataChunk = $query->select(DB::raw('count(two_logisticsOrderCode) num'),'two_logisticsOrderCode','order_type')->groupBy('two_logisticsOrderCode','bound_time','order_type')->orderBy('bound_time')->get()->toArray();
+
+        return $this->ReturnJson(200201, '获取成功',['data' => $dataChunk, 'count' => count($dataChunk)]);
+
+        //获取区域领任务的部分--第二个任务版本
         $tasklistnum = 2;
 
         $i = 0;
@@ -35,8 +44,8 @@ class OrderTaskList extends Controller
         $dataTsk = [];
         foreach ($dataChunk as $key => $item){
 
-            $dataTsk[$i]['taskID'] = $item['two_logisticsOrderCode'];
-            $dataTsk[$i]['num'] = $item['num'];
+            $dataTsk[$t][$i]['taskID'] = $item['two_logisticsOrderCode'];
+            $dataTsk[$t][$i]['num'] = $item['num'];
             $i++;
             if($i == $tasklistnum){
                 $i = 0;

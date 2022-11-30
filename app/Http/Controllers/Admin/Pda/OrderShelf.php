@@ -56,6 +56,7 @@ class OrderShelf extends Controller
             self::$GoodsLog->where('order', $request->mailNo)->create($log);
 
             DB::commit();
+
             return $this->ReturnJson(200201, '上架成功!');
         }catch (\Exception $e){
             DB::rollBack();

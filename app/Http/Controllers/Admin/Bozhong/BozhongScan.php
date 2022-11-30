@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 class BozhongScan extends Controller
 {
     //播种扫描
-    private static  $BoundSwoing;
+    private static  $PickBox;
 
     //绑定播种的区域
     public function __construct(){

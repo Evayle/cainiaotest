@@ -67,6 +67,7 @@ class OrderInbound extends Controller
             return $this->ReturnJson(200201, '入库成功');
         }catch (\Exception $e){
             DB::rollBack();
+
             return $this->ReturnJson(400403, '入库失败,请联系管理员!');
         }
     }

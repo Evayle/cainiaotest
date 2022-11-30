@@ -5,21 +5,21 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class CainiaoBoundTask extends Model
+class VehicleMangement extends Model
 {
     use HasFactory;
 
-    protected $table = 'cainiao_bount_task_list';
+    protected $table = 'cainiao_vehicle_mangement';
 
     /**
      * 处理时间格式
      */
 
-    protected $primaryKey = 'id';
+    protected $primaryKey = 'receiving_id';
 
     public    $timestamps = true;
 
-    protected $fillable = ['id', 'mailNo', 'logisticsOrderCode', 'two_logisticsOrderCode', 'area_id', 'order_type', 'is_send','area_name', 'code', 'bound_time', 'created_at', 'updated_at'];
+    protected $fillable = ['id', 'name', 'code', 'created_at', 'updated_at'];
 
     /**
      * 设置时间格式几个人法兰克福国际'螺丝刀快件管理我快递费加绿茶

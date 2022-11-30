@@ -5,45 +5,51 @@ namespace App\Http\Controllers\Admin\Pda;
 use App\Http\Controllers\Controller;
 use App\Models\BeginPickBox;
 use App\Models\BoundSwoing;
+use App\Models\VehicleMangement;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class BaundSwoing extends Controller
 {
-    private static  $PickBox;
+    private static  $BeginPickBox;
     private static  $BoundSwoing;
+    private static  $VehicleMangement;
 
     //绑定播种的区域
     public function __construct(){
 
-        if(!self::$PickBox)   self::$PickBox   = new BeginPickBox();
-        if(!self::$BoundSwoing)   self::$BoundSwoing   = new BoundSwoing();
-
+        if(!self::$BoundSwoing)      self::$BoundSwoing      = new BoundSwoing();
+        if(!self::$BeginPickBox)     self::$BeginPickBox     = new BeginPickBox();
+        if(!self::$VehicleMangement) self::$VehicleMangement = new VehicleMangement();
     }
 
     public function index(Request $request){
 
+
         if(!$request->filled(['box_code', 'swoing_code'])) return $this->ReturnJson();
 
-        //获取box的code
-        $PickBoxInfo = self::$PickBox->where('staus',1)->where('code', $request->box_code)->first();
+        $BoundSwoing =  self::$BoundSwoing->where('code', $request->box_code)->first();
 
-        if(!$PickBoxInfo)return  $this->ReturnJson(400413, '货架车code无效,请联系管理员');
+        if(!$BoundSwoing) return $this->ReturnJson(400417, '车辆code不存在');
 
-        $BounBox = self::$BoundSwoing->where('code', $request->swoing_code)->first();
+        $VehicleMangement = self::$VehicleMangement->where('code', $request->swoing_code)->first(); 
 
-        if(!$BounBox)return  $this->ReturnJson(400415, '播种区code无效');
+        if(!$VehicleMangement) return $this->ReturnJson(400418, '播种区code失败');
 
-        $PickBoxInfoswoing_code = self::$PickBox->where('staus',1)->where('swoing_code', $request->swoing_code)->first();
+        $PickBoxInfoswoing_code = self::$BeginPickBox->where('swoing_code', $request->swoing_code)->orderBy('id', 'DESC')->first();
 
-        if($PickBoxInfoswoing_code) return  $this->ReturnJson(400416, '货架车code还有快件未扫描完成,不可以绑定新的code');
+        if($PickBoxInfoswoing_code->status == 2) return $this->ReturnJson(200202, '已经绑定了');
+
+        if($PickBoxInfoswoing_code->status == 1) return $this->ReturnJson(400417, '分流区已绑定');
+
+        if($PickBoxInfoswoing_code) return $this->ReturnJson(200202, '已绑定');
 
         //发送数据部分
         DB::beginTransaction();
 
         try {
 
-            self::$PickBox->where('staus',1)->where('code', $request->box_code)->update(['staus' => 2, 'swoing_code' => $request->swoing_code]);
+            self::$BeginPickBox->where('staus',1)->where('code', $request->box_code)->update(['staus' => 2, 'swoing_code' => $request->swoing_code]);
 
             DB::commit();
 
