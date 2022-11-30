@@ -66,6 +66,15 @@ class Controller extends BaseController
 
     }
 
+    protected function CallPostData($apiname, $logistics_interface, $data_digest, $logistic_provider_id = 'TRAN_STORE_30792933'){
+        
+        return 'msg_type=' . $apiname
+            . '&logistics_interface=' . $logistics_interface
+            . '&data_digest=' . $data_digest
+            . '&logistic_provider_id=' . $logistic_provider_id;
+    }
+
+
     protected function OrderStatusInfo($status) {
 
         switch ($status){

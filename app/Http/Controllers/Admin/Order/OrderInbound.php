@@ -38,9 +38,9 @@ class OrderInbound extends Controller
 
         $adminInfo = $request->get('adminInfo');
 
-        if(!$request->filled('mailNo'))  return $this->ReturnJson();
+        if(!$request->filled('logisticsOrderCode'))  return $this->ReturnJson();
 
-        $Goodsinfo = self::$Goods->where('mailNo', $request->mailNo)->select('mailNo', 'logisticsOrderCode', 'order_status', 'cainiao_node', 'conso_order_query', 'store_name')->first();
+        $Goodsinfo = self::$Goods->where('logisticsOrderCode', $request->logisticsOrderCode)->select('mailNo', 'logisticsOrderCode', 'order_status', 'cainiao_node', 'conso_order_query', 'store_name')->first();
 
         if(!$Goodsinfo) return $this->ReturnJson(400403, '订单不存在');
 
@@ -57,9 +57,6 @@ class OrderInbound extends Controller
         $storeinfo = self::$Store->area_infos($Goodsinfo->store_name);
 
         if(!$storeinfo) return $this->ReturnJson(400403, '该订单的快件没有绑定库区,请联系仓管!');
-
-
-
 
         DB::beginTransaction();
         try {

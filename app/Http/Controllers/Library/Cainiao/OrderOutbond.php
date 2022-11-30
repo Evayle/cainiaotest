@@ -20,7 +20,7 @@ class OrderOutbond extends Controller
         $postData = self::postData('CONSO_WAREHOUSE_OUTBOUND',$content ,$contentInfo);
 
         $res = self::Curl(self::$url,$postData);
-        dump($res);
+     
         if(!$res) return false;
 
         $errlog = $res;

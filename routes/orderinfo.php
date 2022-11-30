@@ -10,16 +10,23 @@ Route::group(['namespace'=>'App\Http\Controllers\Admin\Order'], function ($api){
         //客服查询订单的部分
         $api->get ('admin/order/infos/query', 'Search@index');
 
-        //pc多件入库部分
+        //pc多件入库部分--有重量
         $api->post('cainiao/zh/order/in/bound', 'OrderInbounds@index');
 
-        //pc单件入库部分
+        //pc单件入库部分--无重量
         $api->post('cainiao/zh/order/in/bounds', 'OrderInbound@index');
 
 
 
 
     });
+
+     //多件打印上架单
+     $api->get('cainiao/order/shelf/printinfo', 'OrderShelfPrint@index');
+
+        //处理定时任务的部分
+        $api->post('cainiao/task/callback', 'OutBoundCallback@index');
+
 });
 
 Route::group(['namespace'=>'App\Http\Controllers\Admin\Bozhong'], function ($api){
@@ -39,7 +46,4 @@ Route::group(['namespace'=>'App\Http\Controllers\Task'], function ($api){
         $api->post('cainiao/task/xaifa', 'OrderOutBoundTask@index');
     // });
 });
-
-
-
 

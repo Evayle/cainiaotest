@@ -63,11 +63,11 @@ class Forecast extends Model
     }
 
     /**
-     * 关联用户
+     * 关联地址
      */
     public function storename(){
 
-//        return $this->hasOne();
+       return $this->hasOne(Store::class, 'cainiao_match', 'store_name');
     }
 
     /**
@@ -87,7 +87,6 @@ class Forecast extends Model
         return  $this->hasOne(CainiaoPrintInfo::class, 'order', 'trackingNumber');
 
     }
-
 
 
 }

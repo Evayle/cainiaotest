@@ -8,7 +8,6 @@ use App\Models\BeginPickBox;
 use App\Models\Forecast;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Library\Cainiao\OrderOutBoundApply;
-use App\Http\Controllers\Library\Cainiao\OrderOutbond;
 use Illuminate\Support\Facades\DB;
 
 

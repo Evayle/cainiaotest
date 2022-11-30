@@ -35,6 +35,8 @@ Route::group(['namespace'=>'App\Http\Controllers\Admin\Pda'], function ($api){
         //大包号出库
         $api->post('cainiao/admin/pda/order/ountbound', 'PakageOut@index');
 
+        //
+
     });
 
 });
