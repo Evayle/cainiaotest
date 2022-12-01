@@ -50,7 +50,7 @@ class PartseOut extends Controller
 
         DB::beginTransaction();
         try {
-            self::$Goods->where('trackingNumber', $request->trackingNumber)->update([ 'bigBagId' => $request->bigBagId,'order_status' => 45, 'cainiao_node' => 13]);
+            self::$Goods->where('trackingNumber', $request->trackingNumber)->update([ 'bigBagId' => $request->bigBagId,'order_status' => 45, 'cainiao_node' => 13, 'over_time' => date('Y-m-d H:i:s')]);
             DB::commit();
             return $this->ReturnJson(200201, '出库成功');
         }catch (\Exception $e){

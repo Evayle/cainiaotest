@@ -61,7 +61,7 @@ class BaundSwoing extends Controller
 
             DB::rollBack();
 
-            return $this->ReturnJson(400417, 'code绑定失败');
+            return $this->ReturnJson(400419, 'code绑定失败');
         }
 
 

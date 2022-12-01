@@ -18,9 +18,9 @@ class OrderShelfPrint extends Controller
 
     public function index(Request $request){
 
-        if(!$request->filled('logisticsOrderCode'))  return $this->ReturnJson();
+        if(!$request->filled('mailNo'))  return $this->ReturnJson();
 
-        $Goodsinfo = self::$Goods->where('logisticsOrderCode', $request->logisticsOrderCode)->with(['areainfo' => function($query){
+        $Goodsinfo = self::$Goods->where('mailNo', $request->mailNo)->with(['areainfo' => function($query){
 
             $query->select('order', 'area_name');
 
@@ -28,7 +28,7 @@ class OrderShelfPrint extends Controller
 
             $query->select('cainiao_match', 'receiving_name');
 
-        }])->select('logisticsOrderCode','store_name')->first();
+        }])->select('mailNo','store_name')->first();
 
 
         if(!$Goodsinfo) return $this->ReturnJson(400413, '获取失败');
@@ -53,7 +53,7 @@ class OrderShelfPrint extends Controller
                 <div>库区：'.$Goodsinfo->areainfo->area_name.'</div>
                 <div>'.$Goodsinfo->store_name.'</div>
                 <div>'.$Goodsinfo->storename->receiving_name.'</div>
-                <div>'.$request->logisticsOrderCode.'</div>
+                <div>'.$request->mailNo.'</div>
                 <div>'.date('Y-m-d H:i:s').'</div>
             </div>
         </body>

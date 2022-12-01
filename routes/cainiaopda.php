@@ -8,10 +8,10 @@ Route::group(['namespace'=>'App\Http\Controllers\Admin\Pda'], function ($api){
 
     $api->group(['middleware' => 'adminToken'], function ($api){
 
-        //PDA签收入库
+        //PDA小件到达签收
         $api->post('cainiao/admin/pda/order/arrive', 'OrderArriveSign@index');
 
-        //PDA中间签收入库
+        //PDA中件到达签收
         $api->post('cainiao/admin/pda/order/begin/arrive', 'OrderArriveBigSing@index');
 
         //PDA上架部分
@@ -39,8 +39,7 @@ Route::group(['namespace'=>'App\Http\Controllers\Admin\Pda'], function ($api){
         $api->post('cainiao/admin/pda/order/ountbound', 'PakageOut@index');
 
         //散件出库
-
-
+        $api->post('cainiao/admin/pda/order/one/ountbound', 'PartseOut@index');
 
     });
 

@@ -29,17 +29,17 @@ class OrderShelf extends Controller
         $adminInfo = $request->get('adminInfo');
 
         //处理订单
-        if(!$request->filled(['logisticsOrderCode', 'code'])) return $this->ReturnJson();
+        if(!$request->filled(['mailNo', 'code'])) return $this->ReturnJson();
 
         // if(strlen($request->code) < 3) return $this->ReturnJson(400415, '货架单长度太短');
 
-        $GoodsInfo = self::$ShelfInfo->where('order', $request->logisticsOrderCode)->select('id', 'status', 'area_id', 'code')->first();
+        $GoodsInfo = self::$ShelfInfo->where('order', $request->mailNo)->select('id', 'status', 'area_id', 'code')->first();
 
         if(!$GoodsInfo) return $this->ReturnJson(400416, '该订单未入库,请入库后再上架');
 
-        $Goods = self::$Goods->where('logisticsOrderCode', $request->logisticsOrderCode)->select('mailNo')->first();
+        $Goods = self::$Goods->where('mailNo', $request->mailNo)->select('logisticsOrderCode')->first();
 
-        $OrderInbound = OrderInbound::Inbond($Goods->mailNo,$request->logisticsOrderCode);
+        $OrderInbound = OrderInbound::Inbond($request->mailNo,$Goods->logisticsOrderCode);
 
         if(!$OrderInbound) return $this->ReturnJson(400417, '订单上架失败,请立即联系管理员');
 
@@ -47,13 +47,13 @@ class OrderShelf extends Controller
 
         try {
 
-            self::$Goods->where('logisticsOrderCode', $request->logisticsOrderCode)->update(['order_status' => 15]);
+            self::$Goods->where('mailNo', $request->mailNo)->update(['order_status' => 15]);
 
-            self::$ShelfInfo->where('order', $request->logisticsOrderCode)->update(['code' => $request->code, 'status' => 1]);
+            self::$ShelfInfo->where('order', $request->mailNo)->update(['code' => $request->code, 'status' => 1]);
 
-            $log = ['text' => '该快件已上架,上架货架号是:'.$request->code, 'user_name' => $adminInfo->user_name, 'order' => $request->logisticsOrderCode, 'created_at' => date('Y-m-d H:i:s')];
+            $log = ['text' => '该快件已上架,上架货架号是:'.$request->code, 'user_name' => $adminInfo->user_name, 'order' => $request->mailNo, 'created_at' => date('Y-m-d H:i:s')];
 
-            self::$GoodsLog->where('order', $request->mailNo)->create($log);
+            self::$GoodsLog->create($log);
 
             DB::commit();
 

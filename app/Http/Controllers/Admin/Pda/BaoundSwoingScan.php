@@ -58,7 +58,7 @@ class BaoundSwoingScan extends Controller
             DB::commit();
         }catch (\Exception $e){
             DB::rollBack();
-            return $this->ReturnJson(400417, '排序获取失败');
+            return $this->ReturnJson(400418, '排序获取失败');
         }
 
         return $this->ReturnJson(200201, '获取成功',['sort' => $t+1]);

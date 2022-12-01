@@ -10,11 +10,15 @@ Route::group(['namespace'=>'App\Http\Controllers\Admin\Order'], function ($api){
         //客服查询订单的部分
         $api->get ('admin/order/infos/query', 'Search@index');
 
-        //pc多件入库部分--有重量
+        //pc库部分--有重量
         $api->post('cainiao/zh/order/in/bound', 'OrderInbounds@index');
 
-        //pc单件入库部分--无重量
+        //pc入库部分--无重量
         $api->post('cainiao/zh/order/in/bounds', 'OrderInbound@index');
+
+        //pc--单件打印SBKJ
+
+        // $api->post('cainiao/order/print/SBKJ/infos', '');
 
     });
 

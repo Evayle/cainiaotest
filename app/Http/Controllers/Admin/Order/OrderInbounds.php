@@ -35,17 +35,17 @@ class OrderInbounds extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function index(Request $request){
-
+  
         $adminInfo = $request->get('adminInfo');
 
-        if(!$request->filled(['logisticsOrderCode', 'weight']))  return $this->ReturnJson();
+        if(!$request->filled(['mailNo', 'weight']))  return $this->ReturnJson();
 
         if($request->weight < 0.02 || $request->weight > 26){
 
             return $this->ReturnJson(400415, '重量异常，不可以低于0.02或者超过26kg');
         }
 
-        $Goodsinfo = self::$Goods->where('logisticsOrderCode', $request->logisticsOrderCode)->select('mailNo', 'logisticsOrderCode', 'order_status', 'cainiao_node', 'conso_order_query','store_name','weight')->first();
+        $Goodsinfo = self::$Goods->where('mailNo', $request->mailNo)->select('mailNo', 'logisticsOrderCode', 'order_status', 'cainiao_node', 'conso_order_query','store_name','weight')->first();
        
         if(!$Goodsinfo) return $this->ReturnJson(400413, '该订单是无主件');
 
@@ -55,24 +55,27 @@ class OrderInbounds extends Controller
 
         if($Goodsinfo->order_status < 5 ||  $Goodsinfo->order_status > 10) {
 
-            return $this->ReturnJson(400403, $this->OrderStatusInfo($Goodsinfo->order_status));
+            return $this->ReturnJson(400423, $this->OrderStatusInfo($Goodsinfo->order_status));
         }
     
-        if($Goodsinfo->order_status == 6)  return $this->ReturnJson(400415, '该订单订单已退回');
+        // if($Goodsinfo->order_status == 6)  return $this->ReturnJson(400415, '该订单订单已退回');
 
         if($Goodsinfo->order_status == 10) {
 
-            self::$Goods->where('logisticsOrderCode', $logisticsOrderCode)->update(['weight' => $request->weight, 'update_at' => date('Y-m-d H:i:s')]);
+            // self::$Goods->where('mailNo', $request->mailNo)->update(['weight' => $request->weight, 'update_at' => date('Y-m-d H:i:s')]);
+            if($Goodsinfo->conso_order_query == 1){
 
-            return $this->ReturnJson(200204, '该订单订单已重复入库');
+                return $this->ReturnJson(200202, '单件入库成功');
+            }
+
+            return $this->ReturnJson(200201, '多件入库成功');
         }
 
         //如果是单件--查看有没有入库，没有就入库，有入库，就直接分拣出库，
         if($Goodsinfo->conso_order_query == 1){
-
             // 10入库,显示订单在那个区
             //如果单件
-            $OrderInbound = OrderInbound::Inbond($Goodsinfo->mailNo,$Goodsinfo->logisticsOrderCode);
+            $OrderInbound = OrderInbound::Inbond($Goodsinfo->mailNo,$Goodsinfo->logisticsOrderCode,($request->weight * 1000));
 
             if(!$OrderInbound){
                 return  $this->ReturnJson(400418, '单件入库失败！');
@@ -81,7 +84,7 @@ class OrderInbounds extends Controller
             DB::beginTransaction();
 
             try {
-                self::$Goods->where('logisticsOrderCode', $request->logisticsOrderCode)->update(['order_status' => 10, 'weight' => $request->weight, 'cainiao_node' => 7,'created_at' => date('Y-m-d H:i:s')]);
+                self::$Goods->where('mailNo', $request->mailNo)->update(['order_status' => 10, 'weight' => ($request->weight * 1000), 'cainiao_node' => 7,'created_at' => date('Y-m-d H:i:s')]);
                 self::$GoodsLog->create(['text' => '该订单（单件）已入库,操作人员的账号是:'.$adminInfo->user_name, 'user_name' => $adminInfo->user_name]);
                 DB::commit();
                 return $this->ReturnJson(200202, '单件入库成功');
@@ -95,23 +98,23 @@ class OrderInbounds extends Controller
             //查询绑定的库区
             $storeinfo = self::$Store->area_infos($Goodsinfo->store_name);
 
-            if(!$storeinfo) return $this->ReturnJson(400403, '该订单的快件没有绑定库区,请联系仓管!');
+            if(!$storeinfo) return $this->ReturnJson(400421, '该订单的快件没有绑定库区,请联系仓管!');
 
-            $ShelfInfo = self::$ShelfInfo->where('order', $Goodsinfo->logisticsOrderCode)->select('id')->first();
+            $ShelfInfo = self::$ShelfInfo->where('order', $request->mailNo)->select('id')->first();
 
             if($ShelfInfo) return $this->ReturnJson(200203, '多件已入库成功,等待上架');
         }
 
         DB::beginTransaction();
         try {
-            self::$Goods->where('logisticsOrderCode', $request->logisticsOrderCode)->update(['order_status' => 10, 'weight' => $request->weight,'created_at' => date('Y-m-d H:i:s')]);
-            self::$ShelfInfo->create(['order' => $Goodsinfo->logisticsOrderCode, 'area_id' => $storeinfo['area_id'], 'area_name' => $storeinfo['area_name'],'created_at' => date('Y-m-d H:i:s')]);
+            self::$Goods->where('logisticsOrderCode', $request->mailNo)->update(['order_status' => 10, 'weight' => $request->weight,'created_at' => date('Y-m-d H:i:s')]);
+            self::$ShelfInfo->create(['order' => $Goodsinfo->mailNo, 'area_id' => $storeinfo['area_id'], 'area_name' => $storeinfo['area_name'],'created_at' => date('Y-m-d H:i:s')]);
             self::$GoodsLog->create(['text' => '该快件已入库,快件库区是:'.$storeinfo['area_name'].',操作人员的账号是:'.$adminInfo->user_name, 'user_name' => $adminInfo->user_name]);
             DB::commit();
             return $this->ReturnJson(200201, '多件入库成功');
         }catch (\Exception $e){
             DB::rollBack();
-            return $this->ReturnJson(400419, '多件入库失败,请联系管理员!');
+            return $this->ReturnJson(400420, '多件入库失败,请联系管理员!');
         }
     }
 }

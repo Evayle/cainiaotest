@@ -31,7 +31,7 @@ class PrintSBKJ extends Controller
 
         $data = self::$Goods->where('two_logisticsOrderCode', $request->order)->select('trackingNumber')->first();
 
-        if(!$data)  return $this->ReturnJson(400417, '该订单未入库或上架');
+        if(!$data)  return $this->ReturnJson(400416, '该订单未入库或上架');
 
         if($data->trackingNumber){
 

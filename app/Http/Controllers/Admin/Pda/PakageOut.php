@@ -29,7 +29,7 @@ class PakageOut extends Controller
 
         if(!$GoodsInfo) return  $this->ReturnJson(400413, '出库失败,请将该订单给管理员');
 
-        if($GoodsInfo[0]['order_status'] == 45) return $this->ReturnJson(200201, '出库成功1');
+        if($GoodsInfo[0]['order_status'] == 45) return $this->ReturnJson(200201, '出库成功');
 
         $logisticsOrderCodes = null;
 
@@ -50,7 +50,7 @@ class PakageOut extends Controller
 
         DB::beginTransaction();
         try {
-            self::$Goods->where('trackingNumber', $request->trackingNumber)->update([ 'bigBagId' => $request->bigBagId,'order_status' => 45, 'cainiao_node' => 13]);
+            self::$Goods->where('trackingNumber', $request->trackingNumber)->update([ 'bigBagId' => $request->bigBagId,'order_status' => 45, 'cainiao_node' => 13, 'over_time' => date('Y-m-d H:i:s')]);
             DB::commit();
             return $this->ReturnJson(200201, '出库成功');
         }catch (\Exception $e){
