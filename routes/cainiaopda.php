@@ -11,6 +11,9 @@ Route::group(['namespace'=>'App\Http\Controllers\Admin\Pda'], function ($api){
         //PDA签收入库
         $api->post('cainiao/admin/pda/order/arrive', 'OrderArriveSign@index');
 
+        //PDA中间签收入库
+        $api->post('cainiao/admin/pda/order/begin/arrive', 'OrderArriveBigSing@index');
+
         //PDA上架部分
         $api->post('cainiao/admin/pda/order/shelf', 'OrderShelf@index');
 
@@ -35,7 +38,9 @@ Route::group(['namespace'=>'App\Http\Controllers\Admin\Pda'], function ($api){
         //大包号出库
         $api->post('cainiao/admin/pda/order/ountbound', 'PakageOut@index');
 
-        //
+        //散件出库
+
+
 
     });
 

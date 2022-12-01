@@ -39,7 +39,7 @@ class PrintSBKJ extends Controller
 
             self::$PtintInfo->where('order', $data->trackingNumber)->increment('is_print',1);
 
-            return $this->ReturnJson(200201, '获取成功',['printData' => $Print]);
+            return $this->ReturnJson(200202, '获取成功',['printData' => $Print]);
         }
 
         //没有,则请求
@@ -58,7 +58,8 @@ class PrintSBKJ extends Controller
         $two_logisticsOrderCode = substr($two_logisticsOrderCode,0,strlen($two_logisticsOrderCode)-1);
      
         $PrintInfo = OrderOutBoundApply::APPLY($two_logisticsOrderCode,$logisticsOrderCode );
-     
+
+    
         if(!$PrintInfo) return $this->ReturnJson(400417, '获取打印面单失效,请联系管理员');
 
         $trackingNumber = $PrintInfo->waybillDetail->mailNo;

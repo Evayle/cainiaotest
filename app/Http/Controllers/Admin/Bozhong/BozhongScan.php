@@ -16,7 +16,6 @@ class BozhongScan extends Controller
     public function __construct(){
 
         if(!self::$PickBox)   self::$PickBox   = new BeginPickBox();
-
     }
 
     public function index(Request $request){

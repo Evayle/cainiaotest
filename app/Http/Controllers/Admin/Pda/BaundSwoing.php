@@ -28,31 +28,35 @@ class BaundSwoing extends Controller
 
         if(!$request->filled(['box_code', 'swoing_code'])) return $this->ReturnJson();
 
-        $BoundSwoing =  self::$BoundSwoing->where('code', $request->box_code)->first();
+        $BoundSwoing =  self::$BoundSwoing->where('code', $request->swoing_code)->first();
 
         if(!$BoundSwoing) return $this->ReturnJson(400417, '车辆code不存在');
 
-        $VehicleMangement = self::$VehicleMangement->where('code', $request->swoing_code)->first(); 
+        $VehicleMangement = self::$VehicleMangement->where('code', $request->box_code)->first(); 
 
         if(!$VehicleMangement) return $this->ReturnJson(400418, '播种区code失败');
 
-        $PickBoxInfoswoing_code = self::$BeginPickBox->where('swoing_code', $request->swoing_code)->orderBy('id', 'DESC')->first();
+        $PickBoxInfoswoing_code = self::$BeginPickBox->where('code', $request->box_code)->orderBy('id', 'DESC')->first();
+
+        if(!$PickBoxInfoswoing_code){
+            
+            return $this->ReturnJson(400421, '绑定异常,该快件不应该出现在分流区');
+        }
 
         if($PickBoxInfoswoing_code->status == 2) return $this->ReturnJson(200202, '已经绑定了');
 
-        if($PickBoxInfoswoing_code->status == 1) return $this->ReturnJson(400417, '分流区已绑定');
-
-        if($PickBoxInfoswoing_code) return $this->ReturnJson(200202, '已绑定');
+        // if($PickBoxInfoswoing_code->status == 1) return $this->ReturnJson(400419, '分流区已绑定');
 
         //发送数据部分
         DB::beginTransaction();
 
         try {
 
-            self::$BeginPickBox->where('staus',1)->where('code', $request->box_code)->update(['staus' => 2, 'swoing_code' => $request->swoing_code]);
+            self::$BeginPickBox->where('status',1)->where('code', $request->box_code)->update(['status' => 2, 'swoing_code' => $request->swoing_code]);
 
             DB::commit();
 
+            return $this->ReturnJson(200201, 'code绑定成功');
         }catch (\Exception $e){
 
             DB::rollBack();
@@ -60,9 +64,6 @@ class BaundSwoing extends Controller
             return $this->ReturnJson(400417, 'code绑定失败');
         }
 
-        //同时处理发送
-
-        return $this->ReturnJson(200201, 'code绑定成功');
 
     }
 }

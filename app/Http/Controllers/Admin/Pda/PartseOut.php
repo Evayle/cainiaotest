@@ -9,9 +9,9 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Library\Cainiao\OrderOutbond;
 use Illuminate\Support\Facades\DB;
 
-class PakageOut extends Controller
+class PartseOut extends Controller
 {
-    //大包号出库
+    //散件出库
     private static $Goods;
     private static $UserInfo;
 
@@ -23,7 +23,7 @@ class PakageOut extends Controller
 
     public function index(Request $request){
 
-        if(!$request->filled(['bigBagId', 'trackingNumber'])) return $this->ReturnJson();
+        if(!$request->filled('trackingNumber')) return $this->ReturnJson();
 
         $GoodsInfo = self::$Goods->where('trackingNumber', $request->trackingNumber)->select('id','logisticsOrderCode','two_logisticsOrderCode','trackingNumber', 'order_status')->get()->toArray();
 
@@ -44,7 +44,7 @@ class PakageOut extends Controller
 
         $userInfo = self::$UserInfo->where('d_id', $GoodsInfo['0']['id'])->first();
 
-        $OrderOutbond = OrderOutbond::index($logisticsOrderCodes,$two_logisticsOrderCode, $request->trackingNumber,$request->bigBagId,$userInfo->buyer_name,$userInfo->buyer_mobile, $userInfo->buyer_wangwangId,$userInfo->buyer_streetAddress);
+        $OrderOutbond = OrderOutbond::index($logisticsOrderCodes,$two_logisticsOrderCode, $request->trackingNumber,$request->trackingNumber,$userInfo->buyer_name,$userInfo->buyer_mobile, $userInfo->buyer_wangwangId,$userInfo->buyer_streetAddress);
 
         if(!$OrderOutbond) return  $this->ReturnJson(400415, '大包号出库失败,请联系管理员');
 

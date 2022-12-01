@@ -32,11 +32,10 @@ class BaoundSwoingScan extends Controller
 
         $PickBoxInfo = self::$PickBox->where('status',2)->where('code',$request->code)->where('order', $request->order)->select('order','two_logisticsOrderCode','out_sort')->first();
 
-
         if(!$PickBoxInfo) return $this->ReturnJson(400417, '订单异常,请联系管理员查看该快件所属区域');
 
         //获取这里坑位的所有顺序
-        if($PickBoxInfo->out_sort) return $this->ReturnJson(200201, '获取成功', ['code' => $PickBoxInfo->out_sort]);
+        if($PickBoxInfo->out_sort) return $this->ReturnJson(200201, '获取成功', ['sort' => $PickBoxInfo->out_sort]);
 
         //如果没有code
 
@@ -47,7 +46,6 @@ class BaoundSwoingScan extends Controller
         foreach ($PickBoxData as $key => $item){
 
             if($t < $item['out_sort']){
-
                 $t = $item['out_sort'];
             }
         }
@@ -58,13 +56,11 @@ class BaoundSwoingScan extends Controller
 
             self::$PickBox->where('two_logisticsOrderCode', $PickBoxInfo->two_logisticsOrderCode)->update(['out_sort' => ($t + 1)]);
             DB::commit();
-
         }catch (\Exception $e){
-
             DB::rollBack();
-            return $this->ReturnJson(400417, 'code绑定失败');
+            return $this->ReturnJson(400417, '排序获取失败');
         }
 
-        return $this->ReturnJson(200201, '获取成功',['code' => $t+1]);
+        return $this->ReturnJson(200201, '获取成功',['sort' => $t+1]);
     }
 }

@@ -22,7 +22,7 @@ class OrderOutBoundApply extends Controller
         $postData = self::postData('CONSO_WAREHOUSE_OUTBOUND_APPLY',$content ,$contentInfo);
 
         $res = self::Curl(self::$url,$postData);
-        
+  
         if(!$res) return false;
 
         $errlog = $res;

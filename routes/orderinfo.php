@@ -22,18 +22,18 @@ Route::group(['namespace'=>'App\Http\Controllers\Admin\Order'], function ($api){
      $api->get('cainiao/order/shelf/printinfo', 'OrderShelfPrint@index');
 
         //处理定时任务的部分
-        $api->post('cainiao/task/callback', 'OutBoundCallback@index');
+    $api->post('cainiao/task/callback', 'OutBoundCallback@index');
 
 });
 
 Route::group(['namespace'=>'App\Http\Controllers\Admin\Bozhong'], function ($api){
 
     $api->group(['middleware' => 'adminToken'], function ($api){
+
         //pc 扫码待出库
         $api->post('cainiao/admin/order/scan/bound', 'BozhongScan@index');
         //打印
         $api->post('cainiao/admin/order/bound/print', 'PrintSBKJ@index');
-
 
         //播种区管理
         $api->post('cainiao/bozhong/set', 'BozhongIndex@add');
